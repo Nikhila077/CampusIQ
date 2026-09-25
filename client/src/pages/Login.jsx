@@ -159,7 +159,7 @@ export const Login = () => {
             />
 
             {/* Submit Button */}
-            <div className="pt-2">
+            <div className="pt-2 space-y-2.5">
               <Button
                 type="submit"
                 isLoading={isLoading}
@@ -168,6 +168,30 @@ export const Login = () => {
                 Sign In to CampusIQ
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
+
+              {/* Quick Demo Login Shortcut */}
+              <button
+                type="button"
+                onClick={async () => {
+                  setIsLoading(true);
+                  setServerError('');
+                  try {
+                    await login({
+                      email: 'student@campusiq.edu',
+                      password: 'password123'
+                    });
+                    navigate('/dashboard', { replace: true });
+                  } catch (err) {
+                    setServerError(err.message || 'Demo login failed');
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                disabled={isLoading}
+                className="w-full py-2.5 px-4 rounded-xl border border-indigo-500/30 bg-indigo-950/40 hover:bg-indigo-900/40 text-indigo-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+              >
+                <span>⚡ Instant Demo Login (Alex Johnson)</span>
+              </button>
             </div>
           </form>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Briefcase,
   CheckCircle2,
@@ -8,7 +9,10 @@ import {
   Info,
   BookOpen,
   Code2,
-  FolderGit2
+  FolderGit2,
+  Zap,
+  Target,
+  ChevronRight
 } from 'lucide-react';
 import careerService from '../services/careerService.js';
 import useAuth from '../hooks/useAuth.js';
@@ -68,6 +72,28 @@ export const Career = () => {
     }
   };
 
+  // Derive biggest skill gap and suggested focus roadmap
+  const biggestGap = data?.missingSkills && data.missingSkills.length > 0 ? data.missingSkills[0] : null;
+
+  const getSuggestedFocus = (gap) => {
+    if (!gap) return 'Advanced System Architecture & Optimization';
+    switch (gap.toLowerCase()) {
+      case 'dsa':
+        return 'Arrays → Strings → Hashing → Trees & Graphs';
+      case 'sql':
+      case 'dbms':
+        return 'Normalization → Complex JOINs → Indexing & B+ Trees';
+      case 'react':
+        return 'Hooks → Context & State Management → Performance Optimization';
+      case 'python':
+        return 'Data Structures → OOP & Modules → Scripting & Asynchronous I/O';
+      case 'git':
+        return 'Branching Strategies → Rebasing → Conflict Resolution';
+      default:
+        return 'Fundamental Concepts → Problem Sets → Guided Projects';
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
       {/* Header */}
@@ -92,12 +118,12 @@ export const Career = () => {
       ) : (
         <div className="space-y-6">
           {/* Target Role & Readiness Banner */}
-          <div className="bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-900/40 border border-indigo-500/20 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-900/40 border border-indigo-500/20 rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center md:justify-between gap-6 shadow-xl">
             <div className="space-y-2 max-w-xl">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400 px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
                 Target Role
               </span>
-              <h2 className="text-2xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                 {data.targetRole}
               </h2>
               <p className="text-xs text-slate-300 leading-relaxed">{data.roleDescription}</p>
@@ -115,67 +141,86 @@ export const Career = () => {
             </div>
           </div>
 
-          {/* Skill Breakdown: Matched vs Gaps */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Acquired Skills */}
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4" /> Acquired Skills ({data.matchedSkills?.length || 0})
-                </h3>
+          {/* Biggest Skill Gap & Suggested Focus Spotlight */}
+          {biggestGap && (
+            <div className="p-5 rounded-2xl bg-amber-950/20 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    Highest Priority Gap
+                  </span>
+                  <h3 className="text-sm font-bold text-white">Your Biggest Skill Gap: {biggestGap}</h3>
+                </div>
+                <p className="text-xs text-slate-300">
+                  <strong>Suggested Focus:</strong> {getSuggestedFocus(biggestGap)}
+                </p>
               </div>
 
-              {data.matchedSkills?.length === 0 ? (
-                <p className="text-xs text-slate-500 italic py-4">
-                  No overlapping skills recorded yet. Add your current skills below.
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {data.matchedSkills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-300"
-                    >
-                      ✓ {skill}
-                    </span>
-                  ))}
-                </div>
-              )}
+              <div className="flex items-center gap-2 shrink-0">
+                <Link
+                  to="/dashboard"
+                  className="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                >
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>Solve Daily Brain Boost</span>
+                </Link>
+              </div>
             </div>
+          )}
 
-            {/* Missing Skills (Skill Gap) */}
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-orange-400 flex items-center gap-1.5">
-                  <XCircle className="w-4 h-4" /> Focus Areas / Skill Gaps ({data.missingSkills?.length || 0})
-                </h3>
-              </div>
+          {/* Core Competencies Progress Grid */}
+          <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <Target className="w-4 h-4 text-indigo-400" />
+              Core Competencies for {data.targetRole}
+            </h3>
 
-              {data.missingSkills?.length === 0 ? (
-                <p className="text-xs text-emerald-400 font-semibold py-4">
-                  🎉 Outstanding! You have covered all baseline core skills for this target role.
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {data.missingSkills.map((skill) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {(data.coreSkills || []).map((skill) => {
+                const isAcquired = (data.matchedSkills || []).includes(skill);
+                return (
+                  <div
+                    key={skill}
+                    className={`p-3.5 rounded-xl border flex items-center justify-between ${
+                      isAcquired
+                        ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300'
+                        : 'bg-slate-950/60 border-slate-800 text-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isAcquired ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-slate-600 shrink-0" />
+                      )}
+                      <span className="text-xs font-bold text-white">{skill}</span>
+                    </div>
                     <span
-                      key={skill}
-                      className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-orange-500/10 border border-orange-500/20 text-orange-300"
+                      className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded ${
+                        isAcquired
+                          ? 'bg-emerald-500/20 text-emerald-400'
+                          : 'bg-slate-800 text-slate-400'
+                      }`}
                     >
-                      + {skill}
+                      {isAcquired ? 'Mastered' : 'Gap'}
                     </span>
-                  ))}
-                </div>
-              )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           {/* Recommended Portfolio Projects */}
           {data.recommendedProjects && data.recommendedProjects.length > 0 && (
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
-                <FolderGit2 className="w-4 h-4" /> Recommended Portfolio Projects for {data.targetRole}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
+                  <FolderGit2 className="w-4 h-4" /> Recommended Portfolio Projects for {data.targetRole}
+                </h3>
+                <Link to="/projects" className="text-xs text-indigo-400 hover:underline">
+                  Project Hub →
+                </Link>
+              </div>
               <p className="text-xs text-slate-400">
                 Building one of these projects demonstrates mastery of your target role's core stack.
               </p>

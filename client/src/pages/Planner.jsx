@@ -9,20 +9,33 @@ import {
   BookOpen,
   ArrowRight,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  Check,
+  Zap,
+  Target,
+  Flame
 } from 'lucide-react';
 import plannerService from '../services/plannerService.js';
+import gamificationService from '../services/gamificationService.js';
 
 export const Planner = () => {
   const [plan, setPlan] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [gamification, setGamification] = useState({ xp: 0, currentStreak: 0 });
 
   const fetchPlan = async () => {
     try {
       setLoading(true);
-      const res = await plannerService.getPlan();
+      const [res, gRes] = await Promise.all([
+        plannerService.getPlan(),
+        gamificationService.getSummary()
+      ]);
       if (res?.success) {
         setPlan(res.data.actionPlan || []);
+      }
+      if (gRes?.success) {
+        setGamification(gRes.data);
       }
     } catch (err) {
       console.error('Error fetching academic plan:', err);
@@ -35,12 +48,29 @@ export const Planner = () => {
     fetchPlan();
   }, []);
 
+  const handleCompleteTask = async (taskId) => {
+    if (completedTasks.includes(taskId)) return;
+    try {
+      setCompletedTasks((prev) => [...prev, taskId]);
+      const res = await gamificationService.logAction('planner_task', 5, { taskId });
+      if (res?.success) {
+        setGamification((prev) => ({
+          ...prev,
+          xp: (prev.xp || 0) + 5,
+          currentStreak: res.data.currentStreak || prev.currentStreak
+        }));
+      }
+    } catch (err) {
+      console.error('Error completing task:', err);
+    }
+  };
+
   const getPriorityBadge = (priority) => {
     switch (priority) {
       case 'critical':
         return (
           <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/30">
-            Critical Priority
+            Critical
           </span>
         );
       case 'high':
@@ -58,7 +88,7 @@ export const Planner = () => {
       default:
         return (
           <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
-            Scheduled Focus
+            Low Priority
           </span>
         );
     }
@@ -67,17 +97,25 @@ export const Planner = () => {
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'attendance':
-        return <AlertOctagon className="w-5 h-5 text-red-400" />;
+        return <AlertOctagon className="w-4 h-4 text-red-400" />;
       case 'exam':
-        return <GraduationCap className="w-5 h-5 text-indigo-400" />;
+        return <GraduationCap className="w-4 h-4 text-indigo-400" />;
       case 'assignment':
-        return <ClipboardList className="w-5 h-5 text-yellow-400" />;
+        return <ClipboardList className="w-4 h-4 text-yellow-400" />;
       case 'performance':
-        return <AlertTriangle className="w-5 h-5 text-purple-400" />;
+        return <AlertTriangle className="w-4 h-4 text-purple-400" />;
       default:
-        return <BookOpen className="w-5 h-5 text-blue-400" />;
+        return <BookOpen className="w-4 h-4 text-blue-400" />;
     }
   };
+
+  const highPriorityTasks = plan.filter(
+    (p) => p.priority === 'critical' || p.priority === 'high'
+  );
+  const mediumPriorityTasks = plan.filter((p) => p.priority === 'medium');
+  const lowPriorityTasks = plan.filter(
+    (p) => p.priority !== 'critical' && p.priority !== 'high' && p.priority !== 'medium'
+  );
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
@@ -89,16 +127,22 @@ export const Planner = () => {
             Smart Academic Decision Planner
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Prioritized daily and weekly action recommendations with explicit, deterministic reasoning.
+            Prioritized daily and weekly action recommendations with explicit reasoning. Complete actions to earn +5 XP each!
           </p>
         </div>
 
-        <button
-          onClick={fetchPlan}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-slate-300 text-xs font-semibold shadow-sm transition-all"
-        >
-          <Sparkles className="w-4 h-4 text-indigo-400" /> Refresh Plan
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold">
+            <Flame className="w-4 h-4 text-amber-400" />
+            <span className="text-amber-400">{gamification.currentStreak || 0}d Streak</span>
+          </div>
+          <button
+            onClick={fetchPlan}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all"
+          >
+            <Sparkles className="w-4 h-4" /> Refresh Plan
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -114,68 +158,228 @@ export const Planner = () => {
           </p>
         </div>
       ) : (
-        <div className="space-y-3.5">
-          <div className="text-xs text-slate-400 flex items-center justify-between px-1">
-            <span>
-              Showing <strong className="text-white">{plan.length}</strong> prioritized action items
-            </span>
-            <span className="text-[11px] text-indigo-400 font-medium">
-              Ranked in strict order of academic urgency
-            </span>
-          </div>
-
-          {plan.map((item, index) => (
-            <div
-              key={item.id}
-              className={`bg-slate-900/40 border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
-                item.priority === 'critical'
-                  ? 'border-red-500/40 bg-red-950/10'
-                  : item.priority === 'high'
-                  ? 'border-orange-500/30 bg-orange-950/5'
-                  : 'border-slate-800/80 hover:border-slate-700/80'
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex flex-col items-center shrink-0">
-                  <span className="text-xs font-black font-mono text-slate-500 mb-1">
-                    #{index + 1}
-                  </span>
-                  <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                    {getCategoryIcon(item.category)}
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-bold text-white">{item.title}</h3>
-                    {getPriorityBadge(item.priority)}
-                  </div>
-
-                  <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                    {item.reason}
-                  </p>
-
-                  <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-500">
-                    <span className="font-semibold text-indigo-400">{item.subject}</span>
-                    <span>•</span>
-                    <span className="uppercase text-[10px] tracking-wider">{item.category}</span>
-                  </div>
-                </div>
+        <div className="space-y-6">
+          {/* SECTION: HIGH PRIORITY (Critical / Immediate) */}
+          {highPriorityTasks.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-red-400">
+                  High Priority Actions ({highPriorityTasks.length})
+                </h2>
               </div>
 
-              {item.actionUrl && (
-                <div className="shrink-0 pl-12 sm:pl-0">
-                  <Link
-                    to={item.actionUrl}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap"
-                  >
-                    <span>Take Action</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              )}
+              <div className="space-y-2.5">
+                {highPriorityTasks.map((item, idx) => {
+                  const isDone = completedTasks.includes(item.id);
+                  return (
+                    <div
+                      key={item.id}
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
+                        isDone
+                          ? 'bg-slate-950/40 border-slate-800/40 opacity-60'
+                          : 'bg-red-950/20 border-red-500/30 hover:border-red-500/50'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <button
+                          onClick={() => handleCompleteTask(item.id)}
+                          disabled={isDone}
+                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 ${
+                            isDone
+                              ? 'bg-emerald-500 border-emerald-500 text-white'
+                              : 'border-slate-700 hover:border-indigo-400 bg-slate-900'
+                          }`}
+                          title="Complete task (+5 XP)"
+                        >
+                          {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : null}
+                        </button>
+
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}`}>
+                              {item.title}
+                            </h3>
+                            {getPriorityBadge(item.priority)}
+                            <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded border border-amber-500/20">
+                              +5 XP
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                            <strong>Reason:</strong> {item.reason}
+                          </p>
+                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
+                            <span className="font-semibold text-indigo-400">{item.subject}</span>
+                            <span>•</span>
+                            <span className="capitalize">{item.category}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {item.actionUrl && !isDone && (
+                        <div className="shrink-0 pl-9 sm:pl-0">
+                          <Link
+                            to={item.actionUrl}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all"
+                          >
+                            <span>Action</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ))}
+          )}
+
+          {/* SECTION: MEDIUM PRIORITY */}
+          {mediumPriorityTasks.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-2 px-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-yellow-400">
+                  Medium Priority Actions ({mediumPriorityTasks.length})
+                </h2>
+              </div>
+
+              <div className="space-y-2.5">
+                {mediumPriorityTasks.map((item) => {
+                  const isDone = completedTasks.includes(item.id);
+                  return (
+                    <div
+                      key={item.id}
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
+                        isDone
+                          ? 'bg-slate-950/40 border-slate-800/40 opacity-60'
+                          : 'bg-yellow-950/15 border-yellow-500/30 hover:border-yellow-500/50'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <button
+                          onClick={() => handleCompleteTask(item.id)}
+                          disabled={isDone}
+                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 ${
+                            isDone
+                              ? 'bg-emerald-500 border-emerald-500 text-white'
+                              : 'border-slate-700 hover:border-indigo-400 bg-slate-900'
+                          }`}
+                          title="Complete task (+5 XP)"
+                        >
+                          {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : null}
+                        </button>
+
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}`}>
+                              {item.title}
+                            </h3>
+                            {getPriorityBadge(item.priority)}
+                            <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded border border-amber-500/20">
+                              +5 XP
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                            <strong>Reason:</strong> {item.reason}
+                          </p>
+                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
+                            <span className="font-semibold text-indigo-400">{item.subject}</span>
+                            <span>•</span>
+                            <span className="capitalize">{item.category}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {item.actionUrl && !isDone && (
+                        <div className="shrink-0 pl-9 sm:pl-0">
+                          <Link
+                            to={item.actionUrl}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-slate-300 text-xs font-semibold shadow-sm transition-all"
+                          >
+                            <span>Action</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: LOW PRIORITY */}
+          {lowPriorityTasks.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-2 px-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-blue-400">
+                  Scheduled Tasks ({lowPriorityTasks.length})
+                </h2>
+              </div>
+
+              <div className="space-y-2.5">
+                {lowPriorityTasks.map((item) => {
+                  const isDone = completedTasks.includes(item.id);
+                  return (
+                    <div
+                      key={item.id}
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
+                        isDone
+                          ? 'bg-slate-950/40 border-slate-800/40 opacity-60'
+                          : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <button
+                          onClick={() => handleCompleteTask(item.id)}
+                          disabled={isDone}
+                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 ${
+                            isDone
+                              ? 'bg-emerald-500 border-emerald-500 text-white'
+                              : 'border-slate-700 hover:border-indigo-400 bg-slate-900'
+                          }`}
+                          title="Complete task (+5 XP)"
+                        >
+                          {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : null}
+                        </button>
+
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}`}>
+                              {item.title}
+                            </h3>
+                            {getPriorityBadge(item.priority)}
+                          </div>
+                          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                            {item.reason}
+                          </p>
+                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
+                            <span className="font-semibold text-indigo-400">{item.subject}</span>
+                            <span>•</span>
+                            <span className="capitalize">{item.category}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {item.actionUrl && !isDone && (
+                        <div className="shrink-0 pl-9 sm:pl-0">
+                          <Link
+                            to={item.actionUrl}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-slate-300 text-xs font-semibold shadow-sm transition-all"
+                          >
+                            <span>Action</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

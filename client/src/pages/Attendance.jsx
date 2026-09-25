@@ -365,13 +365,13 @@ export const Attendance = () => {
                     <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between">
                       <Link
                         to={`/attendance/simulate?subjectId=${s._id}`}
-                        className="text-xs text-indigo-400 hover:text-indigo-300 font-medium inline-flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-xl bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 text-xs font-semibold inline-flex items-center gap-1.5 transition-all shadow-sm"
                       >
-                        <Sliders className="w-3.5 h-3.5" /> Simulate Scenarios
+                        <Sliders className="w-3.5 h-3.5" /> Run What-If
                       </Link>
                       <button
                         onClick={() => handleOpenLogModal(s._id)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all"
+                        className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all"
                       >
                         + Log Class
                       </button>

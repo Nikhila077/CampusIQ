@@ -15,9 +15,10 @@ import opportunityService from '../services/opportunityService.js';
 const TYPES = [
   { key: 'all', label: 'All Opportunities' },
   { key: 'internship', label: 'Internships' },
-  { key: 'scholarship', label: 'Scholarships' },
   { key: 'hackathon', label: 'Hackathons' },
+  { key: 'workshop', label: 'Workshops' },
   { key: 'competition', label: 'Competitions' },
+  { key: 'scholarship', label: 'Scholarships' },
   { key: 'fellowship', label: 'Fellowships' }
 ];
 

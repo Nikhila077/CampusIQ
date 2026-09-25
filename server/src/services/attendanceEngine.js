@@ -290,3 +290,9 @@ export const calculateOverallAttendance = (subjectSummaries = []) => {
     criticalCount
   };
 };
+
+export default {
+  calculateSubjectMetrics,
+  simulateScenario,
+  calculateOverallAttendance
+};

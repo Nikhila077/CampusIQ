@@ -197,16 +197,30 @@ export const Timetable = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {DAYS.map((day) => {
               const daySlots = slots.filter((s) => s.dayOfWeek === day.key);
+              const todayIndex = new Date().getDay();
+              const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+              const isToday = dayKeys[todayIndex] === day.key;
 
               return (
                 <div
                   key={day.key}
-                  className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col"
+                  className={`rounded-2xl p-4 flex flex-col transition-all ${
+                    isToday
+                      ? 'bg-slate-900/90 border-2 border-indigo-500 shadow-xl shadow-indigo-950/40 ring-1 ring-indigo-500/20'
+                      : 'bg-slate-900/40 border border-slate-800/80'
+                  }`}
                 >
                   <div className="flex items-center justify-between border-b border-slate-800/60 pb-2.5 mb-3">
-                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                      {day.label}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                        {day.label}
+                      </h3>
+                      {isToday && (
+                        <span className="px-1.5 py-0.5 rounded bg-indigo-500 text-[9px] font-bold text-white uppercase tracking-wider">
+                          Today
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[10px] text-slate-500 font-mono">
                       {daySlots.length} {daySlots.length === 1 ? 'class' : 'classes'}
                     </span>

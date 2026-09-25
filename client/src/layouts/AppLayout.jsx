@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -17,15 +17,40 @@ import {
   X,
   Compass,
   ChevronRight,
-  User
+  User,
+  Bell,
+  Check,
+  CheckCheck,
+  AlertTriangle,
+  Flame,
+  Zap,
+  Info
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth.js';
+import notificationService from '../services/notificationService.js';
+import gamificationService from '../services/gamificationService.js';
 
 export const AppLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [comingSoonModal, setComingSoonModal] = useState(null);
+
+  // Notification state
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [browserAlertsEnabled, setBrowserAlertsEnabled] = useState(
+    typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted'
+  );
+  const notifRef = useRef(null);
+
+  // Gamification summary state
+  const [gamification, setGamification] = useState({
+    xp: 0,
+    level: 1,
+    currentStreak: 0,
+    longestStreak: 0
+  });
 
   const handleLogout = async () => {
     try {
@@ -37,90 +62,113 @@ export const AppLayout = () => {
     }
   };
 
-  const navItems = [
-    {
-      name: 'Dashboard',
-      icon: LayoutDashboard,
-      to: '/dashboard',
-      isComingSoon: false
-    },
-    {
-      name: 'Profile & Subjects',
-      icon: User,
-      to: '/profile',
-      isComingSoon: false
-    },
-    {
-      name: 'Attendance',
-      icon: CalendarCheck,
-      to: '/attendance',
-      isComingSoon: false
-    },
-    {
-      name: 'Timetable',
-      icon: Calendar,
-      to: '/timetable',
-      isComingSoon: false
-    },
-    {
-      name: 'Assignments',
-      icon: ClipboardList,
-      to: '/assignments',
-      isComingSoon: false
-    },
-    {
-      name: 'Exams',
-      icon: GraduationCap,
-      to: '/exams',
-      isComingSoon: false
-    },
-    {
-      name: 'Performance',
-      icon: BarChart3,
-      to: '/performance',
-      isComingSoon: false
-    },
-    {
-      name: 'Smart Planner',
-      icon: Clock,
-      to: '/planner',
-      isComingSoon: false
-    },
-    {
-      name: 'Career Readiness',
-      icon: Briefcase,
-      to: '/career',
-      isComingSoon: false
-    },
-    {
-      name: 'Opportunities',
-      icon: Sparkles,
-      to: '/opportunities',
-      isComingSoon: false
-    },
-    {
-      name: 'Project Hub',
-      icon: FolderGit2,
-      to: '/projects',
-      isComingSoon: false
-    },
-    {
-      name: 'Settings',
-      icon: Settings,
-      to: '/settings',
-      isComingSoon: false
-    }
-  ];
-
-  const handleNavClick = (e, item) => {
-    if (item.isComingSoon) {
-      e.preventDefault();
-      setComingSoonModal(item);
-      setMobileMenuOpen(false);
-    } else {
-      setMobileMenuOpen(false);
+  // Fetch notifications and gamification summary
+  const loadNotifications = async () => {
+    try {
+      const res = await notificationService.getNotifications();
+      if (res?.success) {
+        setNotifications(res.data.notifications || []);
+        setUnreadCount(res.data.unreadCount || 0);
+      }
+    } catch (err) {
+      console.error('Error loading notifications:', err);
     }
   };
+
+  const loadGamification = async () => {
+    try {
+      const res = await gamificationService.getSummary();
+      if (res?.success) {
+        setGamification(res.data);
+      }
+    } catch (err) {
+      console.error('Error loading gamification:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadNotifications();
+    loadGamification();
+
+    // Poll notifications every 45s for live updates
+    const interval = setInterval(() => {
+      loadNotifications();
+    }, 45000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Close notifications on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotificationsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleMarkAsRead = async (id, e) => {
+    e?.stopPropagation();
+    try {
+      await notificationService.markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+    } catch (err) {
+      console.error('Error marking all as read:', err);
+    }
+  };
+
+  const handleNotificationClick = async (notif) => {
+    if (!notif.isRead) {
+      await handleMarkAsRead(notif._id);
+    }
+    setNotificationsOpen(false);
+    if (notif.link) {
+      navigate(notif.link);
+    }
+  };
+
+  const requestBrowserPermission = async () => {
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        setBrowserAlertsEnabled(true);
+        new Notification('CampusIQ Alerts Active', {
+          body: 'You will receive intelligent academic alerts for attendance and deadlines.',
+          icon: '/favicon.ico'
+        });
+      }
+    }
+  };
+
+  const navItems = [
+    { name: 'Dashboard', icon: LayoutDashboard, to: '/dashboard' },
+    { name: 'Profile & Subjects', icon: User, to: '/profile' },
+    { name: 'Attendance', icon: CalendarCheck, to: '/attendance' },
+    { name: 'Timetable', icon: Calendar, to: '/timetable' },
+    { name: 'Assignments', icon: ClipboardList, to: '/assignments' },
+    { name: 'Exams', icon: GraduationCap, to: '/exams' },
+    { name: 'Performance', icon: BarChart3, to: '/performance' },
+    { name: 'Smart Planner', icon: Clock, to: '/planner' },
+    { name: 'Career Readiness', icon: Briefcase, to: '/career' },
+    { name: 'Opportunities', icon: Sparkles, to: '/opportunities' },
+    { name: 'Project Hub', icon: FolderGit2, to: '/projects' },
+    { name: 'Settings', icon: Settings, to: '/settings' }
+  ];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -150,8 +198,133 @@ export const AppLayout = () => {
             </Link>
           </div>
 
-          {/* User profile & actions */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Gamification, Notifications & Profile */}
+          <div className="flex items-center gap-2.5 sm:gap-4">
+            {/* Gamification Streak & Level Badge */}
+            <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900/80 border border-slate-800/80 text-xs">
+              <span className="flex items-center gap-1 font-bold text-amber-400" title="Active meaningful learning streak">
+                <Flame className="w-3.5 h-3.5 fill-amber-400/20" />
+                <span>{gamification.currentStreak || 0}d Streak</span>
+              </span>
+              <span className="text-slate-600">•</span>
+              <span className="flex items-center gap-1 text-indigo-300 font-semibold" title="Student Level & XP">
+                <Zap className="w-3.5 h-3.5 text-indigo-400 fill-indigo-400/20" />
+                <span>Lvl {gamification.level || 1}</span>
+                <span className="text-[10px] text-slate-400 font-mono">({gamification.xp || 0} XP)</span>
+              </span>
+            </div>
+
+            {/* Smart Reminders Notification Center Bell */}
+            <div className="relative" ref={notifRef}>
+              <button
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="relative p-2 rounded-xl text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800/60 hover:border-slate-700 transition-colors focus:outline-none"
+                aria-label="Smart Reminders"
+                title="Smart Reminders & Notifications"
+              >
+                <Bell className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-slate-950 animate-pulse">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Notification Center Dropdown Panel */}
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-slate-800 bg-slate-900/95 backdrop-blur-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">
+                        Smart Reminders
+                      </span>
+                      {unreadCount > 0 && (
+                        <span className="px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold border border-indigo-500/30">
+                          {unreadCount} unread
+                        </span>
+                      )}
+                    </div>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={handleMarkAllRead}
+                        className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
+                      >
+                        <CheckCheck className="w-3.5 h-3.5" />
+                        <span>Mark all read</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Browser notification opt-in prompt if not granted */}
+                  {!browserAlertsEnabled && 'Notification' in window && (
+                    <div className="p-2.5 bg-indigo-950/40 border-b border-indigo-500/20 flex items-center justify-between text-xs">
+                      <span className="text-[11px] text-indigo-300">Enable desktop alerts?</span>
+                      <button
+                        onClick={requestBrowserPermission}
+                        className="px-2 py-0.5 rounded bg-indigo-600 text-[10px] font-semibold text-white hover:bg-indigo-500"
+                      >
+                        Allow
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Notifications List */}
+                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-800/60">
+                    {notifications.length === 0 ? (
+                      <div className="p-8 text-center text-xs text-slate-400">
+                        <Check className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                        All caught up! No urgent reminders.
+                      </div>
+                    ) : (
+                      notifications.map((n) => (
+                        <div
+                          key={n._id}
+                          onClick={() => handleNotificationClick(n)}
+                          className={`p-3 text-left transition-colors cursor-pointer hover:bg-slate-800/50 flex items-start gap-2.5 ${
+                            !n.isRead ? 'bg-indigo-950/20' : ''
+                          }`}
+                        >
+                          <div className="mt-0.5 shrink-0">
+                            {n.type === 'attendance' ? (
+                              <AlertTriangle className="w-4 h-4 text-red-400" />
+                            ) : n.type === 'assignment' ? (
+                              <ClipboardList className="w-4 h-4 text-yellow-400" />
+                            ) : n.type === 'exam' ? (
+                              <GraduationCap className="w-4 h-4 text-purple-400" />
+                            ) : n.type === 'brain_boost' ? (
+                              <Zap className="w-4 h-4 text-amber-400" />
+                            ) : (
+                              <Info className="w-4 h-4 text-indigo-400" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1">
+                              <span className={`text-xs font-bold truncate ${!n.isRead ? 'text-white' : 'text-slate-300'}`}>
+                                {n.title}
+                              </span>
+                              {!n.isRead && (
+                                <button
+                                  onClick={(e) => handleMarkAsRead(n._id, e)}
+                                  className="text-[10px] text-slate-500 hover:text-indigo-400 shrink-0"
+                                  title="Mark as read"
+                                >
+                                  Mark read
+                                </button>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
+                              {n.message}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Profile Avatar & Info */}
             <Link
               to="/profile"
               className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-slate-800/60 hover:border-indigo-500/40 transition-colors"
@@ -197,10 +370,9 @@ export const AppLayout = () => {
                   <NavLink
                     key={item.name}
                     to={item.to}
-                    onClick={(e) => handleNavClick(e, item)}
                     className={({ isActive }) =>
                       `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 group ${
-                        isActive && !item.isComingSoon
+                        isActive
                           ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/30 shadow-sm'
                           : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                       }`
@@ -258,7 +430,7 @@ export const AppLayout = () => {
                       <NavLink
                         key={item.name}
                         to={item.to}
-                        onClick={(e) => handleNavClick(e, item)}
+                        onClick={() => setMobileMenuOpen(false)}
                         className={({ isActive }) =>
                           `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
                             isActive
@@ -296,28 +468,6 @@ export const AppLayout = () => {
           <Outlet />
         </main>
       </div>
-
-      {/* Fallback Coming Soon Modal */}
-      {comingSoonModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/95 p-6 shadow-2xl">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4 text-indigo-400">
-              <comingSoonModal.icon className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-white tracking-tight">
-              {comingSoonModal.name} Module
-            </h3>
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={() => setComingSoonModal(null)}
-                className="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors"
-              >
-                Got it
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

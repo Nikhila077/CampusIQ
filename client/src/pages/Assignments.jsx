@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import assignmentService from '../services/assignmentService.js';
 import subjectService from '../services/subjectService.js';
+import gamificationService from '../services/gamificationService.js';
 
 export const Assignments = () => {
   const [assignments, setAssignments] = useState([]);
@@ -89,6 +90,15 @@ export const Assignments = () => {
     const newStatus = assignment.status === 'submitted' ? 'pending' : 'submitted';
     try {
       await assignmentService.updateStatus(assignment._id, newStatus);
+      if (newStatus === 'submitted') {
+        try {
+          await gamificationService.logAction('assignment_complete', 15, {
+            assignmentId: assignment._id
+          });
+        } catch (gErr) {
+          console.error('Gamification log error:', gErr);
+        }
+      }
       setAssignments((prev) =>
         prev.map((a) =>
           a._id === assignment._id
@@ -118,14 +128,16 @@ export const Assignments = () => {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const in3Days = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 
   const filteredAssignments = assignments.filter((a) => {
     const due = new Date(a.dueDate);
     const isOverdue = a.status === 'pending' && due < today;
+    const isDueSoon = a.status === 'pending' && due >= today && due <= in3Days;
 
-    if (filterTab === 'pending') return a.status === 'pending';
-    if (filterTab === 'submitted') return a.status === 'submitted';
+    if (filterTab === 'due_soon') return isDueSoon;
     if (filterTab === 'overdue') return isOverdue;
+    if (filterTab === 'completed') return a.status === 'submitted';
     return true;
   });
 
@@ -136,10 +148,10 @@ export const Assignments = () => {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
             <ClipboardList className="w-6 h-6 text-indigo-400" />
-            Assignment & Task Tracking
+            Assignment & Deliverable Tracking
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Stay on top of coursework submissions, deadlines, and priority deliverables.
+            Stay on top of coursework submissions, deadlines, and earn +15 XP for every completed assignment.
           </p>
         </div>
 
@@ -155,21 +167,22 @@ export const Assignments = () => {
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-800/60 pb-3">
         {[
-          { key: 'all', label: 'All Tasks', count: assignments.length },
+          { key: 'all', label: 'All', count: assignments.length },
           {
-            key: 'pending',
-            label: 'Pending',
-            count: assignments.filter((a) => a.status === 'pending').length
+            key: 'due_soon',
+            label: 'Due Soon',
+            count: assignments.filter(
+              (a) => a.status === 'pending' && new Date(a.dueDate) >= today && new Date(a.dueDate) <= in3Days
+            ).length
           },
           {
             key: 'overdue',
             label: 'Overdue',
-            count: assignments.filter((a) => a.status === 'pending' && new Date(a.dueDate) < today)
-              .length
+            count: assignments.filter((a) => a.status === 'pending' && new Date(a.dueDate) < today).length
           },
           {
-            key: 'submitted',
-            label: 'Submitted',
+            key: 'completed',
+            label: 'Completed',
             count: assignments.filter((a) => a.status === 'submitted').length
           }
         ].map((tab) => (

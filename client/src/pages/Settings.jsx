@@ -17,9 +17,12 @@ export const Settings = () => {
 
   // Notification Preferences
   const [notifications, setNotifications] = useState({
-    emailAlerts: true,
-    attendanceReminders: true,
-    deadlineAlerts: true
+    attendanceWarnings: true,
+    assignmentReminders: true,
+    examReminders: true,
+    plannerReminders: true,
+    dailyBrainBoost: true,
+    desktopAlerts: false
   });
   const [themePreference, setThemePreference] = useState('dark');
   const [savingPrefs, setSavingPrefs] = useState(false);
@@ -38,9 +41,12 @@ export const Settings = () => {
     if (user) {
       if (user.notificationPreferences) {
         setNotifications({
-          emailAlerts: user.notificationPreferences.emailAlerts ?? true,
-          attendanceReminders: user.notificationPreferences.attendanceReminders ?? true,
-          deadlineAlerts: user.notificationPreferences.deadlineAlerts ?? true
+          attendanceWarnings: user.notificationPreferences.attendanceWarnings ?? true,
+          assignmentReminders: user.notificationPreferences.assignmentReminders ?? true,
+          examReminders: user.notificationPreferences.examReminders ?? true,
+          plannerReminders: user.notificationPreferences.plannerReminders ?? true,
+          dailyBrainBoost: user.notificationPreferences.dailyBrainBoost ?? true,
+          desktopAlerts: user.notificationPreferences.desktopAlerts ?? false
         });
       }
       if (user.themePreference) {
@@ -121,7 +127,7 @@ export const Settings = () => {
           className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-5"
         >
           <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
-            <Bell className="w-4 h-4" /> Notification Preferences
+            <Bell className="w-4 h-4" /> Smart Reminder Preferences
           </div>
 
           {prefMsg && (
@@ -134,16 +140,16 @@ export const Settings = () => {
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
-                checked={notifications.attendanceReminders}
+                checked={notifications.attendanceWarnings}
                 onChange={(e) =>
-                  setNotifications({ ...notifications, attendanceReminders: e.target.checked })
+                  setNotifications({ ...notifications, attendanceWarnings: e.target.checked })
                 }
                 className="rounded mt-0.5 text-indigo-600 focus:ring-0"
               />
               <div>
-                <span className="font-semibold text-white block">Smart Attendance Shortage Alerts</span>
+                <span className="font-semibold text-white block">Attendance Warnings</span>
                 <span className="text-slate-400 text-[11px]">
-                  Alert when any subject's safe absence buffer drops to 0 or enters critical status.
+                  Alert when attendance drops below minimum threshold or safe absence buffer is low.
                 </span>
               </div>
             </label>
@@ -151,16 +157,16 @@ export const Settings = () => {
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
-                checked={notifications.deadlineAlerts}
+                checked={notifications.assignmentReminders}
                 onChange={(e) =>
-                  setNotifications({ ...notifications, deadlineAlerts: e.target.checked })
+                  setNotifications({ ...notifications, assignmentReminders: e.target.checked })
                 }
                 className="rounded mt-0.5 text-indigo-600 focus:ring-0"
               />
               <div>
-                <span className="font-semibold text-white block">Assignment & Exam Deadlines</span>
+                <span className="font-semibold text-white block">Assignment Reminders</span>
                 <span className="text-slate-400 text-[11px]">
-                  Send preparation alerts 48 hours before coursework due dates and scheduled exams.
+                  Remind 48 hours before coursework deadlines with direct XP reward preview.
                 </span>
               </div>
             </label>
@@ -168,16 +174,73 @@ export const Settings = () => {
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
-                checked={notifications.emailAlerts}
+                checked={notifications.examReminders}
                 onChange={(e) =>
-                  setNotifications({ ...notifications, emailAlerts: e.target.checked })
+                  setNotifications({ ...notifications, examReminders: e.target.checked })
                 }
                 className="rounded mt-0.5 text-indigo-600 focus:ring-0"
               />
               <div>
-                <span className="font-semibold text-white block">Weekly Intelligence Digest</span>
+                <span className="font-semibold text-white block">Exam Reminders</span>
                 <span className="text-slate-400 text-[11px]">
-                  Receive academic performance summaries and recommended career opportunities.
+                  Send revision countdown notices for midterms, finals, and practical assessments.
+                </span>
+              </div>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={notifications.plannerReminders}
+                onChange={(e) =>
+                  setNotifications({ ...notifications, plannerReminders: e.target.checked })
+                }
+                className="rounded mt-0.5 text-indigo-600 focus:ring-0"
+              />
+              <div>
+                <span className="font-semibold text-white block">Planner Reminders</span>
+                <span className="text-slate-400 text-[11px]">
+                  Daily reminder for uncompleted high-priority academic tasks.
+                </span>
+              </div>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={notifications.dailyBrainBoost}
+                onChange={(e) =>
+                  setNotifications({ ...notifications, dailyBrainBoost: e.target.checked })
+                }
+                className="rounded mt-0.5 text-indigo-600 focus:ring-0"
+              />
+              <div>
+                <span className="font-semibold text-white block">Daily Brain Boost Challenge</span>
+                <span className="text-slate-400 text-[11px]">
+                  Alert when today's micro-challenge is ready to maintain your learning streak.
+                </span>
+              </div>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={notifications.desktopAlerts}
+                onChange={async (e) => {
+                  const checked = e.target.checked;
+                  if (checked && 'Notification' in window && Notification.permission !== 'granted') {
+                    const res = await Notification.requestPermission();
+                    setNotifications({ ...notifications, desktopAlerts: res === 'granted' });
+                  } else {
+                    setNotifications({ ...notifications, desktopAlerts: checked });
+                  }
+                }}
+                className="rounded mt-0.5 text-indigo-600 focus:ring-0"
+              />
+              <div>
+                <span className="font-semibold text-white block">Browser Desktop Notifications</span>
+                <span className="text-slate-400 text-[11px]">
+                  Show OS-level browser notification popups when deadlines or shortages are detected.
                 </span>
               </div>
             </label>

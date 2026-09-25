@@ -13,6 +13,9 @@ import plannerRoutes from './routes/plannerRoutes.js';
 import careerRoutes from './routes/careerRoutes.js';
 import opportunityRoutes from './routes/opportunityRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import brainBoostRoutes from './routes/brainBoostRoutes.js';
+import gamificationRoutes from './routes/gamificationRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -107,6 +110,9 @@ app.use('/api/planner', plannerRoutes);
 app.use('/api/career', careerRoutes);
 app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/brain-boost', brainBoostRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

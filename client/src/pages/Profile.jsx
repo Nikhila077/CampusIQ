@@ -292,28 +292,140 @@ export const Profile = () => {
 
       {/* TAB 1: Profile Information */}
       {activeTab === 'profile' && (
-        <form onSubmit={handleProfileSubmit} className="space-y-6">
-          {profileMsg.text && (
-            <div
-              className={`p-3.5 rounded-xl border flex items-center gap-2.5 text-xs ${
-                profileMsg.type === 'success'
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-red-500/10 border-red-500/30 text-red-400'
-              }`}
-            >
-              {profileMsg.type === 'success' ? (
-                <CheckCircle className="w-4 h-4 shrink-0" />
-              ) : (
-                <AlertCircle className="w-4 h-4 shrink-0" />
-              )}
-              <span>{profileMsg.text}</span>
-            </div>
-          )}
+        <div className="space-y-6">
+          {/* Modern Student Identity Card */}
+          <div className="rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-purple-950/30 p-6 sm:p-7 backdrop-blur-xl relative overflow-hidden shadow-xl">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-indigo-600/30 ring-2 ring-white/10 shrink-0">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h2 className="text-xl font-black text-white">{user?.name || 'Student'}</h2>
+                    {user?.targetRole && (
+                      <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[11px] font-semibold">
+                        {user.targetRole}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1">
+                    {user?.college || 'Institution not specified'} {user?.branch ? `• ${user.branch}` : ''}
+                  </p>
+                  <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+                    Year {user?.year || 1}, Semester {user?.semester || 1} {user?.rollNumber ? `• Roll: ${user.rollNumber}` : ''}
+                  </p>
+                </div>
+              </div>
 
-          <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
-              <User className="w-4 h-4" /> Academic Identity
-            </h2>
+              {/* Badges: Level & Streak */}
+              <div className="flex items-center gap-3 shrink-0">
+                <div className="px-3.5 py-2 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Active Streak</span>
+                  <span className="text-base font-black text-amber-400 flex items-center justify-center gap-1 mt-0.5">
+                    <span>🔥</span> {user?.currentStreak || 0}d
+                  </span>
+                </div>
+                <div className="px-3.5 py-2 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Student Level</span>
+                  <span className="text-base font-black text-indigo-400 flex items-center justify-center gap-1 mt-0.5">
+                    <span>⚡</span> Lvl {user?.level || 1}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Completion Gauge */}
+            <div className="mt-6 pt-5 border-t border-slate-800/80 space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-slate-300 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  Profile Completion
+                </span>
+                <span className="font-mono font-bold text-indigo-400">
+                  {Math.round(
+                    ([
+                      Boolean(user?.name),
+                      Boolean(user?.college),
+                      Boolean(user?.branch),
+                      Boolean(user?.year),
+                      Boolean(user?.semester),
+                      Boolean(user?.rollNumber),
+                      Boolean(user?.targetRole),
+                      Boolean(user?.skills?.length > 0),
+                      Boolean(user?.interests?.length > 0)
+                    ].filter(Boolean).length / 9) * 100
+                  )}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
+                <div
+                  className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.round(
+                      ([
+                        Boolean(user?.name),
+                        Boolean(user?.college),
+                        Boolean(user?.branch),
+                        Boolean(user?.year),
+                        Boolean(user?.semester),
+                        Boolean(user?.rollNumber),
+                        Boolean(user?.targetRole),
+                        Boolean(user?.skills?.length > 0),
+                        Boolean(user?.interests?.length > 0)
+                      ].filter(Boolean).length / 9) * 100
+                    )}%`
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Skills & Interests Chips Preview */}
+            {(user?.skills?.length > 0 || user?.interests?.length > 0) && (
+              <div className="mt-4 pt-4 border-t border-slate-800/60 flex flex-wrap items-center gap-2">
+                <span className="text-[11px] text-slate-400 mr-1">Skills & Focus:</span>
+                {(user?.skills || []).map((sk) => (
+                  <span
+                    key={sk}
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-[10px] text-slate-300 font-medium"
+                  >
+                    {sk}
+                  </span>
+                ))}
+                {(user?.interests || []).map((inr) => (
+                  <span
+                    key={inr}
+                    className="px-2 py-0.5 rounded-lg bg-purple-950/40 border border-purple-500/20 text-[10px] text-purple-300 font-medium"
+                  >
+                    #{inr}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <form onSubmit={handleProfileSubmit} className="space-y-6">
+            {profileMsg.text && (
+              <div
+                className={`p-3.5 rounded-xl border flex items-center gap-2.5 text-xs ${
+                  profileMsg.type === 'success'
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-red-500/10 border-red-500/30 text-red-400'
+                }`}
+              >
+                {profileMsg.type === 'success' ? (
+                  <CheckCircle className="w-4 h-4 shrink-0" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                )}
+                <span>{profileMsg.text}</span>
+              </div>
+            )}
+
+            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+                <User className="w-4 h-4" /> Academic Identity Details
+              </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -477,6 +589,7 @@ export const Profile = () => {
             </button>
           </div>
         </form>
+      </div>
       )}
 
       {/* TAB 2: Subject Management */}

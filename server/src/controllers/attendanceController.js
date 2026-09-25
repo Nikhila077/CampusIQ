@@ -224,74 +224,84 @@ export const deleteAttendance = async (req, res, next) => {
 };
 
 /**
+ * Standalone helper: Get complete attendance summary for a given userId
+ */
+export const getStudentAttendanceSummary = async (userId) => {
+  const subjects = await Subject.find({ userId, isActive: true }).sort({
+    priority: 1,
+    name: 1
+  });
+
+  if (subjects.length === 0) {
+    return {
+      subjects: [],
+      overall: {
+        totalSubjects: 0,
+        totalConducted: 0,
+        totalAttended: 0,
+        overallPercent: 100,
+        overallStatus: 'Safe',
+        safeCount: 0,
+        atRiskCount: 0,
+        criticalCount: 0
+      }
+    };
+  }
+
+  const statsMap = await getSubjectStatsMap(userId);
+
+  const subjectSummaries = subjects.map((subject) => {
+    const stats = statsMap.get(subject._id.toString()) || {
+      conducted: 0,
+      attended: 0,
+      absent: 0,
+      cancelled: 0
+    };
+
+    const metrics = calculateSubjectMetrics({
+      conducted: stats.conducted,
+      attended: stats.attended,
+      minPercent: subject.minAttendancePercent,
+      priority: subject.priority,
+      subjectName: subject.name
+    });
+
+    return {
+      subject: {
+        _id: subject._id,
+        name: subject.name,
+        code: subject.code,
+        faculty: subject.faculty,
+        priority: subject.priority,
+        minAttendancePercent: subject.minAttendancePercent,
+        credits: subject.credits,
+        semester: subject.semester
+      },
+      ...metrics,
+      conductedClasses: stats.conducted,
+      attendedClasses: stats.attended,
+      absentClasses: stats.absent,
+      cancelledClasses: stats.cancelled
+    };
+  });
+
+  const overall = calculateOverallAttendance(subjectSummaries);
+
+  return {
+    subjects: subjectSummaries,
+    overall
+  };
+};
+
+/**
  * @desc    Get complete attendance summary with Smart Engine calculations for all subjects
  * @route   GET /api/attendance/summary
  * @access  Private
  */
 export const getAttendanceSummary = async (req, res, next) => {
   try {
-    const subjects = await Subject.find({ userId: req.user._id, isActive: true }).sort({
-      priority: 1,
-      name: 1
-    });
-
-    if (subjects.length === 0) {
-      return sendSuccess(res, 200, 'No subjects found.', {
-        subjects: [],
-        overall: {
-          totalSubjects: 0,
-          totalConducted: 0,
-          totalAttended: 0,
-          overallPercent: 100,
-          overallStatus: 'Safe',
-          safeCount: 0,
-          atRiskCount: 0,
-          criticalCount: 0
-        }
-      });
-    }
-
-    const statsMap = await getSubjectStatsMap(req.user._id);
-
-    const subjectSummaries = subjects.map((subject) => {
-      const stats = statsMap.get(subject._id.toString()) || {
-        conducted: 0,
-        attended: 0,
-        absent: 0,
-        cancelled: 0
-      };
-
-      const metrics = calculateSubjectMetrics({
-        conducted: stats.conducted,
-        attended: stats.attended,
-        minPercent: subject.minAttendancePercent,
-        priority: subject.priority,
-        subjectName: subject.name
-      });
-
-      return {
-        subject: {
-          _id: subject._id,
-          name: subject.name,
-          code: subject.code,
-          faculty: subject.faculty,
-          priority: subject.priority,
-          minAttendancePercent: subject.minAttendancePercent,
-          credits: subject.credits,
-          semester: subject.semester
-        },
-        ...metrics,
-        absent: stats.absent,
-        cancelled: stats.cancelled
-      };
-    });
-
-    const overall = calculateOverallAttendance(subjectSummaries);
-
-    return sendSuccess(res, 200, 'Attendance summary calculated.', {
-      subjects: subjectSummaries,
-      overall
-    });
+    const summary = await getStudentAttendanceSummary(req.user._id);
+    return sendSuccess(res, 200, 'Attendance summary calculated.', summary);
   } catch (error) {
     next(error);
   }

@@ -17,7 +17,12 @@ import {
   BookOpen,
   Sliders,
   CheckCircle2,
-  ChevronRight
+  ChevronRight,
+  Flame,
+  Zap,
+  Target,
+  Check,
+  Award
 } from 'lucide-react';
 import attendanceService from '../services/attendanceService.js';
 import timetableService from '../services/timetableService.js';
@@ -26,6 +31,8 @@ import examService from '../services/examService.js';
 import plannerService from '../services/plannerService.js';
 import careerService from '../services/careerService.js';
 import markService from '../services/markService.js';
+import brainBoostService from '../services/brainBoostService.js';
+import gamificationService from '../services/gamificationService.js';
 
 export const Dashboard = () => {
   const { user } = useAuth();
@@ -40,6 +47,19 @@ export const Dashboard = () => {
   const [careerReadiness, setCareerReadiness] = useState(null);
   const [performanceSummary, setPerformanceSummary] = useState(null);
 
+  // Gamification & Brain Boost states
+  const [gamification, setGamification] = useState({
+    xp: 0,
+    level: 1,
+    currentStreak: 0,
+    longestStreak: 0,
+    todayProgress: { completedCount: 0, dailyGoal: 3, percent: 0, completedActions: [] }
+  });
+  const [brainBoost, setBrainBoost] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [submittingAnswer, setSubmittingAnswer] = useState(false);
+  const [answerFeedback, setAnswerFeedback] = useState(null);
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -47,67 +67,178 @@ export const Dashboard = () => {
     return 'Good evening';
   };
 
-  useEffect(() => {
-    const loadDashboardData = async () => {
-      try {
-        setLoading(true);
-        const [
-          attRes,
-          todayRes,
-          asgRes,
-          examRes,
-          planRes,
-          careerRes,
-          marksRes
-        ] = await Promise.allSettled([
-          attendanceService.getSummary(),
-          timetableService.getTodayClasses(),
-          assignmentService.getAssignments({ status: 'pending' }),
-          examService.getExams({ upcoming: 'true' }),
-          plannerService.getPlan(),
-          careerService.getReadiness(),
-          markService.getMarks()
-        ]);
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      const [
+        attRes,
+        todayRes,
+        asgRes,
+        examRes,
+        planRes,
+        careerRes,
+        marksRes,
+        gameRes,
+        boostRes
+      ] = await Promise.allSettled([
+        attendanceService.getSummary(),
+        timetableService.getTodayClasses(),
+        assignmentService.getAssignments({ status: 'pending' }),
+        examService.getExams({ upcoming: 'true' }),
+        plannerService.getPlan(),
+        careerService.getReadiness(),
+        markService.getMarks(),
+        gamificationService.getSummary(),
+        brainBoostService.getTodayQuestion()
+      ]);
 
-        if (attRes.status === 'fulfilled' && attRes.value?.success) {
-          setAttendanceData(attRes.value.data);
-        }
-        if (todayRes.status === 'fulfilled' && todayRes.value?.success) {
-          setTodayClasses(todayRes.value.data?.slots || []);
-        }
-        if (asgRes.status === 'fulfilled' && asgRes.value?.success) {
-          setPendingAssignments(asgRes.value.data?.assignments || []);
-        }
-        if (examRes.status === 'fulfilled' && examRes.value?.success) {
-          setUpcomingExams(examRes.value.data?.exams || []);
-        }
-        if (planRes.status === 'fulfilled' && planRes.value?.success) {
-          setPlannerItems(planRes.value.data?.actionPlan || []);
-        }
-        if (careerRes.status === 'fulfilled' && careerRes.value?.success) {
-          setCareerReadiness(careerRes.value.data);
-        }
-        if (marksRes.status === 'fulfilled' && marksRes.value?.success) {
-          setPerformanceSummary(marksRes.value.data?.summary || null);
-        }
-      } catch (err) {
-        console.error('Error loading dashboard data:', err);
-      } finally {
-        setLoading(false);
+      if (attRes.status === 'fulfilled' && attRes.value?.success) {
+        setAttendanceData(attRes.value.data);
       }
-    };
+      if (todayRes.status === 'fulfilled' && todayRes.value?.success) {
+        setTodayClasses(todayRes.value.data?.slots || []);
+      }
+      if (asgRes.status === 'fulfilled' && asgRes.value?.success) {
+        setPendingAssignments(asgRes.value.data?.assignments || []);
+      }
+      if (examRes.status === 'fulfilled' && examRes.value?.success) {
+        setUpcomingExams(examRes.value.data?.exams || []);
+      }
+      if (planRes.status === 'fulfilled' && planRes.value?.success) {
+        setPlannerItems(planRes.value.data?.actionPlan || []);
+      }
+      if (careerRes.status === 'fulfilled' && careerRes.value?.success) {
+        setCareerReadiness(careerRes.value.data);
+      }
+      if (marksRes.status === 'fulfilled' && marksRes.value?.success) {
+        setPerformanceSummary(marksRes.value.data?.summary || null);
+      }
+      if (gameRes.status === 'fulfilled' && gameRes.value?.success) {
+        setGamification(gameRes.value.data);
+      }
+      if (boostRes.status === 'fulfilled' && boostRes.value?.success) {
+        setBrainBoost(boostRes.value.data);
+        if (boostRes.value.data.completedToday) {
+          setAnswerFeedback({
+            alreadyCompleted: true,
+            explanation: boostRes.value.data.question?.explanation
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error loading dashboard data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadDashboardData();
   }, []);
+
+  const handleAnswerSubmit = async (optionIdx) => {
+    if (!brainBoost?.question?._id || brainBoost?.completedToday || submittingAnswer) return;
+    try {
+      setSubmittingAnswer(true);
+      setSelectedOption(optionIdx);
+      const res = await brainBoostService.submitAnswer(brainBoost.question._id, optionIdx);
+      if (res?.success) {
+        setAnswerFeedback(res.data);
+        // Refresh gamification summary
+        const gRes = await gamificationService.getSummary();
+        if (gRes?.success) setGamification(gRes.data);
+      }
+    } catch (err) {
+      console.error('Error submitting brain boost answer:', err);
+    } finally {
+      setSubmittingAnswer(false);
+    }
+  };
 
   const hasSubjects = attendanceData.subjects && attendanceData.subjects.length > 0;
   const criticalAttendance = (attendanceData.subjects || []).filter(
     (s) => s.currentPercent < s.minPercent
   );
 
+  // Derive "Your Next Best Actions" (3 to 5 highest priority recommendations)
+  const nextBestActions = [];
+
+  // 1. Critical/At Risk Attendance
+  if (criticalAttendance.length > 0) {
+    const topCritical = criticalAttendance[0];
+    nextBestActions.push({
+      id: `att_${topCritical.subject._id}`,
+      title: `Attend ${topCritical.subject.name}`,
+      category: 'Attendance Shortage',
+      priority: 'critical',
+      reason: `Current attendance is ${topCritical.currentPercent}% (below ${topCritical.minPercent}% requirement). Attend next ${topCritical.recoveryNeeded} classes to recover.`,
+      actionUrl: `/attendance/simulate?subjectId=${topCritical.subject._id}`,
+      actionLabel: 'Run What-If'
+    });
+  }
+
+  // 2. Urgent Assignment
+  if (pendingAssignments.length > 0) {
+    const topAsg = pendingAssignments[0];
+    const diffDays = Math.ceil((new Date(topAsg.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+    nextBestActions.push({
+      id: `asg_${topAsg._id}`,
+      title: `Submit ${topAsg.title}`,
+      category: 'Coursework Deadline',
+      priority: diffDays <= 1 ? 'critical' : 'high',
+      reason: `Due ${diffDays <= 0 ? 'today' : diffDays === 1 ? 'tomorrow' : `in ${diffDays} days`} for ${topAsg.subjectId?.name || 'coursework'}. Submitting awards +15 XP.`,
+      actionUrl: '/assignments',
+      actionLabel: 'View Deliverable'
+    });
+  }
+
+  // 3. Daily Brain Boost
+  if (!brainBoost?.completedToday && brainBoost?.question) {
+    nextBestActions.push({
+      id: 'brain_boost_action',
+      title: `Solve Today's Brain Boost (${brainBoost.question.category})`,
+      category: 'Skill Challenge',
+      priority: 'high',
+      reason: `Personalized challenge for ${user?.targetRole || 'general CS'}. Complete to earn +10 XP and maintain your 🔥 streak.`,
+      actionUrl: '#brain-boost-card',
+      actionLabel: 'Solve Challenge'
+    });
+  }
+
+  // 4. Upcoming Exam
+  if (upcomingExams.length > 0) {
+    const topExam = upcomingExams[0];
+    const diffDays = Math.ceil((new Date(topExam.date) - new Date()) / (1000 * 60 * 60 * 24));
+    nextBestActions.push({
+      id: `exam_${topExam._id}`,
+      title: `Prepare for ${topExam.subjectId?.name || 'Subject'} ${topExam.examType.toUpperCase()}`,
+      category: 'Exam Milestone',
+      priority: diffDays <= 4 ? 'high' : 'medium',
+      reason: `${topExam.examType.toUpperCase()} scheduled in ${diffDays} day${diffDays === 1 ? '' : 's'}${topExam.venue ? ` at ${topExam.venue}` : ''}. Review syllabus early.`,
+      actionUrl: '/exams',
+      actionLabel: 'Exam Syllabus'
+    });
+  }
+
+  // 5. Safe absence buffer reminder or planner task
+  if (plannerItems.length > 0 && nextBestActions.length < 5) {
+    const topPlan = plannerItems[0];
+    if (!nextBestActions.some((a) => a.title.includes(topPlan.title))) {
+      nextBestActions.push({
+        id: `plan_${topPlan.id}`,
+        title: topPlan.title,
+        category: 'Planner Priority',
+        priority: topPlan.priority || 'medium',
+        reason: topPlan.reason,
+        actionUrl: topPlan.actionUrl || '/planner',
+        actionLabel: 'Planner'
+      });
+    }
+  }
+
   return (
     <div className="space-y-6 pb-12 max-w-7xl mx-auto">
-      {/* Welcome & Top Intelligence Header */}
+      {/* Top Welcome & Command Header */}
       <div className="relative rounded-3xl border border-indigo-500/20 bg-gradient-to-r from-indigo-950/60 via-slate-900/80 to-purple-950/40 p-6 sm:p-8 backdrop-blur-xl overflow-hidden shadow-xl">
         <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -115,7 +246,7 @@ export const Dashboard = () => {
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                Decision Support Center
+                Command Center
               </span>
               <span className="text-xs text-slate-400 font-mono">
                 {new Date().toLocaleDateString(undefined, {
@@ -130,13 +261,14 @@ export const Dashboard = () => {
               {getGreeting()},{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-white">
                 {user?.name || 'Student'}
-              </span>
+              </span>{' '}
+              👋
             </h1>
 
             <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
               {criticalAttendance.length > 0
-                ? `⚠️ Attention: You have ${criticalAttendance.length} subject${criticalAttendance.length > 1 ? 's' : ''} currently below minimum attendance.`
-                : 'All your academic indicators are in healthy standing today.'}
+                ? `⚠️ Attention: You have ${criticalAttendance.length} subject${criticalAttendance.length > 1 ? 's' : ''} currently below the minimum attendance requirement.`
+                : 'All your academic standing indicators are currently in healthy standing.'}
             </p>
           </div>
 
@@ -157,11 +289,11 @@ export const Dashboard = () => {
               <span>Simulator</span>
             </Link>
             <Link
-              to="/profile"
+              to="/planner"
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold transition-all"
             >
-              <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-              <span>Subjects</span>
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <span>Planner</span>
             </Link>
           </div>
         </div>
@@ -192,7 +324,7 @@ export const Dashboard = () => {
       ) : (
         /* Real Connected Dashboard */
         <div className="space-y-6">
-          {/* Top 4 KPI Metrics */}
+          {/* Top 4 KPI Metrics Strip */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
             {/* Overall Attendance */}
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
@@ -222,45 +354,59 @@ export const Dashboard = () => {
               </Link>
             </div>
 
-            {/* Today's Classes */}
+            {/* Streak & Daily Goals */}
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-medium text-slate-400 block">Today's Classes</span>
-                <span className="text-2xl font-black text-white mt-1 block">
-                  {todayClasses.length}
-                </span>
+                <span className="text-[11px] font-medium text-slate-400 block">CampusIQ Streak</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-black text-amber-400 flex items-center gap-1">
+                    <Flame className="w-5 h-5 fill-amber-400/20" />
+                    <span>{gamification.currentStreak || 0}d</span>
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    {gamification.todayProgress?.completedCount || 0}/{gamification.todayProgress?.dailyGoal || 3} today
+                  </span>
+                </div>
               </div>
-              <Link
-                to="/timetable"
-                className="text-[11px] text-indigo-400 hover:underline flex items-center gap-1 mt-3"
-              >
-                <span>Open timetable</span>
-                <ChevronRight className="w-3 h-3" />
-              </Link>
+              <div className="mt-3">
+                <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-amber-400 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${gamification.todayProgress?.percent || 0}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Pending Deliverables */}
+            {/* Student Level & XP */}
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-medium text-slate-400 block">Pending Assignments</span>
-                <span className="text-2xl font-black text-white mt-1 block">
-                  {pendingAssignments.length}
-                </span>
+                <span className="text-[11px] font-medium text-slate-400 block">Academic Standing</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-black text-indigo-400 flex items-center gap-1">
+                    <Zap className="w-5 h-5 fill-indigo-400/20" />
+                    <span>Lvl {gamification.level || 1}</span>
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    {gamification.xp || 0} XP
+                  </span>
+                </div>
               </div>
-              <Link
-                to="/assignments"
-                className="text-[11px] text-indigo-400 hover:underline flex items-center gap-1 mt-3"
-              >
-                <span>Check deadlines</span>
-                <ChevronRight className="w-3 h-3" />
-              </Link>
+              <div className="mt-3">
+                <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-indigo-500 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${gamification.levelProgress?.percent || 0}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Career Readiness */}
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] font-medium text-slate-400 block">Career Skill Match</span>
-                <span className="text-2xl font-black text-indigo-400 mt-1 block">
+                <span className="text-2xl font-black text-emerald-400 mt-1 block">
                   {careerReadiness?.readinessScore || 0}%
                 </span>
               </div>
@@ -274,90 +420,197 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          {/* Main 2-Column Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left 8 Cols: "What Should I Pay Attention to Today?" Priorities */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* Daily Prioritized Action Plan */}
-              <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
-                  <div>
-                    <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-indigo-400" />
-                      What Should I Pay Attention to Today?
-                    </h2>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Prioritized dynamically by attendance urgency, exam proximity, and deadlines.
-                    </p>
-                  </div>
-                  <Link
-                    to="/planner"
-                    className="text-xs font-semibold text-indigo-400 hover:text-indigo-300"
-                  >
-                    Full Planner →
-                  </Link>
+          {/* "YOUR NEXT BEST ACTIONS" Priority Card */}
+          <div className="bg-slate-900/50 border border-indigo-500/30 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xl shadow-indigo-950/20">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                  <Target className="w-4 h-4" />
                 </div>
+                <div>
+                  <h2 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2">
+                    Your Next Best Actions
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Calculated in real-time from attendance urgency, approaching deadlines, and exam proximity.
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/planner"
+                className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+              >
+                <span>Full Planner</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
 
-                {plannerItems.length === 0 ? (
-                  <div className="py-8 text-center text-xs text-slate-400">
-                    <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                    No urgent academic issues detected!
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {plannerItems.slice(0, 4).map((item, idx) => (
-                      <div
-                        key={item.id}
-                        className={`p-3.5 rounded-xl border flex items-start justify-between gap-3 ${
-                          item.priority === 'critical'
-                            ? 'bg-red-500/10 border-red-500/30'
-                            : item.priority === 'high'
-                            ? 'bg-orange-500/10 border-orange-500/30'
-                            : 'bg-slate-950/60 border-slate-800/60'
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {nextBestActions.map((action, idx) => (
+                <div
+                  key={action.id}
+                  className={`p-4 rounded-2xl border flex flex-col justify-between gap-3 transition-all ${
+                    action.priority === 'critical'
+                      ? 'bg-red-950/20 border-red-500/30 hover:border-red-500/50'
+                      : action.priority === 'high'
+                      ? 'bg-amber-950/20 border-amber-500/30 hover:border-amber-500/50'
+                      : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        {action.category}
+                      </span>
+                      <span
+                        className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
+                          action.priority === 'critical'
+                            ? 'bg-red-500/20 text-red-400'
+                            : action.priority === 'high'
+                            ? 'bg-amber-500/20 text-amber-400'
+                            : 'bg-indigo-500/20 text-indigo-300'
                         }`}
                       >
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-mono font-bold text-slate-500">
-                              #{idx + 1}
-                            </span>
-                            <span className="text-xs font-bold text-white">{item.title}</span>
-                            <span
-                              className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
-                                item.priority === 'critical'
-                                  ? 'bg-red-500/20 text-red-400'
-                                  : 'bg-orange-500/20 text-orange-400'
-                              }`}
-                            >
-                              {item.priority}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-300 leading-relaxed">{item.reason}</p>
-                        </div>
+                        {action.priority}
+                      </span>
+                    </div>
+                    <h3 className="text-xs font-bold text-white">{action.title}</h3>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">{action.reason}</p>
+                  </div>
 
-                        {item.actionUrl && (
-                          <Link
-                            to={item.actionUrl}
-                            className="shrink-0 p-1.5 text-indigo-400 hover:text-white rounded-lg hover:bg-slate-800"
-                            title="Action"
+                  {action.actionUrl && (
+                    <div className="pt-2 border-t border-slate-800/60 flex justify-end">
+                      {action.actionUrl.startsWith('#') ? (
+                        <a
+                          href={action.actionUrl}
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-400 hover:text-indigo-300"
+                        >
+                          <span>{action.actionLabel || 'Take Action'}</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        <Link
+                          to={action.actionUrl}
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-400 hover:text-indigo-300"
+                        >
+                          <span>{action.actionLabel || 'Take Action'}</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Main 2-Column Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left 8 Cols: Attendance Health & Daily Brain Boost */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Daily Brain Boost Interactive Card */}
+              <div
+                id="brain-boost-card"
+                className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4"
+              >
+                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                      <Zap className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        Daily Brain Boost
+                      </h3>
+                      <p className="text-[11px] text-slate-400">
+                        {brainBoost?.question
+                          ? `Category: ${brainBoost.question.category} • Target: ${user?.targetRole || 'Software Engineer'}`
+                          : 'Daily technical challenge'}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                    +10 XP
+                  </span>
+                </div>
+
+                {!brainBoost?.question ? (
+                  <p className="text-xs text-slate-400 py-3 text-center">
+                    Loading today's challenge...
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-xs sm:text-sm font-semibold text-slate-200">
+                      {brainBoost.question.question}
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {brainBoost.question.options.map((opt, idx) => {
+                        const isSelected = selectedOption === idx;
+                        const isCorrect =
+                          answerFeedback && answerFeedback.correctAnswer === idx;
+
+                        let style = 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-indigo-500/40 hover:bg-slate-900';
+                        if (answerFeedback) {
+                          if (isCorrect) {
+                            style = 'bg-emerald-950/40 border-emerald-500/60 text-emerald-200 font-bold';
+                          } else if (isSelected && !answerFeedback.correct) {
+                            style = 'bg-red-950/40 border-red-500/60 text-red-300';
+                          }
+                        }
+
+                        return (
+                          <button
+                            key={opt}
+                            disabled={Boolean(answerFeedback) || submittingAnswer}
+                            onClick={() => handleAnswerSubmit(idx)}
+                            className={`p-3 rounded-xl border text-xs text-left flex items-center justify-between transition-all ${style}`}
                           >
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
+                            <span>{opt}</span>
+                            {answerFeedback && isCorrect && (
+                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {answerFeedback && (
+                      <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1">
+                        <span
+                          className={`font-bold block ${
+                            answerFeedback.correct || answerFeedback.alreadyCompleted
+                              ? 'text-emerald-400'
+                              : 'text-red-400'
+                          }`}
+                        >
+                          {answerFeedback.correct
+                            ? '✅ Correct! +10 XP awarded & streak maintained.'
+                            : answerFeedback.alreadyCompleted
+                            ? '✅ Completed for today!'
+                            : `❌ Incorrect. Correct answer: ${
+                                brainBoost.question.options[answerFeedback.correctAnswer]
+                              }`}
+                        </span>
+                        {answerFeedback.explanation && (
+                          <p className="text-[11px] text-slate-400 leading-relaxed">
+                            {answerFeedback.explanation}
+                          </p>
                         )}
                       </div>
-                    ))}
+                    )}
                   </div>
                 )}
               </div>
 
-              {/* Subject Attendance Intelligence Spotlight */}
+              {/* Subject Attendance Intelligence Spotlight with [Run What-If] */}
               <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
                   <div>
-                    <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
                       <CalendarCheck className="w-4 h-4 text-indigo-400" />
                       Attendance Safety Buffers
-                    </h2>
+                    </h3>
                     <p className="text-xs text-slate-400 mt-0.5">
                       Safe absences remaining before falling below institutional requirements.
                     </p>
@@ -371,7 +624,7 @@ export const Dashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {attendanceData.subjects.slice(0, 4).map((item) => (
+                  {attendanceData.subjects.map((item) => (
                     <div
                       key={item.subject._id}
                       className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/60 flex flex-col justify-between"
@@ -406,7 +659,7 @@ export const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="mt-3 pt-2 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
+                      <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
                         <span className="text-slate-400">
                           {item.currentPercent >= item.minPercent ? (
                             <span className="text-emerald-300 font-medium">
@@ -418,7 +671,12 @@ export const Dashboard = () => {
                             </span>
                           )}
                         </span>
-                        <span className="text-[10px] text-slate-500">Min: {item.minPercent}%</span>
+                        <Link
+                          to={`/attendance/simulate?subjectId=${item.subject._id}`}
+                          className="px-2 py-0.5 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[10px] font-semibold border border-indigo-500/20 transition-all"
+                        >
+                          Run What-If
+                        </Link>
                       </div>
                     </div>
                   ))}

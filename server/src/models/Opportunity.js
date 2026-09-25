@@ -9,7 +9,7 @@ const opportunitySchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['internship', 'scholarship', 'competition', 'fellowship', 'hackathon'],
+      enum: ['internship', 'scholarship', 'competition', 'fellowship', 'hackathon', 'workshop'],
       required: [true, 'Opportunity type is required']
     },
     provider: {

@@ -64,7 +64,33 @@ const userSchema = new mongoose.Schema(
     notificationPreferences: {
       emailAlerts: { type: Boolean, default: true },
       attendanceReminders: { type: Boolean, default: true },
-      deadlineAlerts: { type: Boolean, default: true }
+      attendanceWarnings: { type: Boolean, default: true },
+      assignmentReminders: { type: Boolean, default: true },
+      examReminders: { type: Boolean, default: true },
+      plannerReminders: { type: Boolean, default: true },
+      dailyBrainBoost: { type: Boolean, default: true },
+      deadlineAlerts: { type: Boolean, default: true },
+      desktopAlerts: { type: Boolean, default: false }
+    },
+    xp: {
+      type: Number,
+      default: 0
+    },
+    level: {
+      type: Number,
+      default: 1
+    },
+    currentStreak: {
+      type: Number,
+      default: 0
+    },
+    longestStreak: {
+      type: Number,
+      default: 0
+    },
+    lastActiveDate: {
+      type: String,
+      default: ''
     },
     themePreference: {
       type: String,
