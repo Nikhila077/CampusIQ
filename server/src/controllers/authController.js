@@ -46,10 +46,11 @@ export const register = async (req, res, next) => {
 
     // Generate JWT & set cookie
     const token = generateToken(user._id);
-    res.cookie('token', token, getCookieOptions());
+    res.cookie('token', token, getCookieOptions(req));
 
     return sendSuccess(res, 201, 'Student account registered successfully.', {
-      user: user.toJSON()
+      user: user.toJSON(),
+      token
     });
   } catch (error) {
     next(error);
@@ -85,10 +86,11 @@ export const login = async (req, res, next) => {
 
     // Generate JWT & set cookie
     const token = generateToken(user._id);
-    res.cookie('token', token, getCookieOptions());
+    res.cookie('token', token, getCookieOptions(req));
 
     return sendSuccess(res, 200, 'Login successful.', {
-      user: user.toJSON()
+      user: user.toJSON(),
+      token
     });
   } catch (error) {
     next(error);
@@ -102,7 +104,8 @@ export const login = async (req, res, next) => {
  */
 export const getMe = async (req, res) => {
   return sendSuccess(res, 200, 'Current user profile fetched successfully.', {
-    user: req.user.toJSON()
+    user: req.user.toJSON(),
+    token: req.token
   });
 };
 
@@ -112,7 +115,7 @@ export const getMe = async (req, res) => {
  * @access  Private
  */
 export const logout = async (req, res) => {
-  const cookieOptions = getCookieOptions();
+  const cookieOptions = getCookieOptions(req);
   // Set maxAge 0 to clear cookie
   res.clearCookie('token', {
     httpOnly: cookieOptions.httpOnly,

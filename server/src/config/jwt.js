@@ -10,8 +10,10 @@ export const verifyToken = (token) => {
   return jwt.verify(token, process.env.JWT_SECRET);
 };
 
-export const getCookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+export const getCookieOptions = (req) => {
+  const isHttps = req ? (req.secure || req.headers?.['x-forwarded-proto'] === 'https') : false;
+  const isProduction = process.env.NODE_ENV === 'production' || isHttps;
+
   return {
     httpOnly: true,
     secure: isProduction,

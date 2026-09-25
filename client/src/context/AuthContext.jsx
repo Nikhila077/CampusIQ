@@ -14,11 +14,16 @@ export const AuthProvider = ({ children }) => {
       const res = await authService.getMe();
       if (res?.success && res?.data?.user) {
         setUser(res.data.user);
+        if (res?.data?.token) {
+          localStorage.setItem('campusiq_token', res.data.token);
+        }
       } else {
+        localStorage.removeItem('campusiq_token');
         setUser(null);
       }
     } catch {
       // 401 or network error - user is unauthenticated
+      localStorage.removeItem('campusiq_token');
       setUser(null);
     } finally {
       setLoading(false);
@@ -35,6 +40,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     const res = await authService.login(credentials);
     if (res?.success && res?.data?.user) {
+      if (res?.data?.token) {
+        localStorage.setItem('campusiq_token', res.data.token);
+      }
       setUser(res.data.user);
       return res.data.user;
     }
@@ -47,6 +55,9 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     const res = await authService.register(userData);
     if (res?.success && res?.data?.user) {
+      if (res?.data?.token) {
+        localStorage.setItem('campusiq_token', res.data.token);
+      }
       setUser(res.data.user);
       return res.data.user;
     }
@@ -62,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.warn('Logout API warning:', err.message);
     } finally {
+      localStorage.removeItem('campusiq_token');
       setUser(null);
     }
   };

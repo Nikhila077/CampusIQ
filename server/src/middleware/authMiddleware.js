@@ -4,11 +4,16 @@ import { sendError } from '../utils/responseHelper.js';
 
 export const protect = async (req, res, next) => {
   try {
-    let token = req.cookies?.token;
+    let token = null;
 
-    // Optional fallback for Authorization header (Bearer token) if needed in dev, but primary is cookie
-    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    // Check Authorization header (Bearer token)
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
       token = req.headers.authorization.split(' ')[1];
+    }
+
+    // Fall back to HttpOnly cookie if not in header
+    if (!token && req.cookies?.token) {
+      token = req.cookies.token;
     }
 
     if (!token) {
@@ -26,6 +31,7 @@ export const protect = async (req, res, next) => {
     }
 
     req.user = user;
+    req.token = token;
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
