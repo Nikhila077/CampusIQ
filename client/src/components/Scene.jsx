@@ -1,17 +1,23 @@
-import { PredictiveArcCanvas } from "@designcodeio/threeui";
-import "@designcodeio/threeui/style.css";
+import LightPillar from './LightPillar.jsx';
 
-export function Scene() {
+export function Scene(props) {
   return (
-    <div className="shader-frame">
-      <PredictiveArcCanvas
-        mode="dark"
-        speed={1.00}
-        hue={0}
-        saturation={1.00}
-        brightness={1.00}
-      />
-    </div>
+    <LightPillar
+      topColor="#F4F7F5"
+      bottomColor="#3B8F83"
+      intensity={0.8}
+      rotationSpeed={0.2}
+      glowAmount={0.003}
+      pillarWidth={3.0}
+      pillarHeight={0.4}
+      noiseIntensity={0.5}
+      pillarRotation={0}
+      interactive={true}
+      mixBlendMode="normal"
+      quality="high"
+      lightMode={true}
+      {...props}
+    />
   );
 }
 
