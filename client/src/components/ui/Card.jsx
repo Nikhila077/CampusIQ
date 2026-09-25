@@ -8,15 +8,15 @@ export const Card = ({
 }) => {
   return (
     <div
-      className={`relative rounded-2xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-xl p-6 transition-all duration-200 ${
-        glow ? 'shadow-xl shadow-indigo-500/5 hover:border-slate-700' : ''
+      className={`relative rounded-2xl border border-slate-200/90 bg-white p-6 transition-all duration-200 shadow-xs ${
+        glow ? 'hover:border-[#3B8F83]/50' : ''
       } ${className}`}
     >
       {(title || subtitle || action) && (
-        <div className="flex items-start justify-between gap-4 mb-5 pb-4 border-b border-slate-800/60">
+        <div className="flex items-start justify-between gap-4 mb-5 pb-4 border-b border-slate-100">
           <div>
-            {title && <h3 className="text-lg font-semibold text-slate-100 tracking-tight">{title}</h3>}
-            {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
+            {title && <h3 className="text-lg font-bold text-[#102A2A] tracking-tight">{title}</h3>}
+            {subtitle && <p className="text-xs text-slate-600 mt-0.5">{subtitle}</p>}
           </div>
           {action && <div className="shrink-0">{action}</div>}
         </div>
@@ -32,12 +32,12 @@ export const Badge = ({
   className = ''
 }) => {
   const variants = {
-    default: 'bg-slate-800 text-slate-300 border-slate-700',
-    primary: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
-    success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    warning: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    danger: 'bg-red-500/10 text-red-400 border-red-500/30',
-    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/30'
+    default: 'bg-slate-100 text-slate-800 border-slate-200',
+    primary: 'bg-teal-50 text-teal-950 border-teal-200',
+    success: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    warning: 'bg-teal-50/80 text-teal-900 border-teal-300',
+    danger: 'bg-red-50 text-red-800 border-red-200',
+    purple: 'bg-teal-50 text-[#3B8F83] border-teal-200'
   };
 
   return (

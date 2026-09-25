@@ -9,7 +9,13 @@ import {
   CheckCircle,
   AlertCircle,
   Sparkles,
-  Shield
+  Shield,
+  GraduationCap,
+  Flame,
+  Zap,
+  Sliders,
+  CheckCircle2,
+  X
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth.js';
 import userService from '../services/userService.js';
@@ -125,7 +131,7 @@ export const Profile = () => {
       });
 
       if (res?.success) {
-        setProfileMsg({ type: 'success', text: 'Profile updated successfully!' });
+        setProfileMsg({ type: 'success', text: 'Profile updated successfully.' });
         await checkAuth();
       }
     } catch (err) {
@@ -168,7 +174,7 @@ export const Profile = () => {
     }
   };
 
-  // Subject Modal Helpers
+  // Subject Modal Actions
   const openAddSubject = () => {
     setEditingSubject(null);
     setSubjectForm({
@@ -193,7 +199,7 @@ export const Profile = () => {
       minAttendancePercent: subj.minAttendancePercent || 75,
       priority: subj.priority || 'medium',
       credits: subj.credits || 3,
-      semester: subj.semester || 1
+      semester: subj.semester || user?.semester || 1
     });
     setSubjectError('');
     setSubjectModalOpen(true);
@@ -241,48 +247,72 @@ export const Profile = () => {
     }
   };
 
+  // Profile completion calculation
+  const completionItems = [
+    Boolean(user?.name),
+    Boolean(user?.college),
+    Boolean(user?.branch),
+    Boolean(user?.year),
+    Boolean(user?.semester),
+    Boolean(user?.rollNumber),
+    Boolean(user?.targetRole),
+    Boolean(user?.skills?.length > 0),
+    Boolean(user?.interests?.length > 0)
+  ];
+  const completionPercentage = Math.round(
+    (completionItems.filter(Boolean).length / completionItems.length) * 100
+  );
+
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-5">
+    <div className="space-y-6 max-w-5xl mx-auto pb-16">
+      {/* 1. Header: Student Identity Workspace */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/90 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <User className="w-6 h-6 text-indigo-400" />
-            Student Profile & Academic Settings
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-900 border border-teal-200">
+              Identity Workspace
+            </span>
+            <span className="text-xs text-slate-500 font-medium">
+              Student Records & Curriculum
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#102A2A] mt-1 flex items-center gap-2.5">
+            <User className="w-7 h-7 text-[#3B8F83]" />
+            Student Profile
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
             Manage your personal academic identity, curriculum subjects, and security credentials.
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shrink-0">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               activeTab === 'profile'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-white text-[#102A2A] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Profile
+            Academic Identity
           </button>
           <button
             onClick={() => setActiveTab('subjects')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               activeTab === 'subjects'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-white text-[#102A2A] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Subjects ({subjects.length})
           </button>
           <button
             onClick={() => setActiveTab('security')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               activeTab === 'security'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-white text-[#102A2A] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Security
@@ -290,104 +320,85 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* TAB 1: Profile Information */}
+      {/* 2. TAB 1: Profile Information */}
       {activeTab === 'profile' && (
         <div className="space-y-6">
-          {/* Modern Student Identity Card */}
-          <div className="rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-purple-950/30 p-6 sm:p-7 backdrop-blur-xl relative overflow-hidden shadow-xl">
+          {/* Identity Showcase Card (Clean, high-contrast, brand colors) */}
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-indigo-600/30 ring-2 ring-white/10 shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-[#102A2A] text-[#E8F5F2] flex items-center justify-center text-2xl font-black shadow-xs ring-4 ring-teal-50 shrink-0">
                   {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h2 className="text-xl font-black text-white">{user?.name || 'Student'}</h2>
+                    <h2 className="text-xl font-black text-[#102A2A]">{user?.name || 'Student'}</h2>
                     {user?.targetRole && (
-                      <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[11px] font-semibold">
+                      <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-900 border border-teal-200 text-[11px] font-bold">
                         {user.targetRole}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">
-                    {user?.college || 'Institution not specified'} {user?.branch ? `• ${user.branch}` : ''}
+                  <p className="text-xs text-slate-600 mt-1">
+                    {user?.college || 'Institution not configured'} {user?.branch ? `• ${user.branch}` : ''}
                   </p>
                   <p className="text-[11px] text-slate-500 font-mono mt-0.5">
-                    Year {user?.year || 1}, Semester {user?.semester || 1} {user?.rollNumber ? `• Roll: ${user.rollNumber}` : ''}
+                    Year {user?.year || 1}, Semester {user?.semester || 1}{' '}
+                    {user?.rollNumber ? `• Roll: ${user.rollNumber}` : ''}
                   </p>
                 </div>
               </div>
 
               {/* Badges: Level & Streak */}
               <div className="flex items-center gap-3 shrink-0">
-                <div className="px-3.5 py-2 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
-                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Active Streak</span>
-                  <span className="text-base font-black text-amber-400 flex items-center justify-center gap-1 mt-0.5">
-                    <span>🔥</span> {user?.currentStreak || 0}d
+                <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">
+                    Active Streak
+                  </span>
+                  <span className="text-sm font-black text-[#102A2A] flex items-center justify-center gap-1 mt-0.5">
+                    <Flame className="w-4 h-4 text-[#3B8F83] fill-[#3B8F83]/20" />
+                    <span>{user?.currentStreak || 0}d</span>
                   </span>
                 </div>
-                <div className="px-3.5 py-2 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
-                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Student Level</span>
-                  <span className="text-base font-black text-indigo-400 flex items-center justify-center gap-1 mt-0.5">
-                    <span>⚡</span> Lvl {user?.level || 1}
+                <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">
+                    Student Level
+                  </span>
+                  <span className="text-sm font-black text-[#102A2A] flex items-center justify-center gap-1 mt-0.5">
+                    <Zap className="w-4 h-4 text-[#3B8F83] fill-[#3B8F83]/20" />
+                    <span>Lvl {user?.level || 1}</span>
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Profile Completion Gauge */}
-            <div className="mt-6 pt-5 border-t border-slate-800/80 space-y-2">
+            <div className="pt-4 border-t border-slate-100 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  Profile Completion
+                <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#3B8F83]" />
+                  <span>Profile Completion</span>
                 </span>
-                <span className="font-mono font-bold text-indigo-400">
-                  {Math.round(
-                    ([
-                      Boolean(user?.name),
-                      Boolean(user?.college),
-                      Boolean(user?.branch),
-                      Boolean(user?.year),
-                      Boolean(user?.semester),
-                      Boolean(user?.rollNumber),
-                      Boolean(user?.targetRole),
-                      Boolean(user?.skills?.length > 0),
-                      Boolean(user?.interests?.length > 0)
-                    ].filter(Boolean).length / 9) * 100
-                  )}%
+                <span className="font-mono font-bold text-[#102A2A]">
+                  {completionPercentage}% Complete
                 </span>
               </div>
-              <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.round(
-                      ([
-                        Boolean(user?.name),
-                        Boolean(user?.college),
-                        Boolean(user?.branch),
-                        Boolean(user?.year),
-                        Boolean(user?.semester),
-                        Boolean(user?.rollNumber),
-                        Boolean(user?.targetRole),
-                        Boolean(user?.skills?.length > 0),
-                        Boolean(user?.interests?.length > 0)
-                      ].filter(Boolean).length / 9) * 100
-                    )}%`
-                  }}
+                  className="bg-[#3B8F83] h-full rounded-full transition-all duration-500"
+                  style={{ width: `${completionPercentage}%` }}
                 />
               </div>
             </div>
 
-            {/* Skills & Interests Chips Preview */}
+            {/* Skills & Focus Chips Preview */}
             {(user?.skills?.length > 0 || user?.interests?.length > 0) && (
-              <div className="mt-4 pt-4 border-t border-slate-800/60 flex flex-wrap items-center gap-2">
-                <span className="text-[11px] text-slate-400 mr-1">Skills & Focus:</span>
+              <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-1.5">
+                <span className="text-[11px] font-bold text-slate-700 mr-1">Skills:</span>
                 {(user?.skills || []).map((sk) => (
                   <span
                     key={sk}
-                    className="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-[10px] text-slate-300 font-medium"
+                    className="px-2.5 py-0.5 rounded-lg bg-teal-50 border border-teal-200 text-[10px] text-teal-950 font-bold"
                   >
                     {sk}
                   </span>
@@ -395,7 +406,7 @@ export const Profile = () => {
                 {(user?.interests || []).map((inr) => (
                   <span
                     key={inr}
-                    className="px-2 py-0.5 rounded-lg bg-purple-950/40 border border-purple-500/20 text-[10px] text-purple-300 font-medium"
+                    className="px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-medium"
                   >
                     #{inr}
                   </span>
@@ -404,227 +415,217 @@ export const Profile = () => {
             )}
           </div>
 
+          {/* Edit Profile Form */}
           <form onSubmit={handleProfileSubmit} className="space-y-6">
             {profileMsg.text && (
               <div
-                className={`p-3.5 rounded-xl border flex items-center gap-2.5 text-xs ${
+                className={`p-3 rounded-xl border flex items-center gap-2 text-xs font-medium ${
                   profileMsg.type === 'success'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-red-500/10 border-red-500/30 text-red-400'
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-red-50 border-red-200 text-red-800'
                 }`}
               >
                 {profileMsg.type === 'success' ? (
-                  <CheckCircle className="w-4 h-4 shrink-0" />
+                  <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                 )}
                 <span>{profileMsg.text}</span>
               </div>
             )}
 
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
-                <User className="w-4 h-4" /> Academic Identity Details
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-5 shadow-xs">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-2">
+                <User className="w-4 h-4 text-[#3B8F83]" />
+                <span>Academic Identity Details</span>
               </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={profileForm.name}
-                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Email Address (Read-only)
-                </label>
-                <input
-                  type="email"
-                  disabled
-                  value={user?.email || ''}
-                  className="w-full bg-slate-900/60 border border-slate-800/60 rounded-xl px-3.5 py-2 text-xs text-slate-400 cursor-not-allowed"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  College / University
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. National Institute of Technology"
-                  value={profileForm.college}
-                  onChange={(e) => setProfileForm({ ...profileForm, college: e.target.value })}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Branch / Major
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Computer Science and Engineering"
-                  value={profileForm.branch}
-                  onChange={(e) => setProfileForm({ ...profileForm, branch: e.target.value })}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Year</label>
-                  <select
-                    value={profileForm.year}
-                    onChange={(e) => setProfileForm({ ...profileForm, year: e.target.value })}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-                  >
-                    <option value={1}>1st Year</option>
-                    <option value={2}>2nd Year</option>
-                    <option value={3}>3rd Year</option>
-                    <option value={4}>4th Year</option>
-                  </select>
+                  <label className="block font-bold text-slate-700 mb-1.5">Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={profileForm.name}
+                    onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  />
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Semester</label>
-                  <select
-                    value={profileForm.semester}
-                    onChange={(e) => setProfileForm({ ...profileForm, semester: e.target.value })}
-                    className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                      <option key={sem} value={sem}>
-                        Sem {sem}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Roll / Registration Number
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 21BCE1045"
-                  value={profileForm.rollNumber}
-                  onChange={(e) => setProfileForm({ ...profileForm, rollNumber: e.target.value })}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">Institutional Email</label>
+                  <input
+                    type="email"
+                    disabled
+                    value={user?.email || ''}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-500 cursor-not-allowed font-mono text-[11px]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">College / University</label>
+                  <input
+                    type="text"
+                    value={profileForm.college}
+                    onChange={(e) => setProfileForm({ ...profileForm, college: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">Department / Branch</label>
+                  <input
+                    type="text"
+                    value={profileForm.branch}
+                    onChange={(e) => setProfileForm({ ...profileForm, branch: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1.5">Academic Year</label>
+                    <select
+                      value={profileForm.year}
+                      onChange={(e) => setProfileForm({ ...profileForm, year: e.target.value })}
+                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    >
+                      <option value={1}>1st Year</option>
+                      <option value={2}>2nd Year</option>
+                      <option value={3}>3rd Year</option>
+                      <option value={4}>4th Year</option>
+                      <option value={5}>5th Year</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1.5">Semester</label>
+                    <select
+                      value={profileForm.semester}
+                      onChange={(e) => setProfileForm({ ...profileForm, semester: e.target.value })}
+                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                        <option key={sem} value={sem}>
+                          Sem {sem}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">Roll / Registration Number</label>
+                  <input
+                    type="text"
+                    value={profileForm.rollNumber}
+                    onChange={(e) => setProfileForm({ ...profileForm, rollNumber: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-purple-400 flex items-center gap-2">
-              <Sparkles className="w-4 h-4" /> Career Direction & Skills
-            </h2>
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-5 shadow-xs">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#3B8F83]" />
+                <span>Career Direction & Skills</span>
+              </h2>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Target Career Role
-                </label>
-                <select
-                  value={profileForm.targetRole}
-                  onChange={(e) => setProfileForm({ ...profileForm, targetRole: e.target.value })}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-                >
-                  <option value="">Select target role...</option>
-                  <option value="Software Engineer">Software Engineer</option>
-                  <option value="Frontend Developer">Frontend Developer</option>
-                  <option value="Backend Developer">Backend Developer</option>
-                  <option value="Full Stack Developer">Full Stack Developer</option>
-                  <option value="Data Analyst">Data Analyst</option>
-                  <option value="ML Engineer">Machine Learning Engineer</option>
-                </select>
-              </div>
+              <div className="space-y-4 text-xs">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">Target Career Role</label>
+                  <select
+                    value={profileForm.targetRole}
+                    onChange={(e) => setProfileForm({ ...profileForm, targetRole: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  >
+                    <option value="">Select target role...</option>
+                    <option value="Software Engineer">Software Engineer</option>
+                    <option value="Frontend Developer">Frontend Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
+                    <option value="Full Stack Developer">Full Stack Developer</option>
+                    <option value="Data Analyst">Data Analyst</option>
+                    <option value="ML Engineer">Machine Learning Engineer</option>
+                  </select>
+                </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Skills (comma separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Python, Java, SQL, React, DSA, Git"
-                  value={profileForm.skillsInput}
-                  onChange={(e) => setProfileForm({ ...profileForm, skillsInput: e.target.value })}
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">Skills (comma-separated)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Python, Java, SQL, React, DSA, Git"
+                    value={profileForm.skillsInput}
+                    onChange={(e) => setProfileForm({ ...profileForm, skillsInput: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Interests / Domains (comma separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Web Development, Open Source, Artificial Intelligence, Robotics"
-                  value={profileForm.interestsInput}
-                  onChange={(e) =>
-                    setProfileForm({ ...profileForm, interestsInput: e.target.value })
-                  }
-                  className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1.5">Interests / Focus (comma-separated)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Web Development, Open Source, Distributed Systems"
+                    value={profileForm.interestsInput}
+                    onChange={(e) => setProfileForm({ ...profileForm, interestsInput: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={profileSaving}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
-            >
-              {profileSaving ? 'Saving Changes...' : 'Save Profile Changes'}
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={profileSaving}
+                className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50"
+              >
+                {profileSaving ? 'Saving Changes...' : 'Save Profile Changes'}
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
-      {/* TAB 2: Subject Management */}
+      {/* 3. TAB 2: Subject Management */}
       {activeTab === 'subjects' && (
         <div className="space-y-5">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-white">Your Registered Subjects</h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <h2 className="text-base font-bold text-[#102A2A]">Your Registered Subjects</h2>
+              <p className="text-xs text-slate-600 mt-0.5">
                 Set minimum attendance thresholds and planning priority preferences per subject.
               </p>
             </div>
             <button
               onClick={openAddSubject}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all shrink-0"
             >
-              <Plus className="w-4 h-4" /> Add Subject
+              <Plus className="w-4 h-4" />
+              <span>Add Subject</span>
             </button>
           </div>
 
           {loadingSubjects ? (
-            <div className="p-8 text-center text-xs text-slate-400">Loading subjects...</div>
+            <div className="p-16 text-center text-xs font-semibold text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
+              Loading curriculum subjects...
+            </div>
           ) : subjects.length === 0 ? (
-            <div className="p-8 rounded-2xl border border-dashed border-slate-800 text-center">
-              <BookOpen className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-slate-300">No subjects added yet</p>
-              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                Add your current semester subjects to unlock the Smart Attendance Engine, Timetable,
-                and Academic Planner.
-              </p>
+            <div className="p-16 rounded-2xl border border-dashed border-slate-300 text-center bg-white space-y-3.5 max-w-xl mx-auto shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-200 text-[#3B8F83] flex items-center justify-center mx-auto">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-base font-bold text-[#102A2A]">No subjects added yet</p>
+                <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
+                  Add your current semester subjects to unlock the Smart Attendance Engine, Timetable, and Academic Planner.
+                </p>
+              </div>
               <button
                 onClick={openAddSubject}
-                className="mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold"
+                className="mt-2 px-4 py-2 rounded-xl bg-[#3B8F83] text-white text-xs font-semibold shadow-xs"
               >
-                Add Your First Subject
+                + Add Your First Subject
               </button>
             </div>
           ) : (
@@ -632,82 +633,85 @@ export const Profile = () => {
               {subjects.map((s) => (
                 <div
                   key={s._id}
-                  className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700/80 transition-all"
+                  className="bg-white border border-slate-200/90 hover:border-slate-300 rounded-2xl p-5 flex flex-col justify-between transition-all shadow-xs space-y-4"
                 >
-                  <div>
+                  <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-white">{s.name}</h3>
+                          <h3 className="text-base font-bold text-[#102A2A]">{s.name}</h3>
                           {s.code && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-medium border border-slate-200">
                               {s.code}
                             </span>
                           )}
                         </div>
                         {s.faculty && (
-                          <p className="text-xs text-slate-400 mt-0.5">Faculty: {s.faculty}</p>
+                          <p className="text-xs text-slate-600 mt-0.5">Faculty: {s.faculty}</p>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1">
                         <button
                           onClick={() => openEditSubject(s)}
-                          className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
-                          title="Edit"
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-[#3B8F83] hover:bg-slate-50 transition-colors"
+                          title="Edit Subject"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDeleteSubject(s._id, s.name)}
-                          className="p-1.5 text-slate-400 hover:text-red-400 rounded-lg hover:bg-slate-800"
-                          title="Delete"
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-slate-50 transition-colors"
+                          title="Delete Subject"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-800/60 text-center">
-                      <div className="bg-slate-950/40 p-2 rounded-xl border border-slate-800/40">
-                        <span className="text-[10px] text-slate-400 block">Min Required</span>
-                        <span className="text-xs font-bold text-indigo-400">
-                          {s.minAttendancePercent}%
+                    <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                          Min Attendance
+                        </span>
+                        <span className="text-sm font-black text-[#102A2A] font-mono">
+                          {s.minAttendancePercent || 75}%
                         </span>
                       </div>
-                      <div className="bg-slate-950/40 p-2 rounded-xl border border-slate-800/40">
-                        <span className="text-[10px] text-slate-400 block">Credits</span>
-                        <span className="text-xs font-bold text-slate-200">{s.credits}</span>
-                      </div>
-                      <div className="bg-slate-950/40 p-2 rounded-xl border border-slate-800/40">
-                        <span className="text-[10px] text-slate-400 block">Semester</span>
-                        <span className="text-xs font-bold text-slate-200">{s.semester}</span>
+
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                          Credits / Weight
+                        </span>
+                        <span className="text-sm font-black text-[#102A2A] font-mono">
+                          {s.credits || 3} Credits
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Priority selector */}
-                  <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-400">Planning Priority:</span>
+                  {/* Priority Switcher */}
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-600">Planner Priority:</span>
                     <div className="flex items-center gap-1">
-                      {['low', 'medium', 'high'].map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          onClick={() => handleQuickPriorityChange(s._id, p)}
-                          className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider transition-all ${
-                            s.priority === p
-                              ? p === 'high'
-                                ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                : p === 'medium'
-                                ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                                : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                              : 'text-slate-500 hover:text-slate-300'
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ))}
+                      {['low', 'medium', 'high'].map((p) => {
+                        const isCurrent = (s.priority || 'medium') === p;
+                        return (
+                          <button
+                            key={p}
+                            onClick={() => handleQuickPriorityChange(s._id, p)}
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all ${
+                              isCurrent
+                                ? p === 'high'
+                                  ? 'bg-red-50 text-red-800 border border-red-200'
+                                  : 'bg-teal-50 text-teal-900 border border-teal-200'
+                                : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -717,35 +721,37 @@ export const Profile = () => {
         </div>
       )}
 
-      {/* TAB 3: Security & Password */}
+      {/* 4. TAB 3: Security */}
       {activeTab === 'security' && (
-        <form onSubmit={handlePasswordSubmit} className="space-y-6 max-w-xl">
+        <form
+          onSubmit={handlePasswordSubmit}
+          className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-4 max-w-xl shadow-xs"
+        >
+          <div className="border-b border-slate-100 pb-3">
+            <h3 className="text-base font-bold text-[#102A2A] flex items-center gap-2">
+              <Lock className="w-4 h-4 text-[#3B8F83]" />
+              <span>Change Security Password</span>
+            </h3>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Update your account credentials to keep your student profile safe.
+            </p>
+          </div>
+
           {passwordMsg.text && (
             <div
-              className={`p-3.5 rounded-xl border flex items-center gap-2.5 text-xs ${
+              className={`p-3 rounded-xl text-xs font-medium ${
                 passwordMsg.type === 'success'
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-red-500/10 border-red-500/30 text-red-400'
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                  : 'bg-red-50 text-red-800 border border-red-200'
               }`}
             >
-              {passwordMsg.type === 'success' ? (
-                <CheckCircle className="w-4 h-4 shrink-0" />
-              ) : (
-                <AlertCircle className="w-4 h-4 shrink-0" />
-              )}
-              <span>{passwordMsg.text}</span>
+              {passwordMsg.text}
             </div>
           )}
 
-          <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
-              <Shield className="w-4 h-4" /> Change Password
-            </h2>
-
+          <div className="space-y-3.5 text-xs">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Current Password
-              </label>
+              <label className="block font-bold text-slate-700 mb-1">Current Password *</label>
               <input
                 type="password"
                 required
@@ -753,114 +759,122 @@ export const Profile = () => {
                 onChange={(e) =>
                   setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
                 }
-                className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">New Password</label>
+              <label className="block font-bold text-slate-700 mb-1">New Password *</label>
               <input
                 type="password"
                 required
                 minLength={6}
                 value={passwordForm.newPassword}
-                onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                onChange={(e) =>
+                  setPasswordForm({ ...passwordForm, newPassword: e.target.value })
+                }
+                className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Confirm New Password
-              </label>
+              <label className="block font-bold text-slate-700 mb-1">Confirm New Password *</label>
               <input
                 type="password"
                 required
+                minLength={6}
                 value={passwordForm.confirmPassword}
                 onChange={(e) =>
                   setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })
                 }
-                className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
               />
             </div>
+          </div>
 
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={passwordSaving}
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all disabled:opacity-50"
-              >
-                {passwordSaving ? 'Updating Password...' : 'Update Password'}
-              </button>
-            </div>
+          <div className="flex justify-end pt-3 border-t border-slate-100">
+            <button
+              type="submit"
+              disabled={passwordSaving}
+              className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50"
+            >
+              {passwordSaving ? 'Updating...' : 'Update Password'}
+            </button>
           </div>
         </form>
       )}
 
-      {/* Add / Edit Subject Modal */}
+      {/* 5. Subject Modal (Add/Edit) */}
       {subjectModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-white mb-4">
-              {editingSubject ? 'Edit Subject' : 'Add New Subject'}
-            </h3>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-[#102A2A]">
+                  {editingSubject ? 'Edit Subject' : 'Add Curriculum Subject'}
+                </h3>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Configure attendance requirements and course weight.
+                </p>
+              </div>
+              <button
+                onClick={() => setSubjectModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
             {subjectError && (
-              <div className="mb-4 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+              <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700">
                 {subjectError}
               </div>
             )}
 
-            <form onSubmit={handleSaveSubject} className="space-y-3.5">
+            <form onSubmit={handleSaveSubject} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
-                  Subject Name *
-                </label>
+                <label className="block font-bold text-slate-700 mb-1">Subject Name *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Database Management Systems"
+                  placeholder="e.g. Operating Systems"
                   value={subjectForm.name}
                   onChange={(e) => setSubjectForm({ ...subjectForm, name: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
-                    Subject Code
-                  </label>
+                  <label className="block font-bold text-slate-700 mb-1">Subject Code</label>
                   <input
                     type="text"
                     placeholder="e.g. CS302"
                     value={subjectForm.code}
                     onChange={(e) => setSubjectForm({ ...subjectForm, code: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white uppercase focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Faculty</label>
+                  <label className="block font-bold text-slate-700 mb-1">Faculty Name</label>
                   <input
                     type="text"
-                    placeholder="e.g. Dr. Sharma"
+                    placeholder="e.g. Dr. Reynolds"
                     value={subjectForm.faculty}
                     onChange={(e) => setSubjectForm({ ...subjectForm, faculty: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
-                    Min Attendance %
-                  </label>
+                  <label className="block font-bold text-slate-700 mb-1">Min Attendance %</label>
                   <input
                     type="number"
-                    min={0}
+                    min={50}
                     max={100}
-                    required
                     value={subjectForm.minAttendancePercent}
                     onChange={(e) =>
                       setSubjectForm({
@@ -868,64 +882,50 @@ export const Profile = () => {
                         minAttendancePercent: Number(e.target.value)
                       })
                     }
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Priority</label>
-                  <select
-                    value={subjectForm.priority}
-                    onChange={(e) => setSubjectForm({ ...subjectForm, priority: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-                  >
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                  </select>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Credits</label>
+                  <label className="block font-bold text-slate-700 mb-1">Credits</label>
                   <input
                     type="number"
                     min={1}
-                    max={10}
+                    max={6}
                     value={subjectForm.credits}
                     onChange={(e) =>
                       setSubjectForm({ ...subjectForm, credits: Number(e.target.value) })
                     }
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Semester</label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={8}
-                    value={subjectForm.semester}
-                    onChange={(e) =>
-                      setSubjectForm({ ...subjectForm, semester: Number(e.target.value) })
-                    }
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-3">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Study Priority</label>
+                <select
+                  value={subjectForm.priority}
+                  onChange={(e) => setSubjectForm({ ...subjectForm, priority: e.target.value })}
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                >
+                  <option value="low">Low Priority</option>
+                  <option value="medium">Medium Priority</option>
+                  <option value="high">High Priority</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setSubjectModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={subjectSaving}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white font-semibold disabled:opacity-50"
                 >
                   {subjectSaving ? 'Saving...' : editingSubject ? 'Update Subject' : 'Add Subject'}
                 </button>

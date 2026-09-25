@@ -146,16 +146,16 @@ export const Career = () => {
 
           {/* Biggest Skill Gap & Suggested Focus Spotlight */}
           {biggestGap && (
-            <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+            <div className="p-5 rounded-2xl bg-[#E8F5F2] border border-[#3B8F83]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#3B8F83] text-white">
                     Highest Priority Gap
                   </span>
                   <h3 className="text-sm font-bold text-[#102A2A]">Your Biggest Skill Gap: {biggestGap}</h3>
                 </div>
                 <p className="text-xs text-slate-700">
-                  <strong className="text-slate-900">Suggested Focus:</strong> {getSuggestedFocus(biggestGap)}
+                  <strong className="text-[#102A2A]">Suggested Focus:</strong> {getSuggestedFocus(biggestGap)}
                 </p>
               </div>
 

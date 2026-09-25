@@ -155,7 +155,7 @@ export const Exams = () => {
                     : diffDays <= 2
                     ? 'border-red-200 bg-red-50/20'
                     : diffDays <= 7
-                    ? 'border-amber-200 bg-amber-50/20'
+                    ? 'border-teal-200 bg-teal-50/20'
                     : 'border-slate-200/90 hover:border-[#3B8F83]/40'
                 }`}
               >
@@ -185,7 +185,7 @@ export const Exams = () => {
                           Today!
                         </span>
                       ) : diffDays === 1 ? (
-                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-900 border border-amber-200">
+                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-teal-100 text-teal-950 border border-teal-300">
                           Tomorrow
                         </span>
                       ) : (

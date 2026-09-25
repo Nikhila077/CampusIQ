@@ -16,13 +16,13 @@ export const Button = ({
 
   const variants = {
     primary:
-      'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 focus:ring-indigo-500 border border-indigo-400/30',
+      'bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-xs focus:ring-[#3B8F83] border border-[#3B8F83]/40',
     secondary:
-      'bg-slate-800/80 hover:bg-slate-700/80 text-slate-100 border border-slate-700 hover:border-slate-600 focus:ring-slate-500 shadow-sm',
+      'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 focus:ring-slate-400 shadow-xs',
     outline:
-      'border border-indigo-500/40 hover:border-indigo-400 text-indigo-300 hover:text-white hover:bg-indigo-950/50 focus:ring-indigo-500',
+      'border border-[#3B8F83] text-[#3B8F83] hover:bg-teal-50 focus:ring-[#3B8F83]',
     ghost:
-      'text-slate-300 hover:text-white hover:bg-slate-800/60 focus:ring-slate-600',
+      'text-slate-700 hover:text-slate-950 hover:bg-slate-100 focus:ring-slate-300',
     danger:
       'bg-red-600 hover:bg-red-500 text-white focus:ring-red-500 shadow-md shadow-red-600/25'
   };

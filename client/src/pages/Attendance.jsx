@@ -106,26 +106,26 @@ export const Attendance = () => {
     switch (status) {
       case 'Safe':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <ShieldCheck className="w-3 h-3" /> Safe
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <ShieldCheck className="w-3 h-3 text-emerald-700" /> Safe
           </span>
         );
       case 'At Risk':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-            <AlertTriangle className="w-3 h-3" /> At Risk
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-900 border border-teal-300">
+            <AlertTriangle className="w-3 h-3 text-[#3B8F83]" /> At Risk
           </span>
         );
       case 'Critical':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/20">
-            <AlertOctagon className="w-3 h-3" /> Critical
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-800 border border-red-200">
+            <AlertOctagon className="w-3 h-3 text-red-600" /> Critical
           </span>
         );
       case 'Defaulter':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
-            <AlertOctagon className="w-3 h-3" /> Defaulter
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-900 border border-red-300">
+            <AlertOctagon className="w-3 h-3 text-red-700" /> Defaulter
           </span>
         );
       default:
@@ -219,7 +219,7 @@ export const Attendance = () => {
 
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
                 <span className="text-xs font-bold text-slate-700 block">At Risk</span>
-                <span className="text-2xl font-black tracking-tight text-amber-700 mt-1 block">
+                <span className="text-2xl font-black tracking-tight text-[#102A2A] mt-1 block">
                   {data.overall.atRiskCount}
                 </span>
                 <span className="text-xs text-slate-600 mt-1 block font-medium">
@@ -279,8 +279,8 @@ export const Attendance = () => {
                               s.priority === 'high'
                                 ? 'bg-red-50 text-red-800 border-red-200'
                                 : s.priority === 'medium'
-                                ? 'bg-amber-50 text-amber-800 border-amber-200'
-                                : 'bg-teal-50 text-teal-800 border-teal-200'
+                                ? 'bg-teal-50 text-teal-900 border-teal-300'
+                                : 'bg-slate-100 text-slate-700 border-slate-200'
                             }`}
                           >
                             {s.priority} Priority
@@ -306,7 +306,7 @@ export const Attendance = () => {
                               item.status === 'Safe'
                                 ? 'bg-[#3B8F83]'
                                 : item.status === 'At Risk'
-                                ? 'bg-amber-500'
+                                ? 'bg-[#102A2A]'
                                 : 'bg-red-500'
                             }`}
                             style={{ width: `${Math.min(100, item.currentPercent)}%` }}
