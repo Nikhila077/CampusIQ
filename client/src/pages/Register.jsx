@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Compass,
   User,
   Mail,
   Lock,
@@ -17,6 +16,7 @@ import {
 import useAuth from '../hooks/useAuth.js';
 import { Input } from '../components/ui/Input.jsx';
 import { Button } from '../components/ui/Button.jsx';
+import { StudentLensLogo } from '../components/shared/StudentLensLogo.jsx';
 
 export const Register = () => {
   const { register } = useAuth();
@@ -113,22 +113,19 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative selection:bg-indigo-500 selection:text-white">
-      {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="min-h-screen bg-[#F4F7F5] text-[#102A2A] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative selection:bg-[#3B8F83] selection:text-white">
+      {/* Subtle ambient light */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#3B8F83]/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* Header / Brand */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-            <Compass className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-2xl font-bold tracking-tight text-white">Campus<span className="text-indigo-400">IQ</span></span>
+        <Link to="/" className="inline-flex items-center gap-2.5 mb-4 group">
+          <StudentLensLogo iconClassName="w-10 h-10" textClassName="text-2xl" />
         </Link>
-        <h2 className="text-2xl font-bold tracking-tight text-white">Create your student account</h2>
-        <p className="mt-1 text-xs text-slate-400">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#102A2A]">Create your student account</h2>
+        <p className="mt-1.5 text-xs sm:text-sm text-slate-500">
           Already registered?{' '}
-          <Link to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+          <Link to="/login" className="font-semibold text-[#3B8F83] hover:text-[#2d6f66] transition-colors underline-offset-2 hover:underline">
             Sign in here
           </Link>
         </p>
@@ -136,10 +133,10 @@ export const Register = () => {
 
       {/* Form Container */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl px-4 sm:px-0">
-        <div className="rounded-2xl border border-slate-800/80 bg-slate-900/70 backdrop-blur-xl p-6 sm:p-8 shadow-2xl">
+        <div className="rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-xl p-6 sm:p-8 shadow-xl shadow-slate-900/5">
           {serverError && (
-            <div className="mb-6 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-3 text-red-400 text-xs font-medium animate-in fade-in duration-200">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+            <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3 text-red-700 text-xs font-medium animate-in fade-in duration-200">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
               <span>{serverError}</span>
             </div>
           )}
@@ -190,7 +187,7 @@ export const Register = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-slate-400 hover:text-slate-200 focus:outline-none"
+                    className="text-slate-400 hover:text-slate-600 focus:outline-none"
                     tabIndex="-1"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -213,7 +210,7 @@ export const Register = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="text-slate-400 hover:text-slate-200 focus:outline-none"
+                    className="text-slate-400 hover:text-slate-600 focus:outline-none"
                     tabIndex="-1"
                   >
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -250,7 +247,7 @@ export const Register = () => {
             {/* Year, Semester & Roll Number */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1.5 text-left">
-                <label htmlFor="year" className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label htmlFor="year" className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
                   Year
                 </label>
                 <select
@@ -258,7 +255,7 @@ export const Register = () => {
                   name="year"
                   value={formData.year}
                   onChange={handleChange}
-                  className="w-full bg-slate-900/90 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm border border-slate-800 hover:border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+                  className="w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm border border-slate-200 hover:border-slate-300 focus:border-[#3B8F83] focus:ring-2 focus:ring-[#3B8F83]/20 outline-none"
                 >
                   <option value="1">1st Year</option>
                   <option value="2">2nd Year</option>
@@ -268,7 +265,7 @@ export const Register = () => {
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label htmlFor="semester" className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label htmlFor="semester" className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
                   Semester
                 </label>
                 <select
@@ -276,7 +273,7 @@ export const Register = () => {
                   name="semester"
                   value={formData.semester}
                   onChange={handleChange}
-                  className="w-full bg-slate-900/90 text-slate-100 rounded-xl px-3.5 py-2.5 text-sm border border-slate-800 hover:border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+                  className="w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm border border-slate-200 hover:border-slate-300 focus:border-[#3B8F83] focus:ring-2 focus:ring-[#3B8F83]/20 outline-none"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                     <option key={sem} value={sem}>
@@ -299,8 +296,8 @@ export const Register = () => {
             </div>
 
             {/* Security note */}
-            <div className="pt-2 flex items-center gap-2 text-[11px] text-slate-400">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <div className="pt-2 flex items-center gap-2 text-[11px] text-slate-500">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#3B8F83] shrink-0" />
               <span>Password is cryptographically hashed with bcrypt before storing.</span>
             </div>
 
@@ -309,17 +306,17 @@ export const Register = () => {
               <Button
                 type="submit"
                 isLoading={isLoading}
-                className="w-full font-semibold py-3 text-sm shadow-indigo-600/30"
+                className="w-full font-semibold py-3 text-sm bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-md border-0"
               >
-                Register & Enter CampusIQ
-                <ArrowRight className="w-4 h-4 ml-1" />
+                Register & Enter StudentLens
+                <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </div>
           </form>
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-500">
-          Phase 1 Foundation • Secure HttpOnly JWT Session
+          Personalized Student Decision-Support Platform • Secure HttpOnly JWT Session
         </p>
       </div>
     </div>

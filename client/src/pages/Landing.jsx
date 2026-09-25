@@ -12,6 +12,7 @@ import {
 import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
 import LightPillar from '../components/LightPillar.jsx';
+import { StudentLensLogo } from '../components/shared/StudentLensLogo.jsx';
 
 export const Landing = () => {
   return (
@@ -43,12 +44,7 @@ export const Landing = () => {
         <header className="relative z-10 w-full border-b border-slate-200/60 bg-white/70 backdrop-blur-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center shadow-md">
-                <Compass className="w-5 h-5 text-[#3B8F83]" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">
-                Campus<span className="text-[#3B8F83]">IQ</span>
-              </span>
+              <StudentLensLogo />
             </Link>
 
             <div className="flex items-center gap-3">
@@ -73,12 +69,12 @@ export const Landing = () => {
             <span className="w-2 h-2 rounded-full bg-[#3B8F83]"></span>
             <span>Personalized Student Decision-Support Platform</span>
             <span className="text-slate-300">|</span>
-            <span className="text-slate-600 font-medium">Student Data → Analysis → Insight → Action</span>
+            <span className="text-slate-600 font-medium">Student Data → Analysis → Insight → Recommended Action</span>
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
-            Campus<span className="text-[#3B8F83]">IQ</span>
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#102A2A] leading-[1.1]">
+            Student<span className="text-[#3B8F83]">Lens</span>
           </h1>
 
           {/* Subtitle / Positioning */}
@@ -87,7 +83,7 @@ export const Landing = () => {
           </p>
 
           <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-            CampusIQ transforms fragmented academic records into clear calculations, safe absence buffers, prioritized study schedules, and career readiness.
+            StudentLens transforms fragmented academic records into clear calculations, safe absence buffers, prioritized study schedules, and career readiness.
           </p>
 
           {/* Primary & Secondary CTAs */}
@@ -137,7 +133,7 @@ export const Landing = () => {
               <div className="w-3 h-3 rounded-full bg-slate-200" />
               <div className="w-3 h-3 rounded-full bg-slate-200" />
               <div className="w-3 h-3 rounded-full bg-slate-200" />
-              <span className="ml-3 text-xs text-slate-500 font-mono">campusiq.internal/command-center</span>
+              <span className="ml-3 text-xs text-slate-500 font-mono">studentlens.internal/command-center</span>
             </div>
             <span className="text-[11px] font-semibold text-[#3B8F83] bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100">
               Live Decision Feed
@@ -227,18 +223,18 @@ export const Landing = () => {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 2: WHY CAMPUSIQ (TRADITIONAL ERP VS CAMPUSIQ)             */}
+      {/* SECTION 2: WHY STUDENTLENS (TRADITIONAL ERP VS STUDENTLENS)       */}
       {/* ================================================================ */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-24">
         <div className="space-y-3 mb-12">
           <Badge variant="secondary" className="text-xs px-3 py-1 font-semibold text-[#3B8F83] bg-teal-50 border border-teal-200">
-            The CampusIQ Paradigm
+            The StudentLens Paradigm
           </Badge>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Why Traditional Portals Fall Short
           </h2>
           <p className="text-slate-600 max-w-xl mx-auto text-sm leading-relaxed">
-            Standard college portals present passive numbers. CampusIQ calculates what those numbers mean and gives you a clear course of action.
+            Standard college portals present passive numbers. StudentLens calculates what those numbers mean and gives you a clear course of action.
           </p>
         </div>
 
@@ -273,10 +269,10 @@ export const Landing = () => {
             </ul>
           </div>
 
-          {/* CampusIQ Decision Engine Card */}
+          {/* StudentLens Decision Engine Card */}
           <div className="rounded-2xl border border-teal-200 bg-white p-6 space-y-4 shadow-lg shadow-teal-900/5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#3B8F83]">CampusIQ Engine</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#3B8F83]">StudentLens Engine</span>
               <span className="px-2 py-0.5 rounded bg-teal-50 text-teal-800 text-xs border border-teal-200 font-semibold">
                 Decision Support
               </span>
@@ -458,7 +454,7 @@ export const Landing = () => {
             "What Should I Focus on Today?"
           </h2>
           <p className="text-slate-600 max-w-xl mx-auto text-sm leading-relaxed">
-            CampusIQ continuously correlates attendance shortages, approaching deadlines, and upcoming exam countdowns to produce an actionable plan.
+            StudentLens continuously correlates attendance shortages, approaching deadlines, and upcoming exam countdowns to produce an actionable plan.
           </p>
         </div>
 
@@ -519,7 +515,7 @@ export const Landing = () => {
             Ready to Take Control of Your Academic Journey?
           </h2>
           <p className="text-slate-600 max-w-xl mx-auto text-sm leading-relaxed">
-            Join CampusIQ today. Experience data-driven attendance safety buffers, prioritized daily schedules, and career readiness tracking.
+            Join StudentLens today. Experience data-driven attendance safety buffers, prioritized daily schedules, and career readiness tracking.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Link to="/register" className="w-full sm:w-auto">
@@ -543,12 +539,10 @@ export const Landing = () => {
       <footer className="w-full border-t border-slate-200 bg-white py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-2">
-            <Compass className="w-4 h-4 text-[#3B8F83]" />
-            <span className="font-semibold text-slate-800">CampusIQ</span>
-            <span>— Personalized Student Decision-Support Platform</span>
+            <StudentLensLogo />
           </div>
           <div>
-            <span className="font-medium text-slate-600">Student Data → Analysis → Insight → Action</span>
+            <span className="font-medium text-slate-600">Student Data → Analysis → Insight → Recommended Action</span>
           </div>
         </div>
       </footer>

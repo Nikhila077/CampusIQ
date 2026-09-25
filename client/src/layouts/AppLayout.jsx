@@ -15,7 +15,6 @@ import {
   LogOut,
   Menu,
   X,
-  Compass,
   ChevronRight,
   User,
   Bell,
@@ -29,6 +28,7 @@ import {
 import useAuth from '../hooks/useAuth.js';
 import notificationService from '../services/notificationService.js';
 import gamificationService from '../services/gamificationService.js';
+import { StudentLensLogo } from '../components/shared/StudentLensLogo.jsx';
 
 export const AppLayout = () => {
   const { user, logout } = useAuth();
@@ -90,18 +90,19 @@ export const AppLayout = () => {
     loadNotifications();
     loadGamification();
 
-    // Poll notifications every 45s for live updates
+    // Auto-refresh notifications and gamification status every 60 seconds
     const interval = setInterval(() => {
       loadNotifications();
-    }, 45000);
+      loadGamification();
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Close notifications on outside click
+  // Close dropdown on click outside
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (notifRef.current && !notifRef.current.contains(e.target)) {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
         setNotificationsOpen(false);
       }
     };
@@ -110,7 +111,7 @@ export const AppLayout = () => {
   }, []);
 
   const handleMarkAsRead = async (id, e) => {
-    e?.stopPropagation();
+    if (e) e.stopPropagation();
     try {
       await notificationService.markAsRead(id);
       setNotifications((prev) =>
@@ -147,9 +148,9 @@ export const AppLayout = () => {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         setBrowserAlertsEnabled(true);
-        new Notification('CampusIQ Alerts Active', {
-          body: 'You will receive intelligent academic alerts for attendance and deadlines.',
-          icon: '/favicon.ico'
+        new Notification('StudentLens Alerts Active', {
+          body: 'You will now receive timely academic reminders on your desktop.',
+          icon: '/favicon.svg'
         });
       }
     }
@@ -171,46 +172,39 @@ export const AppLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#F4F7F5] text-slate-900 flex flex-col">
       {/* Top Header / Navigation Bar */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800/60 focus:outline-none"
+              className="lg:hidden p-2 text-slate-500 hover:text-slate-900 rounded-lg hover:bg-slate-100 focus:outline-none"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <Link to="/dashboard" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
-                <Compass className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-xl font-bold tracking-tight text-white">
-                  Campus<span className="text-indigo-400">IQ</span>
-                </span>
-                <span className="hidden sm:inline-block text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Decision Engine
-                </span>
-              </div>
+              <StudentLensLogo />
+              <span className="hidden sm:inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 ml-1">
+                Decision Support
+              </span>
             </Link>
           </div>
 
           {/* Gamification, Notifications & Profile */}
           <div className="flex items-center gap-2.5 sm:gap-4">
             {/* Gamification Streak & Level Badge */}
-            <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900/80 border border-slate-800/80 text-xs">
-              <span className="flex items-center gap-1 font-bold text-amber-400" title="Active meaningful learning streak">
-                <Flame className="w-3.5 h-3.5 fill-amber-400/20" />
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+              <span className="flex items-center gap-1 font-bold text-amber-600" title="Active meaningful learning streak">
+                <Flame className="w-3.5 h-3.5 fill-amber-500/20" />
                 <span>{gamification.currentStreak || 0}d Streak</span>
               </span>
-              <span className="text-slate-600">•</span>
-              <span className="flex items-center gap-1 text-indigo-300 font-semibold" title="Student Level & XP">
-                <Zap className="w-3.5 h-3.5 text-indigo-400 fill-indigo-400/20" />
+              <span className="text-slate-300">•</span>
+              <span className="flex items-center gap-1 text-[#3B8F83] font-semibold" title="Student Level & XP">
+                <Zap className="w-3.5 h-3.5 text-[#3B8F83] fill-[#3B8F83]/20" />
                 <span>Lvl {gamification.level || 1}</span>
-                <span className="text-[10px] text-slate-400 font-mono">({gamification.xp || 0} XP)</span>
+                <span className="text-[10px] text-slate-500 font-mono">({gamification.xp || 0} XP)</span>
               </span>
             </div>
 
@@ -218,13 +212,13 @@ export const AppLayout = () => {
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative p-2 rounded-xl text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800/60 hover:border-slate-700 transition-colors focus:outline-none"
+                className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 transition-colors focus:outline-none shadow-sm"
                 aria-label="Smart Reminders"
                 title="Smart Reminders & Notifications"
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-slate-950 animate-pulse">
+                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white animate-pulse">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -232,14 +226,14 @@ export const AppLayout = () => {
 
               {/* Notification Center Dropdown Panel */}
               {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-slate-800 bg-slate-900/95 backdrop-blur-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                         Smart Reminders
                       </span>
                       {unreadCount > 0 && (
-                        <span className="px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold border border-indigo-500/30">
+                        <span className="px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-800 text-[10px] font-bold border border-teal-200">
                           {unreadCount} unread
                         </span>
                       )}
@@ -247,7 +241,7 @@ export const AppLayout = () => {
                     {unreadCount > 0 && (
                       <button
                         onClick={handleMarkAllRead}
-                        className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
+                        className="text-[11px] text-[#3B8F83] hover:text-[#2d6f66] font-medium flex items-center gap-1 cursor-pointer"
                       >
                         <CheckCheck className="w-3.5 h-3.5" />
                         <span>Mark all read</span>
@@ -257,11 +251,11 @@ export const AppLayout = () => {
 
                   {/* Browser notification opt-in prompt if not granted */}
                   {!browserAlertsEnabled && 'Notification' in window && (
-                    <div className="p-2.5 bg-indigo-950/40 border-b border-indigo-500/20 flex items-center justify-between text-xs">
-                      <span className="text-[11px] text-indigo-300">Enable desktop alerts?</span>
+                    <div className="p-2.5 bg-teal-50/60 border-b border-teal-100 flex items-center justify-between text-xs">
+                      <span className="text-[11px] text-teal-900">Enable desktop alerts?</span>
                       <button
                         onClick={requestBrowserPermission}
-                        className="px-2 py-0.5 rounded bg-indigo-600 text-[10px] font-semibold text-white hover:bg-indigo-500"
+                        className="px-2.5 py-1 rounded bg-[#3B8F83] text-[10px] font-semibold text-white hover:bg-[#327a70]"
                       >
                         Allow
                       </button>
@@ -269,10 +263,10 @@ export const AppLayout = () => {
                   )}
 
                   {/* Notifications List */}
-                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-800/60">
+                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
                     {notifications.length === 0 ? (
-                      <div className="p-8 text-center text-xs text-slate-400">
-                        <Check className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                      <div className="p-8 text-center text-xs text-slate-500">
+                        <Check className="w-6 h-6 text-emerald-600 mx-auto mb-2" />
                         All caught up! No urgent reminders.
                       </div>
                     ) : (
@@ -280,39 +274,39 @@ export const AppLayout = () => {
                         <div
                           key={n._id}
                           onClick={() => handleNotificationClick(n)}
-                          className={`p-3 text-left transition-colors cursor-pointer hover:bg-slate-800/50 flex items-start gap-2.5 ${
-                            !n.isRead ? 'bg-indigo-950/20' : ''
+                          className={`p-3 text-left transition-colors cursor-pointer hover:bg-slate-50 flex items-start gap-2.5 ${
+                            !n.isRead ? 'bg-teal-50/40' : ''
                           }`}
                         >
                           <div className="mt-0.5 shrink-0">
                             {n.type === 'attendance' ? (
-                              <AlertTriangle className="w-4 h-4 text-red-400" />
+                              <AlertTriangle className="w-4 h-4 text-red-500" />
                             ) : n.type === 'assignment' ? (
-                              <ClipboardList className="w-4 h-4 text-yellow-400" />
+                              <ClipboardList className="w-4 h-4 text-amber-500" />
                             ) : n.type === 'exam' ? (
-                              <GraduationCap className="w-4 h-4 text-purple-400" />
+                              <GraduationCap className="w-4 h-4 text-[#3B8F83]" />
                             ) : n.type === 'brain_boost' ? (
-                              <Zap className="w-4 h-4 text-amber-400" />
+                              <Zap className="w-4 h-4 text-amber-500" />
                             ) : (
-                              <Info className="w-4 h-4 text-indigo-400" />
+                              <Info className="w-4 h-4 text-[#3B8F83]" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-1">
-                              <span className={`text-xs font-bold truncate ${!n.isRead ? 'text-white' : 'text-slate-300'}`}>
+                              <span className={`text-xs font-bold truncate ${!n.isRead ? 'text-slate-900' : 'text-slate-700'}`}>
                                 {n.title}
                               </span>
                               {!n.isRead && (
                                 <button
                                   onClick={(e) => handleMarkAsRead(n._id, e)}
-                                  className="text-[10px] text-slate-500 hover:text-indigo-400 shrink-0"
+                                  className="text-[10px] text-slate-400 hover:text-[#3B8F83] shrink-0"
                                   title="Mark as read"
                                 >
                                   Mark read
                                 </button>
                               )}
                             </div>
-                            <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
+                            <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
                               {n.message}
                             </p>
                           </div>
@@ -327,17 +321,17 @@ export const AppLayout = () => {
             {/* Profile Avatar & Info */}
             <Link
               to="/profile"
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-slate-800/60 hover:border-indigo-500/40 transition-colors"
+              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors shadow-sm"
               title="View & Edit Profile"
             >
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#3B8F83] to-[#102A2A] flex items-center justify-center text-white text-xs font-bold shadow-sm">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
               </div>
               <div className="hidden sm:flex flex-col text-left">
-                <span className="text-xs font-semibold text-slate-200 truncate max-w-[130px]">
+                <span className="text-xs font-semibold text-slate-900 truncate max-w-[130px]">
                   {user?.name || 'Student'}
                 </span>
-                <span className="text-[10px] text-slate-400 truncate max-w-[130px]">
+                <span className="text-[10px] text-slate-500 truncate max-w-[130px]">
                   {user?.branch ? `${user.branch} • Sem ${user.semester || 1}` : user?.email}
                 </span>
               </div>
@@ -345,7 +339,7 @@ export const AppLayout = () => {
 
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl border border-slate-800 hover:border-red-500/30 transition-all duration-200"
+              className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl border border-slate-200 hover:border-red-200 transition-all duration-200 cursor-pointer shadow-sm"
               title="Log out"
             >
               <LogOut className="w-4 h-4" />
@@ -359,7 +353,7 @@ export const AppLayout = () => {
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex gap-8">
         {/* Desktop Sidebar Navigation */}
         <aside className="hidden lg:block w-64 shrink-0">
-          <div className="sticky top-24 rounded-2xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-xl p-3 shadow-sm">
+          <div className="sticky top-24 rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-xl p-3 shadow-sm">
             <div className="px-3 py-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
               Navigation
             </div>
@@ -373,25 +367,25 @@ export const AppLayout = () => {
                     className={({ isActive }) =>
                       `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 group ${
                         isActive
-                          ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/30 shadow-sm'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                          ? 'bg-teal-50 text-teal-900 font-semibold border border-teal-200 shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                       }`
                     }
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className="w-4 h-4 text-slate-400 group-hover:text-indigo-400 transition-colors" />
+                      <Icon className="w-4 h-4 text-slate-400 group-hover:text-[#3B8F83] transition-colors" />
                       <span>{item.name}</span>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-indigo-400 transition-colors" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#3B8F83] transition-colors" />
                   </NavLink>
                 );
               })}
             </nav>
 
-            <div className="mt-6 pt-4 border-t border-slate-800/60 px-3 pb-2">
-              <div className="p-3 rounded-xl bg-indigo-950/30 border border-indigo-500/20">
-                <p className="text-[11px] font-medium text-indigo-300">Decision Support Engine</p>
-                <p className="text-[10px] text-slate-400 mt-1">
+            <div className="mt-6 pt-4 border-t border-slate-100 px-3 pb-2">
+              <div className="p-3 rounded-xl bg-teal-50/70 border border-teal-200/70">
+                <p className="text-[11px] font-semibold text-teal-900">StudentLens Decision Engine</p>
+                <p className="text-[10px] text-slate-600 mt-1 leading-relaxed">
                   Attendance buffers, planner priorities, and career analytics active.
                 </p>
               </div>
@@ -403,21 +397,16 @@ export const AppLayout = () => {
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm"
               onClick={() => setMobileMenuOpen(false)}
             ></div>
-            <div className="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 p-5 flex flex-col justify-between overflow-y-auto">
+            <div className="fixed inset-y-0 left-0 w-72 bg-white border-r border-slate-200 p-5 flex flex-col justify-between overflow-y-auto shadow-2xl">
               <div>
-                <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-                      <Compass className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="font-bold text-white">CampusIQ</span>
-                  </div>
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <StudentLensLogo />
                   <button
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-1 text-slate-400 hover:text-white"
+                    className="p-1 text-slate-400 hover:text-slate-600"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -434,26 +423,26 @@ export const AppLayout = () => {
                         className={({ isActive }) =>
                           `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
                             isActive
-                              ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
-                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                              ? 'bg-teal-50 text-teal-900 font-semibold border border-teal-200'
+                              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                           }`
                         }
                       >
                         <div className="flex items-center gap-2.5">
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-4 h-4 text-[#3B8F83]" />
                           <span>{item.name}</span>
                         </div>
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                       </NavLink>
                     );
                   })}
                 </nav>
               </div>
 
-              <div className="pt-4 border-t border-slate-800">
+              <div className="pt-4 border-t border-slate-100">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-red-600/10 text-red-400 hover:bg-red-600/20 border border-red-500/30 text-xs font-semibold"
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 text-xs font-semibold cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   Logout

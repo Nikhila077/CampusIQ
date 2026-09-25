@@ -144,7 +144,7 @@ export const Attendance = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <CalendarCheck className="w-6 h-6 text-indigo-400" />
+            <CalendarCheck className="w-6 h-6 text-[#3B8F83]" />
             Smart Attendance Engine
           </h1>
           <p className="text-xs text-slate-400 mt-1">
@@ -155,15 +155,15 @@ export const Attendance = () => {
         <div className="flex items-center gap-2.5">
           <Link
             to="/attendance/simulate"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 text-indigo-300 text-xs font-semibold shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-[#3B8F83]/50 text-[#3B8F83] text-xs font-semibold shadow-sm transition-all"
           >
-            <Sliders className="w-4 h-4 text-indigo-400" />
+            <Sliders className="w-4 h-4 text-[#3B8F83]" />
             What-If Simulator
           </Link>
           <button
             onClick={() => handleOpenLogModal()}
             disabled={!data.subjects || data.subjects.length === 0}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-lg shadow-[#3B8F83]/20 transition-all disabled:opacity-50"
           >
             <Plus className="w-4 h-4" />
             Log Class
@@ -184,7 +184,7 @@ export const Attendance = () => {
           </p>
           <Link
             to="/profile"
-            className="mt-5 inline-block px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold"
+            className="mt-5 inline-block px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold"
           >
             Go to Profile & Add Subjects
           </Link>
@@ -242,7 +242,7 @@ export const Attendance = () => {
           {/* Per-Subject Attendance Cards */}
           <div className="space-y-4">
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-indigo-400" />
+              <Sparkles className="w-4 h-4 text-[#3B8F83]" />
               Subject Intelligence Cards
             </h2>
 
@@ -280,7 +280,7 @@ export const Attendance = () => {
                                 ? 'bg-red-500/10 text-red-400'
                                 : s.priority === 'medium'
                                 ? 'bg-yellow-500/10 text-yellow-400'
-                                : 'bg-blue-500/10 text-blue-400'
+                                : 'bg-[#3B8F83]/10 text-[#3B8F83]'
                             }`}
                           >
                             {s.priority} Priority
@@ -365,7 +365,7 @@ export const Attendance = () => {
                     <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between">
                       <Link
                         to={`/attendance/simulate?subjectId=${s._id}`}
-                        className="px-3 py-1.5 rounded-xl bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 text-xs font-semibold inline-flex items-center gap-1.5 transition-all shadow-sm"
+                        className="px-3 py-1.5 rounded-xl bg-[#3B8F83]/10 hover:bg-[#3B8F83]/20 text-[#3B8F83] border border-[#3B8F83]/30 text-xs font-semibold inline-flex items-center gap-1.5 transition-all shadow-sm"
                       >
                         <Sliders className="w-3.5 h-3.5" /> Run What-If
                       </Link>
@@ -398,7 +398,7 @@ export const Attendance = () => {
                 <select
                   value={selectedSubjectId}
                   onChange={(e) => setSelectedSubjectId(e.target.value)}
-                  className="bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1 text-xs text-white focus:outline-none focus:border-[#3B8F83]"
                 >
                   <option value="all">All Subjects</option>
                   {data.subjects.map((item) => (
@@ -493,7 +493,7 @@ export const Attendance = () => {
                   required
                   value={logForm.subjectId}
                   onChange={(e) => setLogForm({ ...logForm, subjectId: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3B8F83]"
                 >
                   <option value="">Select subject...</option>
                   {data.subjects.map((item) => (
@@ -512,7 +512,7 @@ export const Attendance = () => {
                     required
                     value={logForm.date}
                     onChange={(e) => setLogForm({ ...logForm, date: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
                 <div>
@@ -520,7 +520,7 @@ export const Attendance = () => {
                   <select
                     value={logForm.status}
                     onChange={(e) => setLogForm({ ...logForm, status: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3B8F83]"
                   >
                     <option value="present">Present</option>
                     <option value="absent">Absent</option>
@@ -540,7 +540,7 @@ export const Attendance = () => {
                     onChange={(e) =>
                       setLogForm({ ...logForm, classNumber: Number(e.target.value) })
                     }
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
                 <div>
@@ -550,7 +550,7 @@ export const Attendance = () => {
                     placeholder="e.g. Lab experiment 4"
                     value={logForm.remarks}
                     onChange={(e) => setLogForm({ ...logForm, remarks: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
               </div>
@@ -566,7 +566,7 @@ export const Attendance = () => {
                 <button
                   type="submit"
                   disabled={logging}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-sm disabled:opacity-50"
                 >
                   {logging ? 'Recording...' : 'Log Record'}
                 </button>

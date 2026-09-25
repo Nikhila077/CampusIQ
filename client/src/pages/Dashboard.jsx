@@ -239,13 +239,13 @@ export const Dashboard = () => {
   return (
     <div className="space-y-6 pb-12 max-w-7xl mx-auto">
       {/* Top Welcome & Command Header */}
-      <div className="relative rounded-3xl border border-indigo-500/20 bg-gradient-to-r from-indigo-950/60 via-slate-900/80 to-purple-950/40 p-6 sm:p-8 backdrop-blur-xl overflow-hidden shadow-xl">
-        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative rounded-3xl border border-[#3B8F83]/30 bg-gradient-to-r from-[#102A2A] via-[#143333] to-[#102A2A] p-6 sm:p-8 backdrop-blur-xl overflow-hidden shadow-xl">
+        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-[#3B8F83]/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#3B8F83]/15 text-[#3B8F83] border border-[#3B8F83]/30">
                 Command Center
               </span>
               <span className="text-xs text-slate-400 font-mono">
@@ -259,7 +259,7 @@ export const Dashboard = () => {
 
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               {getGreeting()},{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-white">
+              <span className="text-[#3B8F83]">
                 {user?.name || 'Student'}
               </span>{' '}
               👋
@@ -276,16 +276,16 @@ export const Dashboard = () => {
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Link
               to="/attendance"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-lg shadow-[#3B8F83]/20 transition-all"
             >
               <CalendarCheck className="w-3.5 h-3.5" />
               <span>Attendance</span>
             </Link>
             <Link
               to="/attendance/simulate"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-slate-300 text-xs font-semibold transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-[#3B8F83]/50 text-slate-300 text-xs font-semibold transition-all"
             >
-              <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+              <Sliders className="w-3.5 h-3.5 text-[#3B8F83]" />
               <span>Simulator</span>
             </Link>
             <Link
@@ -306,16 +306,16 @@ export const Dashboard = () => {
       ) : !hasSubjects ? (
         /* Empty State: Guide user to add subjects */
         <div className="p-12 rounded-3xl border border-dashed border-slate-800 bg-slate-900/30 text-center space-y-4 max-w-2xl mx-auto">
-          <BookOpen className="w-12 h-12 text-indigo-400 mx-auto" />
+          <BookOpen className="w-12 h-12 text-[#3B8F83] mx-auto" />
           <div className="space-y-1">
             <h2 className="text-lg font-bold text-white">No Subjects Configured Yet</h2>
             <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-              CampusIQ is powered by your real curriculum. Add your subjects to unlock the Smart Attendance Engine, daily timetable schedule, and prioritized academic planner.
+              StudentLens is powered by your real curriculum. Add your subjects to unlock the Smart Attendance Engine, daily timetable schedule, and prioritized academic planner.
             </p>
           </div>
           <Link
             to="/profile"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-lg shadow-[#3B8F83]/20 transition-all"
           >
             <span>Add Subjects in Profile</span>
             <ArrowRight className="w-4 h-4" />
@@ -347,7 +347,7 @@ export const Dashboard = () => {
               </div>
               <Link
                 to="/attendance"
-                className="text-[11px] text-indigo-400 hover:underline flex items-center gap-1 mt-3"
+                className="text-[11px] text-[#3B8F83] hover:underline flex items-center gap-1 mt-3"
               >
                 <span>View buffer breakdown</span>
                 <ChevronRight className="w-3 h-3" />
@@ -357,7 +357,7 @@ export const Dashboard = () => {
             {/* Streak & Daily Goals */}
             <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-medium text-slate-400 block">CampusIQ Streak</span>
+                <span className="text-[11px] font-medium text-slate-400 block">StudentLens Streak</span>
                 <div className="flex items-baseline gap-2 mt-1">
                   <span className="text-2xl font-black text-amber-400 flex items-center gap-1">
                     <Flame className="w-5 h-5 fill-amber-400/20" />
@@ -383,8 +383,8 @@ export const Dashboard = () => {
               <div>
                 <span className="text-[11px] font-medium text-slate-400 block">Academic Standing</span>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-2xl font-black text-indigo-400 flex items-center gap-1">
-                    <Zap className="w-5 h-5 fill-indigo-400/20" />
+                  <span className="text-2xl font-black text-[#3B8F83] flex items-center gap-1">
+                    <Zap className="w-5 h-5 fill-[#3B8F83]/20" />
                     <span>Lvl {gamification.level || 1}</span>
                   </span>
                   <span className="text-[10px] text-slate-400 font-mono">
@@ -395,7 +395,7 @@ export const Dashboard = () => {
               <div className="mt-3">
                 <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
                   <div
-                    className="bg-indigo-500 h-full rounded-full transition-all duration-300"
+                    className="bg-[#3B8F83] h-full rounded-full transition-all duration-300"
                     style={{ width: `${gamification.levelProgress?.percent || 0}%` }}
                   />
                 </div>
@@ -412,7 +412,7 @@ export const Dashboard = () => {
               </div>
               <Link
                 to="/career"
-                className="text-[11px] text-indigo-400 hover:underline flex items-center gap-1 mt-3"
+                className="text-[11px] text-[#3B8F83] hover:underline flex items-center gap-1 mt-3"
               >
                 <span>Role: {careerReadiness?.targetRole || 'Select Role'}</span>
                 <ChevronRight className="w-3 h-3" />
@@ -421,7 +421,7 @@ export const Dashboard = () => {
           </div>
 
           {/* "YOUR NEXT BEST ACTIONS" Priority Card */}
-          <div className="bg-slate-900/50 border border-indigo-500/30 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xl shadow-indigo-950/20">
+          <div className="bg-slate-900/50 border border-[#3B8F83]/30 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
@@ -438,7 +438,7 @@ export const Dashboard = () => {
               </div>
               <Link
                 to="/planner"
-                className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                className="text-xs font-semibold text-[#3B8F83] hover:text-[#327a70] flex items-center gap-1"
               >
                 <span>Full Planner</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -468,7 +468,7 @@ export const Dashboard = () => {
                             ? 'bg-red-500/20 text-red-400'
                             : action.priority === 'high'
                             ? 'bg-amber-500/20 text-amber-400'
-                            : 'bg-indigo-500/20 text-indigo-300'
+                            : 'bg-[#3B8F83]/20 text-[#3B8F83]'
                         }`}
                       >
                         {action.priority}
@@ -483,7 +483,7 @@ export const Dashboard = () => {
                       {action.actionUrl.startsWith('#') ? (
                         <a
                           href={action.actionUrl}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-400 hover:text-indigo-300"
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3B8F83] hover:text-[#327a70]"
                         >
                           <span>{action.actionLabel || 'Take Action'}</span>
                           <ArrowRight className="w-3 h-3" />
@@ -491,7 +491,7 @@ export const Dashboard = () => {
                       ) : (
                         <Link
                           to={action.actionUrl}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-400 hover:text-indigo-300"
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3B8F83] hover:text-[#327a70]"
                         >
                           <span>{action.actionLabel || 'Take Action'}</span>
                           <ArrowRight className="w-3 h-3" />
@@ -608,7 +608,7 @@ export const Dashboard = () => {
                 <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
                   <div>
                     <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                      <CalendarCheck className="w-4 h-4 text-indigo-400" />
+                      <CalendarCheck className="w-4 h-4 text-[#3B8F83]" />
                       Attendance Safety Buffers
                     </h3>
                     <p className="text-xs text-slate-400 mt-0.5">
@@ -617,7 +617,7 @@ export const Dashboard = () => {
                   </div>
                   <Link
                     to="/attendance"
-                    className="text-xs font-semibold text-indigo-400 hover:text-indigo-300"
+                    className="text-xs font-semibold text-[#3B8F83] hover:text-[#327a70]"
                   >
                     View All →
                   </Link>
@@ -649,9 +649,9 @@ export const Dashboard = () => {
                           <div
                             className={`h-full rounded-full ${
                               item.status === 'Safe'
-                                ? 'bg-emerald-500'
+                                ? 'bg-[#3B8F83]'
                                 : item.status === 'At Risk'
-                                ? 'bg-yellow-500'
+                                ? 'bg-amber-400'
                                 : 'bg-red-500'
                             }`}
                             style={{ width: `${Math.min(100, item.currentPercent)}%` }}
@@ -673,7 +673,7 @@ export const Dashboard = () => {
                         </span>
                         <Link
                           to={`/attendance/simulate?subjectId=${item.subject._id}`}
-                          className="px-2 py-0.5 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[10px] font-semibold border border-indigo-500/20 transition-all"
+                          className="px-2 py-0.5 rounded bg-[#3B8F83]/10 hover:bg-[#3B8F83]/20 text-[#3B8F83] text-[10px] font-semibold border border-[#3B8F83]/30 transition-all"
                         >
                           Run What-If
                         </Link>
@@ -690,10 +690,10 @@ export const Dashboard = () => {
               <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-indigo-400" />
+                    <Calendar className="w-4 h-4 text-[#3B8F83]" />
                     Today's Classes
                   </h3>
-                  <Link to="/timetable" className="text-[11px] text-indigo-400 hover:underline">
+                  <Link to="/timetable" className="text-[11px] text-[#3B8F83] hover:underline">
                     Schedule
                   </Link>
                 </div>
@@ -727,10 +727,10 @@ export const Dashboard = () => {
               <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                    <GraduationCap className="w-4 h-4 text-purple-400" />
+                    <GraduationCap className="w-4 h-4 text-amber-400" />
                     Upcoming Exams
                   </h3>
-                  <Link to="/exams" className="text-[11px] text-indigo-400 hover:underline">
+                  <Link to="/exams" className="text-[11px] text-[#3B8F83] hover:underline">
                     View
                   </Link>
                 </div>
@@ -775,7 +775,7 @@ export const Dashboard = () => {
                     <ClipboardList className="w-4 h-4 text-yellow-400" />
                     Pending Deliverables
                   </h3>
-                  <Link to="/assignments" className="text-[11px] text-indigo-400 hover:underline">
+                  <Link to="/assignments" className="text-[11px] text-[#3B8F83] hover:underline">
                     View
                   </Link>
                 </div>
