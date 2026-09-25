@@ -237,18 +237,18 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 pb-12 max-w-7xl mx-auto">
-      {/* Top Welcome & Command Header */}
-      <div className="relative rounded-3xl border border-[#3B8F83]/30 bg-gradient-to-r from-[#102A2A] via-[#143333] to-[#102A2A] p-6 sm:p-8 backdrop-blur-xl overflow-hidden shadow-xl">
-        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-[#3B8F83]/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="space-y-5 pb-10 max-w-7xl mx-auto">
+      {/* 1. TOP: Welcome / Command Center Section */}
+      <div className="relative rounded-2xl border border-[#102A2A] bg-[#102A2A] text-white p-4 sm:p-5 shadow-sm overflow-hidden">
+        <div className="absolute -right-8 -bottom-8 w-60 h-60 bg-[#3B8F83]/15 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-1.5">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#3B8F83]/15 text-[#3B8F83] border border-[#3B8F83]/30">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#3B8F83]/20 text-[#E8F5F2] border border-[#3B8F83]/40">
                 Command Center
               </span>
-              <span className="text-xs text-slate-400 font-mono">
+              <span className="text-xs text-slate-300 font-mono">
                 {new Date().toLocaleDateString(undefined, {
                   weekday: 'short',
                   month: 'short',
@@ -257,7 +257,7 @@ export const Dashboard = () => {
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
               {getGreeting()},{' '}
               <span className="text-[#3B8F83]">
                 {user?.name || 'Student'}
@@ -265,32 +265,32 @@ export const Dashboard = () => {
               👋
             </h1>
 
-            <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
+            <p className="text-xs text-slate-200 max-w-xl leading-relaxed">
               {criticalAttendance.length > 0
-                ? `⚠️ Attention: You have ${criticalAttendance.length} subject${criticalAttendance.length > 1 ? 's' : ''} currently below the minimum attendance requirement.`
-                : 'All your academic standing indicators are currently in healthy standing.'}
+                ? `⚠️ Action Required: You have ${criticalAttendance.length} subject${criticalAttendance.length > 1 ? 's' : ''} below the institutional requirement. Check recovery steps below.`
+                : 'All your academic standing indicators are in healthy standing. Smart Attendance safety buffers are active.'}
             </p>
           </div>
 
-          {/* Quick Action Navigation */}
+          {/* Quick Actions */}
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Link
               to="/attendance"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-lg shadow-[#3B8F83]/20 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-colors"
             >
               <CalendarCheck className="w-3.5 h-3.5" />
               <span>Attendance</span>
             </Link>
             <Link
               to="/attendance/simulate"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-[#3B8F83]/50 text-slate-300 text-xs font-semibold transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#143333] hover:bg-[#1a4040] text-[#E8F5F2] border border-[#3B8F83]/40 text-xs font-semibold transition-colors"
             >
               <Sliders className="w-3.5 h-3.5 text-[#3B8F83]" />
               <span>Simulator</span>
             </Link>
             <Link
               to="/planner"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#143333] hover:bg-[#1a4040] text-slate-200 border border-slate-700 text-xs font-semibold transition-colors"
             >
               <Clock className="w-3.5 h-3.5 text-slate-400" />
               <span>Planner</span>
@@ -300,100 +300,81 @@ export const Dashboard = () => {
       </div>
 
       {loading ? (
-        <div className="p-16 text-center text-xs text-slate-400">
-          Gathering personalized academic data...
+        <div className="p-16 text-center text-xs font-semibold text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
+          Loading student decision-support data...
         </div>
       ) : !hasSubjects ? (
         /* Empty State: Guide user to add subjects */
-        <div className="p-12 rounded-3xl border border-dashed border-slate-800 bg-slate-900/30 text-center space-y-4 max-w-2xl mx-auto">
+        <div className="p-10 rounded-2xl border border-dashed border-slate-300 bg-white text-center space-y-3.5 max-w-2xl mx-auto shadow-xs">
           <BookOpen className="w-12 h-12 text-[#3B8F83] mx-auto" />
           <div className="space-y-1">
-            <h2 className="text-lg font-bold text-white">No Subjects Configured Yet</h2>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-              StudentLens is powered by your real curriculum. Add your subjects to unlock the Smart Attendance Engine, daily timetable schedule, and prioritized academic planner.
+            <h2 className="text-base font-bold text-[#102A2A]">No Subjects Configured Yet</h2>
+            <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+              StudentLens is powered by your real curriculum. Add your semester subjects to unlock the Smart Attendance Engine, daily schedule, and prioritized academic planner.
             </p>
           </div>
           <Link
             to="/profile"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-lg shadow-[#3B8F83]/20 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-colors"
           >
             <span>Add Subjects in Profile</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       ) : (
-        /* Real Connected Dashboard */
-        <div className="space-y-6">
-          {/* Top 4 KPI Metrics Strip */}
+        /* 2. SECOND: 4 Core Status KPI Cards */
+        <div className="space-y-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {/* Overall Attendance */}
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
+            {/* KPI 1: Overall Attendance */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-medium text-slate-400 block">Overall Attendance</span>
-                <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-2xl font-black text-white">
+                <span className="text-xs font-bold text-slate-700 block">Overall Attendance</span>
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-2xl font-black text-[#102A2A]">
                     {attendanceData.overall?.overallPercent || 100}%
                   </span>
                   <span
-                    className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
+                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
                       attendanceData.overall?.overallStatus === 'Safe'
-                        ? 'bg-emerald-500/10 text-emerald-400'
-                        : 'bg-red-500/10 text-red-400'
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                        : 'bg-red-50 text-red-800 border-red-200'
                     }`}
                   >
                     {attendanceData.overall?.overallStatus || 'Safe'}
                   </span>
                 </div>
+                <p className="text-xs text-slate-600 font-medium mt-1">
+                  {attendanceData.overall?.totalAttended || 0} / {attendanceData.overall?.totalConducted || 0} classes attended
+                </p>
               </div>
               <Link
                 to="/attendance"
-                className="text-[11px] text-[#3B8F83] hover:underline flex items-center gap-1 mt-3"
+                className="text-xs font-semibold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1 mt-3"
               >
-                <span>View buffer breakdown</span>
-                <ChevronRight className="w-3 h-3" />
+                <span>Buffer breakdown</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            {/* Streak & Daily Goals */}
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
+            {/* KPI 2: Academic Standing & XP */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-medium text-slate-400 block">StudentLens Streak</span>
-                <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-2xl font-black text-amber-400 flex items-center gap-1">
-                    <Flame className="w-5 h-5 fill-amber-400/20" />
-                    <span>{gamification.currentStreak || 0}d</span>
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    {gamification.todayProgress?.completedCount || 0}/{gamification.todayProgress?.dailyGoal || 3} today
-                  </span>
-                </div>
-              </div>
-              <div className="mt-3">
-                <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className="bg-amber-400 h-full rounded-full transition-all duration-300"
-                    style={{ width: `${gamification.todayProgress?.percent || 0}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Student Level & XP */}
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
-              <div>
-                <span className="text-[11px] font-medium text-slate-400 block">Academic Standing</span>
-                <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-2xl font-black text-[#3B8F83] flex items-center gap-1">
-                    <Zap className="w-5 h-5 fill-[#3B8F83]/20" />
+                <span className="text-xs font-bold text-slate-700 block">Academic Standing</span>
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-2xl font-black text-[#102A2A] flex items-center gap-1.5">
+                    <Zap className="w-4 h-4 text-[#3B8F83] fill-[#3B8F83]/20" />
                     <span>Lvl {gamification.level || 1}</span>
                   </span>
-                  <span className="text-[10px] text-slate-400 font-mono">
+                  <span className="text-[10px] font-mono font-bold text-[#3B8F83] bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
                     {gamification.xp || 0} XP
                   </span>
                 </div>
+                <p className="text-xs text-slate-600 font-medium mt-1">
+                  {gamification.levelProgress?.percent || 0}% toward Level {(gamification.level || 1) + 1}
+                </p>
               </div>
               <div className="mt-3">
-                <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div
                     className="bg-[#3B8F83] h-full rounded-full transition-all duration-300"
                     style={{ width: `${gamification.levelProgress?.percent || 0}%` }}
@@ -402,280 +383,162 @@ export const Dashboard = () => {
               </div>
             </div>
 
-            {/* Career Readiness */}
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between">
+            {/* KPI 3: Career Readiness */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-medium text-slate-400 block">Career Skill Match</span>
-                <span className="text-2xl font-black text-emerald-400 mt-1 block">
-                  {careerReadiness?.readinessScore || 0}%
-                </span>
+                <span className="text-xs font-bold text-slate-700 block">Career Readiness</span>
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-2xl font-black text-[#102A2A]">
+                    {careerReadiness?.readinessScore || 0}%
+                  </span>
+                  <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                    Match
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 font-medium mt-1 truncate">
+                  Role: {careerReadiness?.targetRole || user?.targetRole || 'Software Engineer'}
+                </p>
               </div>
               <Link
                 to="/career"
-                className="text-[11px] text-[#3B8F83] hover:underline flex items-center gap-1 mt-3"
+                className="text-xs font-semibold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1 mt-3"
               >
-                <span>Role: {careerReadiness?.targetRole || 'Select Role'}</span>
-                <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-          </div>
-
-          {/* "YOUR NEXT BEST ACTIONS" Priority Card */}
-          <div className="bg-slate-900/50 border border-[#3B8F83]/30 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-                  <Target className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2">
-                    Your Next Best Actions
-                  </h2>
-                  <p className="text-xs text-slate-400">
-                    Calculated in real-time from attendance urgency, approaching deadlines, and exam proximity.
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/planner"
-                className="text-xs font-semibold text-[#3B8F83] hover:text-[#327a70] flex items-center gap-1"
-              >
-                <span>Full Planner</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Career roadmap</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {nextBestActions.map((action, idx) => (
-                <div
-                  key={action.id}
-                  className={`p-4 rounded-2xl border flex flex-col justify-between gap-3 transition-all ${
-                    action.priority === 'critical'
-                      ? 'bg-red-950/20 border-red-500/30 hover:border-red-500/50'
-                      : action.priority === 'high'
-                      ? 'bg-amber-950/20 border-amber-500/30 hover:border-amber-500/50'
-                      : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        {action.category}
-                      </span>
-                      <span
-                        className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
-                          action.priority === 'critical'
-                            ? 'bg-red-500/20 text-red-400'
-                            : action.priority === 'high'
-                            ? 'bg-amber-500/20 text-amber-400'
-                            : 'bg-[#3B8F83]/20 text-[#3B8F83]'
-                        }`}
-                      >
-                        {action.priority}
-                      </span>
-                    </div>
-                    <h3 className="text-xs font-bold text-white">{action.title}</h3>
-                    <p className="text-[11px] text-slate-300 leading-relaxed">{action.reason}</p>
-                  </div>
-
-                  {action.actionUrl && (
-                    <div className="pt-2 border-t border-slate-800/60 flex justify-end">
-                      {action.actionUrl.startsWith('#') ? (
-                        <a
-                          href={action.actionUrl}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3B8F83] hover:text-[#327a70]"
-                        >
-                          <span>{action.actionLabel || 'Take Action'}</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </a>
-                      ) : (
-                        <Link
-                          to={action.actionUrl}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3B8F83] hover:text-[#327a70]"
-                        >
-                          <span>{action.actionLabel || 'Take Action'}</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Main 2-Column Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left 8 Cols: Attendance Health & Daily Brain Boost */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* Daily Brain Boost Interactive Card */}
-              <div
-                id="brain-boost-card"
-                className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4"
-              >
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-                      <Zap className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        Daily Brain Boost
-                      </h3>
-                      <p className="text-[11px] text-slate-400">
-                        {brainBoost?.question
-                          ? `Category: ${brainBoost.question.category} • Target: ${user?.targetRole || 'Software Engineer'}`
-                          : 'Daily technical challenge'}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
-                    +10 XP
+            {/* KPI 4: Productivity Streak */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-bold text-slate-700 block">StudentLens Streak</span>
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-2xl font-black text-amber-600 flex items-center gap-1">
+                    <Flame className="w-5 h-5 fill-amber-500/20 text-amber-500" />
+                    <span>{gamification.currentStreak || 0}d</span>
+                  </span>
+                  <span className="text-[10px] text-slate-600 font-mono font-bold">
+                    {gamification.todayProgress?.completedCount || 0}/{gamification.todayProgress?.dailyGoal || 3} today
                   </span>
                 </div>
-
-                {!brainBoost?.question ? (
-                  <p className="text-xs text-slate-400 py-3 text-center">
-                    Loading today's challenge...
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    <p className="text-xs sm:text-sm font-semibold text-slate-200">
-                      {brainBoost.question.question}
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {brainBoost.question.options.map((opt, idx) => {
-                        const isSelected = selectedOption === idx;
-                        const isCorrect =
-                          answerFeedback && answerFeedback.correctAnswer === idx;
-
-                        let style = 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-indigo-500/40 hover:bg-slate-900';
-                        if (answerFeedback) {
-                          if (isCorrect) {
-                            style = 'bg-emerald-950/40 border-emerald-500/60 text-emerald-200 font-bold';
-                          } else if (isSelected && !answerFeedback.correct) {
-                            style = 'bg-red-950/40 border-red-500/60 text-red-300';
-                          }
-                        }
-
-                        return (
-                          <button
-                            key={opt}
-                            disabled={Boolean(answerFeedback) || submittingAnswer}
-                            onClick={() => handleAnswerSubmit(idx)}
-                            className={`p-3 rounded-xl border text-xs text-left flex items-center justify-between transition-all ${style}`}
-                          >
-                            <span>{opt}</span>
-                            {answerFeedback && isCorrect && (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {answerFeedback && (
-                      <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1">
-                        <span
-                          className={`font-bold block ${
-                            answerFeedback.correct || answerFeedback.alreadyCompleted
-                              ? 'text-emerald-400'
-                              : 'text-red-400'
-                          }`}
-                        >
-                          {answerFeedback.correct
-                            ? '✅ Correct! +10 XP awarded & streak maintained.'
-                            : answerFeedback.alreadyCompleted
-                            ? '✅ Completed for today!'
-                            : `❌ Incorrect. Correct answer: ${
-                                brainBoost.question.options[answerFeedback.correctAnswer]
-                              }`}
-                        </span>
-                        {answerFeedback.explanation && (
-                          <p className="text-[11px] text-slate-400 leading-relaxed">
-                            {answerFeedback.explanation}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
+                <p className="text-xs text-slate-600 font-medium mt-1">
+                  Daily goals completed today
+                </p>
               </div>
+              <div className="mt-3">
+                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-amber-500 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${gamification.todayProgress?.percent || 0}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
-              {/* Subject Attendance Intelligence Spotlight with [Run What-If] */}
-              <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
+          {/* 3. MAIN HERO ROW: Smart Attendance Intelligence (7 cols) + Next Best Actions (5 cols) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* Left 7 cols: Smart Attendance Engine (HERO Section) */}
+            <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <h2 className="text-sm font-bold text-[#102A2A] flex items-center gap-2">
                       <CalendarCheck className="w-4 h-4 text-[#3B8F83]" />
-                      Attendance Safety Buffers
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Safe absences remaining before falling below institutional requirements.
+                      <span>Smart Attendance Intelligence</span>
+                      <span className="px-2 py-0.5 rounded-full bg-teal-50 text-[#3B8F83] border border-teal-200 text-[10px] font-bold">
+                        Hero Engine
+                      </span>
+                    </h2>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      Deterministic safety buffers & recovery targets calculated in real-time.
                     </p>
                   </div>
                   <Link
                     to="/attendance"
-                    className="text-xs font-semibold text-[#3B8F83] hover:text-[#327a70]"
+                    className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1 shrink-0"
                   >
-                    View All →
+                    <span>Full Analysis</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {attendanceData.subjects.map((item) => (
+                {/* Status Bar Summary */}
+                <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold">
+                    Safe: {attendanceData.overall?.safeCount || 0} subjects
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 font-bold">
+                    Attention Needed: {(attendanceData.overall?.atRiskCount || 0) + (attendanceData.overall?.criticalCount || 0)} subjects
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 font-medium">
+                    75% requirement
+                  </span>
+                </div>
+
+                {/* Per-Subject Intelligence Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3.5">
+                  {attendanceData.subjects.slice(0, 4).map((item) => (
                     <div
                       key={item.subject._id}
-                      className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/60 flex flex-col justify-between"
+                      className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/90 hover:border-[#3B8F83]/50 transition-all flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-white truncate max-w-[150px]">
+                          <span className="text-xs font-bold text-[#102A2A] truncate max-w-[130px]">
                             {item.subject.name}
                           </span>
                           <span
-                            className={`text-[10px] font-bold ${
+                            className={`text-[11px] font-black ${
                               item.currentPercent >= item.minPercent
-                                ? 'text-emerald-400'
-                                : 'text-red-400'
+                                ? 'text-emerald-700'
+                                : 'text-red-600'
                             }`}
                           >
                             {item.currentPercent}%
                           </span>
                         </div>
 
-                        <div className="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                        {/* Progress Bar */}
+                        <div className="w-full bg-slate-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
                               item.status === 'Safe'
                                 ? 'bg-[#3B8F83]'
                                 : item.status === 'At Risk'
-                                ? 'bg-amber-400'
+                                ? 'bg-amber-500'
                                 : 'bg-red-500'
                             }`}
                             style={{ width: `${Math.min(100, item.currentPercent)}%` }}
-                          ></div>
+                          />
+                        </div>
+
+                        {/* Attendance Decision Indicator */}
+                        <div className="mt-2.5">
+                          {item.currentPercent >= item.minPercent ? (
+                            <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200/90 flex items-start gap-1.5 text-[11px] text-emerald-900 font-semibold">
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
+                              <span>Buffer: +{item.safeAbsenceBuffer} {item.safeAbsenceBuffer === 1 ? 'class' : 'classes'} can be missed safely</span>
+                            </div>
+                          ) : (
+                            <div className="p-2 rounded-lg bg-red-50 border border-red-200/90 flex items-start gap-1.5 text-[11px] text-red-900 font-semibold">
+                              <AlertTriangle className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
+                              <span>Recovery: Attend next {item.recoveryNeeded} classes consecutively</span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-                        <span className="text-slate-400">
-                          {item.currentPercent >= item.minPercent ? (
-                            <span className="text-emerald-300 font-medium">
-                              Buffer: {item.safeAbsenceBuffer} {item.safeAbsenceBuffer === 1 ? 'class' : 'classes'}
-                            </span>
-                          ) : (
-                            <span className="text-red-400 font-medium">
-                              Need {item.recoveryNeeded} to recover
-                            </span>
-                          )}
+                      <div className="mt-2.5 pt-2 border-t border-slate-200/70 flex items-center justify-between text-[11px]">
+                        <span className="text-slate-600 font-medium">
+                          {item.attended}/{item.conducted} classes
                         </span>
                         <Link
                           to={`/attendance/simulate?subjectId=${item.subject._id}`}
-                          className="px-2 py-0.5 rounded bg-[#3B8F83]/10 hover:bg-[#3B8F83]/20 text-[#3B8F83] text-[10px] font-semibold border border-[#3B8F83]/30 transition-all"
+                          className="font-bold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1"
                         >
-                          Run What-If
+                          <Sliders className="w-3 h-3" />
+                          <span>Run What-If</span>
                         </Link>
                       </div>
                     </div>
@@ -684,130 +547,382 @@ export const Dashboard = () => {
               </div>
             </div>
 
-            {/* Right 4 Cols: Today's Schedule & Milestones */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* Today's Classes */}
-              <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-[#3B8F83]" />
-                    Today's Classes
-                  </h3>
-                  <Link to="/timetable" className="text-[11px] text-[#3B8F83] hover:underline">
-                    Schedule
+            {/* Right 5 cols: Recommended Actions (Next Best Actions) */}
+            <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-[#102A2A] flex items-center gap-2">
+                      <Target className="w-4 h-4 text-amber-600" />
+                      <span>Next Best Actions</span>
+                      <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">
+                        Priority Guidance
+                      </span>
+                    </h2>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      Prescribed action plan prioritized by immediate academic urgency.
+                    </p>
+                  </div>
+                  <Link
+                    to="/planner"
+                    className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1 shrink-0"
+                  >
+                    <span>Planner</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
 
-                {todayClasses.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic py-4 text-center">
-                    No classes scheduled for today.
-                  </p>
-                ) : (
-                  <div className="space-y-2">
-                    {todayClasses.map((c) => (
+                <div className="space-y-2.5 mt-3.5">
+                  {nextBestActions.length === 0 ? (
+                    <div className="py-8 text-center text-xs text-slate-600">
+                      <CheckCircle2 className="w-6 h-6 text-emerald-600 mx-auto mb-1.5" />
+                      All coursework, attendance, and exam prep are currently on track!
+                    </div>
+                  ) : (
+                    nextBestActions.slice(0, 3).map((action) => (
                       <div
-                        key={c._id}
-                        className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/60 flex items-center justify-between"
+                        key={action.id}
+                        className={`p-3 rounded-xl border flex flex-col justify-between gap-1.5 transition-all ${
+                          action.priority === 'critical'
+                            ? 'bg-red-50/50 border-red-200 hover:border-red-300'
+                            : action.priority === 'high'
+                            ? 'bg-amber-50/50 border-amber-200 hover:border-amber-300'
+                            : 'bg-slate-50/70 border-slate-200 hover:border-slate-300'
+                        }`}
                       >
                         <div>
-                          <span className="text-xs font-bold text-white block">
-                            {c.subjectId?.name || 'Class'}
-                          </span>
-                          <span className="text-[10px] text-slate-400 font-mono">
-                            {c.startTime} - {c.endTime} {c.room && `• Room ${c.room}`}
-                          </span>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                              {action.category}
+                            </span>
+                            <span
+                              className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
+                                action.priority === 'critical'
+                                  ? 'bg-red-100 text-red-800'
+                                  : action.priority === 'high'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-teal-100 text-teal-800'
+                              }`}
+                            >
+                              {action.priority}
+                            </span>
+                          </div>
+                          <h3 className="text-xs font-bold text-[#102A2A] mt-1">{action.title}</h3>
+                          <p className="text-[11px] text-slate-700 leading-relaxed mt-0.5">{action.reason}</p>
                         </div>
+
+                        {action.actionUrl && (
+                          <div className="pt-1.5 border-t border-slate-200/60 flex justify-end">
+                            {action.actionUrl.startsWith('#') ? (
+                              <a
+                                href={action.actionUrl}
+                                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3B8F83] hover:text-[#2d6f66]"
+                              >
+                                <span>{action.actionLabel || 'Take Action'}</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </a>
+                            ) : (
+                              <Link
+                                to={action.actionUrl}
+                                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3B8F83] hover:text-[#2d6f66]"
+                              >
+                                <span>{action.actionLabel || 'Take Action'}</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. THIRD TIER: Timetable & Academic Milestones (2 Columns: 6 cols / 6 cols) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* Left 6 cols: Today's Classes */}
+            <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-[#3B8F83]" />
+                    <span>Today's Classes</span>
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Lectures and practical sessions scheduled for today.
+                  </p>
+                </div>
+                <Link to="/timetable" className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66]">
+                  Schedule →
+                </Link>
               </div>
 
-              {/* Upcoming Exams Countdown */}
-              <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                    <GraduationCap className="w-4 h-4 text-amber-400" />
-                    Upcoming Exams
+              <div className="mt-3.5 space-y-2">
+                {todayClasses.length === 0 ? (
+                  <div className="py-6 text-center text-xs text-slate-600">
+                    <Calendar className="w-7 h-7 text-slate-400 mx-auto mb-1.5" />
+                    <p className="font-bold text-slate-800">No classes scheduled for today</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5">Your timetable will appear here when classes are active.</p>
+                  </div>
+                ) : (
+                  todayClasses.map((c) => (
+                    <div
+                      key={c._id}
+                      className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between"
+                    >
+                      <div>
+                        <span className="text-xs font-bold text-[#102A2A] block">
+                          {c.subjectId?.name || 'Class'}
+                        </span>
+                        <span className="text-[11px] text-slate-600 font-mono">
+                          {c.startTime} - {c.endTime} {c.room && `• Room ${c.room}`}
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-800 border border-teal-200">
+                        Scheduled
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Right 6 cols: Coursework Deliverables & Upcoming Exams */}
+            <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs space-y-4">
+              {/* Deliverables */}
+              <div>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-1.5">
+                    <ClipboardList className="w-4 h-4 text-amber-600" />
+                    <span>Pending Deliverables</span>
                   </h3>
-                  <Link to="/exams" className="text-[11px] text-[#3B8F83] hover:underline">
-                    View
+                  <Link to="/assignments" className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66]">
+                    View →
                   </Link>
                 </div>
 
-                {upcomingExams.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic py-4 text-center">
-                    No upcoming exams scheduled.
-                  </p>
-                ) : (
-                  <div className="space-y-2">
-                    {upcomingExams.slice(0, 3).map((e) => {
+                <div className="mt-2.5 space-y-2">
+                  {pendingAssignments.length === 0 ? (
+                    <p className="text-xs text-slate-600 italic py-2">
+                      All coursework submitted! No pending deadlines.
+                    </p>
+                  ) : (
+                    pendingAssignments.slice(0, 2).map((a) => (
+                      <div
+                        key={a._id}
+                        className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between"
+                      >
+                        <div className="truncate max-w-[200px]">
+                          <span className="text-xs font-bold text-[#102A2A] block truncate">
+                            {a.title}
+                          </span>
+                          <span className="text-[11px] text-slate-600">
+                            {a.subjectId?.name || 'Coursework'}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                          Due {new Date(a.dueDate).toLocaleDateString(undefined, {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Upcoming Exams */}
+              <div className="pt-2 border-t border-slate-100">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-1.5">
+                    <GraduationCap className="w-4 h-4 text-[#3B8F83]" />
+                    <span>Upcoming Exams</span>
+                  </h3>
+                  <Link to="/exams" className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66]">
+                    View →
+                  </Link>
+                </div>
+
+                <div className="mt-2.5 space-y-2">
+                  {upcomingExams.length === 0 ? (
+                    <p className="text-xs text-slate-600 italic py-2">
+                      No upcoming exams scheduled.
+                    </p>
+                  ) : (
+                    upcomingExams.slice(0, 2).map((e) => {
                       const diffDays = Math.ceil(
                         (new Date(e.date) - new Date()) / (1000 * 60 * 60 * 24)
                       );
                       return (
                         <div
                           key={e._id}
-                          className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/60 flex items-center justify-between"
+                          className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between"
                         >
                           <div>
-                            <span className="text-xs font-bold text-white block">
+                            <span className="text-xs font-bold text-[#102A2A] block">
                               {e.subjectId?.name}
                             </span>
-                            <span className="text-[10px] text-slate-400 capitalize">
-                              {e.examType}
+                            <span className="text-[11px] text-slate-600 capitalize">
+                              {e.examType} {e.venue && `• ${e.venue}`}
                             </span>
                           </div>
-                          <span className="text-xs font-bold text-yellow-400 font-mono">
+                          <span className="text-xs font-bold text-amber-700 font-mono bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
                             {diffDays <= 0 ? 'Today' : `In ${diffDays}d`}
                           </span>
                         </div>
                       );
-                    })}
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. FOURTH TIER: Daily Brain Boost (7 cols) + Smart Planner Progress (5 cols) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* Left 7 cols: Daily Brain Boost Interactive Card */}
+            <div
+              id="brain-boost-card"
+              className="lg:col-span-7 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs space-y-3.5"
+            >
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+                    <Zap className="w-4 h-4" />
                   </div>
-                )}
+                  <div>
+                    <h3 className="text-sm font-bold text-[#102A2A] flex items-center gap-2">
+                      Daily Brain Boost
+                    </h3>
+                    <p className="text-xs text-slate-600">
+                      {brainBoost?.question
+                        ? `Category: ${brainBoost.question.category} • Target: ${user?.targetRole || 'Software Engineer'}`
+                        : 'Daily technical challenge'}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                  +10 XP
+                </span>
               </div>
 
-              {/* Upcoming Assignments */}
-              <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                    <ClipboardList className="w-4 h-4 text-yellow-400" />
-                    Pending Deliverables
-                  </h3>
-                  <Link to="/assignments" className="text-[11px] text-[#3B8F83] hover:underline">
-                    View
-                  </Link>
-                </div>
+              {!brainBoost?.question ? (
+                <p className="text-xs text-slate-600 py-3 text-center">
+                  Loading today's challenge...
+                </p>
+              ) : (
+                <div className="space-y-3.5">
+                  <p className="text-xs sm:text-sm font-bold text-[#102A2A]">
+                    {brainBoost.question.question}
+                  </p>
 
-                {pendingAssignments.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic py-4 text-center">
-                    All coursework submitted!
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {brainBoost.question.options.map((opt, idx) => {
+                      const isSelected = selectedOption === idx;
+                      const isCorrect =
+                        answerFeedback && answerFeedback.correctAnswer === idx;
+
+                      let style = 'bg-slate-50 border-slate-200 text-slate-800 hover:border-[#3B8F83] hover:bg-teal-50/30';
+                      if (answerFeedback) {
+                        if (isCorrect) {
+                          style = 'bg-emerald-50 border-emerald-300 text-emerald-950 font-bold';
+                        } else if (isSelected && !answerFeedback.correct) {
+                          style = 'bg-red-50 border-red-300 text-red-950';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={opt}
+                          disabled={Boolean(answerFeedback) || submittingAnswer}
+                          onClick={() => handleAnswerSubmit(idx)}
+                          className={`p-3 rounded-xl border text-xs text-left flex items-center justify-between transition-all ${style}`}
+                        >
+                          <span>{opt}</span>
+                          {answerFeedback && isCorrect && (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {answerFeedback && (
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                      <span
+                        className={`font-bold block ${
+                          answerFeedback.correct || answerFeedback.alreadyCompleted
+                            ? 'text-emerald-800'
+                            : 'text-red-700'
+                        }`}
+                      >
+                        {answerFeedback.correct
+                          ? '✅ Correct! +10 XP awarded & streak maintained.'
+                          : answerFeedback.alreadyCompleted
+                          ? '✅ Completed for today!'
+                          : `❌ Incorrect. Correct answer: ${
+                              brainBoost.question.options[answerFeedback.correctAnswer]
+                            }`}
+                      </span>
+                      {answerFeedback.explanation && (
+                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                          {answerFeedback.explanation}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Right 5 cols: Smart Planner Priorities */}
+            <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-[#3B8F83]" />
+                    <span>Smart Planner Focus</span>
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    High-leverage tasks to advance your academic goals.
+                  </p>
+                </div>
+                <Link to="/planner" className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66]">
+                  Planner →
+                </Link>
+              </div>
+
+              <div className="space-y-2 mt-3.5">
+                {plannerItems.length === 0 ? (
+                  <p className="text-xs text-slate-600 italic py-6 text-center">
+                    Add milestones or study goals in the Smart Planner to view priorities here.
                   </p>
                 ) : (
-                  <div className="space-y-2">
-                    {pendingAssignments.slice(0, 3).map((a) => (
-                      <div
-                        key={a._id}
-                        className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/60 flex items-center justify-between"
-                      >
-                        <div className="truncate max-w-[180px]">
-                          <span className="text-xs font-bold text-white block truncate">
-                            {a.title}
-                          </span>
-                          <span className="text-[10px] text-slate-400">
-                            {a.subjectId?.name || 'Coursework'}
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-mono text-slate-300">
-                          {new Date(a.dueDate).toLocaleDateString(undefined, {
-                            month: 'short',
-                            day: 'numeric'
-                          })}
+                  plannerItems.slice(0, 3).map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start justify-between gap-2"
+                    >
+                      <div className="space-y-0.5">
+                        <span className="text-xs font-bold text-[#102A2A] block">
+                          {item.title}
                         </span>
+                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                          {item.reason}
+                        </p>
                       </div>
-                    ))}
-                  </div>
+                      <Link
+                        to={item.actionUrl || '/planner'}
+                        className="text-[#3B8F83] hover:text-[#2d6f66] shrink-0 mt-0.5"
+                        title="Go to task"
+                      >
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  ))
                 )}
               </div>
             </div>

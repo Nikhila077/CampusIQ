@@ -69,25 +69,25 @@ export const Planner = () => {
     switch (priority) {
       case 'critical':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/30">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-900 border border-red-200">
             Critical
           </span>
         );
       case 'high':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-200">
             High Priority
           </span>
         );
       case 'medium':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-yellow-100 text-yellow-900 border border-yellow-200">
             Medium Priority
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-800 border border-slate-200">
             Low Priority
           </span>
         );
@@ -97,15 +97,15 @@ export const Planner = () => {
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'attendance':
-        return <AlertOctagon className="w-4 h-4 text-red-400" />;
+        return <AlertOctagon className="w-4 h-4 text-red-600" />;
       case 'exam':
-        return <GraduationCap className="w-4 h-4 text-indigo-400" />;
+        return <GraduationCap className="w-4 h-4 text-[#3B8F83]" />;
       case 'assignment':
-        return <ClipboardList className="w-4 h-4 text-yellow-400" />;
+        return <ClipboardList className="w-4 h-4 text-amber-600" />;
       case 'performance':
-        return <AlertTriangle className="w-4 h-4 text-purple-400" />;
+        return <AlertTriangle className="w-4 h-4 text-purple-600" />;
       default:
-        return <BookOpen className="w-4 h-4 text-blue-400" />;
+        return <BookOpen className="w-4 h-4 text-[#3B8F83]" />;
     }
   };
 
@@ -120,25 +120,25 @@ export const Planner = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/90 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Clock className="w-6 h-6 text-indigo-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#102A2A] flex items-center gap-2.5">
+            <Clock className="w-6 h-6 text-[#3B8F83]" />
             Smart Academic Decision Planner
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 mt-1">
             Prioritized daily and weekly action recommendations with explicit reasoning. Complete actions to earn +5 XP each!
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold">
-            <Flame className="w-4 h-4 text-amber-400" />
-            <span className="text-amber-400">{gamification.currentStreak || 0}d Streak</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-900 shadow-xs">
+            <Flame className="w-4 h-4 text-amber-500 fill-amber-500/20" />
+            <span>{gamification.currentStreak || 0}d Streak</span>
           </div>
           <button
             onClick={fetchPlan}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
           >
             <Sparkles className="w-4 h-4" /> Refresh Plan
           </button>
@@ -146,14 +146,14 @@ export const Planner = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400">
+        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
           Synthesizing academic schedules, exams, and attendance buffers...
         </div>
       ) : plan.length === 0 ? (
-        <div className="p-12 rounded-2xl border border-dashed border-slate-800 text-center bg-slate-900/20">
-          <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-          <h3 className="text-base font-bold text-white">All Caught Up!</h3>
-          <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+        <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
+          <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-2" />
+          <h3 className="text-base font-bold text-[#102A2A]">All Caught Up!</h3>
+          <p className="text-xs text-slate-600 mt-1 max-w-md mx-auto">
             No critical attendance shortages, upcoming exams, or pending overdue assignments right now. You are in a safe academic zone.
           </p>
         </div>
@@ -163,32 +163,32 @@ export const Planner = () => {
           {highPriorityTasks.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-                <h2 className="text-xs font-bold uppercase tracking-wider text-red-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-red-800">
                   High Priority Actions ({highPriorityTasks.length})
                 </h2>
               </div>
 
               <div className="space-y-2.5">
-                {highPriorityTasks.map((item, idx) => {
+                {highPriorityTasks.map((item) => {
                   const isDone = completedTasks.includes(item.id);
                   return (
                     <div
                       key={item.id}
-                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all shadow-xs ${
                         isDone
-                          ? 'bg-slate-950/40 border-slate-800/40 opacity-60'
-                          : 'bg-red-950/20 border-red-500/30 hover:border-red-500/50'
+                          ? 'bg-slate-50 border-slate-200 opacity-60'
+                          : 'bg-white border-red-200 hover:border-red-300'
                       }`}
                     >
                       <div className="flex items-start gap-3.5">
                         <button
                           onClick={() => handleCompleteTask(item.id)}
                           disabled={isDone}
-                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 ${
+                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                             isDone
-                              ? 'bg-emerald-500 border-emerald-500 text-white'
-                              : 'border-slate-700 hover:border-indigo-400 bg-slate-900'
+                              ? 'bg-emerald-600 border-emerald-600 text-white'
+                              : 'border-slate-300 hover:border-[#3B8F83] bg-white'
                           }`}
                           title="Complete task (+5 XP)"
                         >
@@ -197,19 +197,19 @@ export const Planner = () => {
 
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}`}>
+                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-[#102A2A]'}`}>
                               {item.title}
                             </h3>
                             {getPriorityBadge(item.priority)}
-                            <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded border border-amber-500/20">
+                            <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
                               +5 XP
                             </span>
                           </div>
-                          <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                            <strong>Reason:</strong> {item.reason}
+                          <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                            <strong className="text-slate-900">Reason:</strong> {item.reason}
                           </p>
-                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
-                            <span className="font-semibold text-indigo-400">{item.subject}</span>
+                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-600">
+                            <span className="font-bold text-[#3B8F83]">{item.subject}</span>
                             <span>•</span>
                             <span className="capitalize">{item.category}</span>
                           </div>
@@ -220,7 +220,7 @@ export const Planner = () => {
                         <div className="shrink-0 pl-9 sm:pl-0">
                           <Link
                             to={item.actionUrl}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all"
                           >
                             <span>Action</span>
                             <ArrowRight className="w-3.5 h-3.5" />
@@ -238,8 +238,8 @@ export const Planner = () => {
           {mediumPriorityTasks.length > 0 && (
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-2 px-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                <h2 className="text-xs font-bold uppercase tracking-wider text-yellow-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-amber-800">
                   Medium Priority Actions ({mediumPriorityTasks.length})
                 </h2>
               </div>
@@ -250,20 +250,20 @@ export const Planner = () => {
                   return (
                     <div
                       key={item.id}
-                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all shadow-xs ${
                         isDone
-                          ? 'bg-slate-950/40 border-slate-800/40 opacity-60'
-                          : 'bg-yellow-950/15 border-yellow-500/30 hover:border-yellow-500/50'
+                          ? 'bg-slate-50 border-slate-200 opacity-60'
+                          : 'bg-white border-amber-200 hover:border-amber-300'
                       }`}
                     >
                       <div className="flex items-start gap-3.5">
                         <button
                           onClick={() => handleCompleteTask(item.id)}
                           disabled={isDone}
-                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 ${
+                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                             isDone
-                              ? 'bg-emerald-500 border-emerald-500 text-white'
-                              : 'border-slate-700 hover:border-indigo-400 bg-slate-900'
+                              ? 'bg-emerald-600 border-emerald-600 text-white'
+                              : 'border-slate-300 hover:border-[#3B8F83] bg-white'
                           }`}
                           title="Complete task (+5 XP)"
                         >
@@ -272,19 +272,19 @@ export const Planner = () => {
 
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}`}>
+                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-[#102A2A]'}`}>
                               {item.title}
                             </h3>
                             {getPriorityBadge(item.priority)}
-                            <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded border border-amber-500/20">
+                            <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
                               +5 XP
                             </span>
                           </div>
-                          <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                            <strong>Reason:</strong> {item.reason}
+                          <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                            <strong className="text-slate-900">Reason:</strong> {item.reason}
                           </p>
-                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
-                            <span className="font-semibold text-indigo-400">{item.subject}</span>
+                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-600">
+                            <span className="font-bold text-[#3B8F83]">{item.subject}</span>
                             <span>•</span>
                             <span className="capitalize">{item.category}</span>
                           </div>
@@ -295,7 +295,7 @@ export const Planner = () => {
                         <div className="shrink-0 pl-9 sm:pl-0">
                           <Link
                             to={item.actionUrl}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-slate-300 text-xs font-semibold shadow-sm transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all"
                           >
                             <span>Action</span>
                             <ArrowRight className="w-3.5 h-3.5" />
@@ -313,8 +313,8 @@ export const Planner = () => {
           {lowPriorityTasks.length > 0 && (
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-2 px-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                <h2 className="text-xs font-bold uppercase tracking-wider text-blue-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-teal-500" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-teal-800">
                   Scheduled Tasks ({lowPriorityTasks.length})
                 </h2>
               </div>
@@ -325,20 +325,20 @@ export const Planner = () => {
                   return (
                     <div
                       key={item.id}
-                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all ${
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all shadow-xs ${
                         isDone
-                          ? 'bg-slate-950/40 border-slate-800/40 opacity-60'
-                          : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
+                          ? 'bg-slate-50 border-slate-200 opacity-60'
+                          : 'bg-white border-slate-200 hover:border-slate-300'
                       }`}
                     >
                       <div className="flex items-start gap-3.5">
                         <button
                           onClick={() => handleCompleteTask(item.id)}
                           disabled={isDone}
-                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 ${
+                          className={`mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                             isDone
-                              ? 'bg-emerald-500 border-emerald-500 text-white'
-                              : 'border-slate-700 hover:border-indigo-400 bg-slate-900'
+                              ? 'bg-emerald-600 border-emerald-600 text-white'
+                              : 'border-slate-300 hover:border-[#3B8F83] bg-white'
                           }`}
                           title="Complete task (+5 XP)"
                         >
@@ -347,16 +347,16 @@ export const Planner = () => {
 
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-white'}`}>
+                            <h3 className={`text-sm font-bold ${isDone ? 'line-through text-slate-400' : 'text-[#102A2A]'}`}>
                               {item.title}
                             </h3>
                             {getPriorityBadge(item.priority)}
                           </div>
-                          <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                          <p className="text-xs text-slate-700 leading-relaxed font-medium">
                             {item.reason}
                           </p>
-                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
-                            <span className="font-semibold text-indigo-400">{item.subject}</span>
+                          <div className="flex items-center gap-2 pt-0.5 text-[11px] text-slate-600">
+                            <span className="font-bold text-[#3B8F83]">{item.subject}</span>
                             <span>•</span>
                             <span className="capitalize">{item.category}</span>
                           </div>
@@ -367,7 +367,7 @@ export const Planner = () => {
                         <div className="shrink-0 pl-9 sm:pl-0">
                           <Link
                             to={item.actionUrl}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-slate-300 text-xs font-semibold shadow-sm transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 hover:border-[#3B8F83]/40 text-slate-800 text-xs font-semibold shadow-xs transition-all"
                           >
                             <span>Action</span>
                             <ArrowRight className="w-3.5 h-3.5" />

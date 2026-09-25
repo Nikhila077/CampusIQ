@@ -102,13 +102,13 @@ export const Exams = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/90 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <GraduationCap className="w-6 h-6 text-indigo-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#102A2A] flex items-center gap-2.5">
+            <GraduationCap className="w-6 h-6 text-[#3B8F83]" />
             Exam Schedules & Countdown
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 mt-1">
             Track midterms, finals, quizzes, and practical assessments with live preparation countdowns.
           </p>
         </div>
@@ -116,25 +116,25 @@ export const Exams = () => {
         <button
           onClick={handleOpenModal}
           disabled={subjects.length === 0}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Schedule Exam
         </button>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400">Loading exams...</div>
+        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">Loading exams...</div>
       ) : exams.length === 0 ? (
-        <div className="p-12 rounded-2xl border border-dashed border-slate-800 text-center bg-slate-900/20">
-          <GraduationCap className="w-10 h-10 text-slate-600 mx-auto mb-2" />
-          <h3 className="text-sm font-semibold text-slate-300">No exams scheduled</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+        <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
+          <GraduationCap className="w-10 h-10 text-slate-400 mx-auto mb-2" />
+          <h3 className="text-sm font-bold text-[#102A2A]">No exams scheduled</h3>
+          <p className="text-xs text-slate-600 mt-1 max-w-sm mx-auto">
             Add your upcoming midterms, finals, or practical dates so the Smart Planner can prioritize study sessions for you.
           </p>
           <button
             onClick={handleOpenModal}
             disabled={subjects.length === 0}
-            className="mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold disabled:opacity-50"
+            className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer"
           >
             Schedule First Exam
           </button>
@@ -149,27 +149,27 @@ export const Exams = () => {
             return (
               <div
                 key={exam._id}
-                className={`bg-slate-900/40 border rounded-2xl p-5 flex flex-col justify-between transition-all ${
+                className={`bg-white border rounded-2xl p-5 flex flex-col justify-between transition-all shadow-xs ${
                   isPast
-                    ? 'border-slate-800/40 opacity-60'
+                    ? 'border-slate-200/80 opacity-60 bg-slate-50/50'
                     : diffDays <= 2
-                    ? 'border-red-500/40 bg-red-950/10'
+                    ? 'border-red-200 bg-red-50/20'
                     : diffDays <= 7
-                    ? 'border-yellow-500/40'
-                    : 'border-slate-800/80 hover:border-slate-700/80'
+                    ? 'border-amber-200 bg-amber-50/20'
+                    : 'border-slate-200/90 hover:border-[#3B8F83]/40'
                 }`}
               >
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 inline-block mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-900 border border-teal-200 inline-block mb-1">
                         {exam.examType}
                       </span>
-                      <h3 className="text-base font-bold text-white tracking-tight">
+                      <h3 className="text-base font-bold text-[#102A2A] tracking-tight">
                         {exam.subjectId?.name || 'Subject Exam'}
                       </h3>
                       {exam.subjectId?.code && (
-                        <span className="text-[10px] font-mono text-slate-400">
+                        <span className="text-[10px] font-mono text-slate-600">
                           {exam.subjectId.code}
                         </span>
                       )}
@@ -177,55 +177,55 @@ export const Exams = () => {
 
                     <div className="text-right">
                       {isPast ? (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">
                           Completed
                         </span>
                       ) : diffDays === 0 ? (
-                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse">
+                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-red-100 text-red-900 border border-red-200">
                           Today!
                         </span>
                       ) : diffDays === 1 ? (
-                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-yellow-500/20 text-yellow-400 border border-yellow-500/40">
+                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-900 border border-amber-200">
                           Tomorrow
                         </span>
                       ) : (
-                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-teal-50 text-teal-900 border border-teal-200">
                           In {diffDays} days
                         </span>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-300">
+                  <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-100 text-xs text-slate-700">
                     <div className="flex items-center gap-1.5 font-mono">
-                      <Calendar className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>{examDate.toLocaleDateString()}</span>
+                      <Calendar className="w-3.5 h-3.5 text-[#3B8F83]" />
+                      <span className="font-semibold">{examDate.toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center gap-1.5 font-mono">
-                      <Clock className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>{exam.startTime || '10:00 AM'}</span>
+                      <Clock className="w-3.5 h-3.5 text-[#3B8F83]" />
+                      <span className="font-semibold">{exam.startTime || '10:00 AM'}</span>
                     </div>
                   </div>
 
                   {exam.venue && (
-                    <div className="flex items-center gap-1.5 mt-2 text-xs text-slate-400">
-                      <MapPin className="w-3.5 h-3.5 text-slate-500" />
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-slate-600">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
                       <span>Venue: {exam.venue}</span>
                     </div>
                   )}
 
                   {exam.syllabus && (
-                    <div className="mt-3 p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/60 text-[11px] text-slate-400">
-                      <span className="font-semibold text-slate-300 block mb-0.5">Syllabus:</span>
+                    <div className="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-700">
+                      <span className="font-bold text-slate-900 block mb-0.5">Syllabus:</span>
                       <p className="line-clamp-2">{exam.syllabus}</p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/60 flex justify-end">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end">
                   <button
                     onClick={() => handleDeleteExam(exam._id, exam.subjectId?.name)}
-                    className="p-1 text-slate-500 hover:text-red-400 transition-colors"
+                    className="p-1 text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
                     title="Delete exam"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -239,24 +239,24 @@ export const Exams = () => {
 
       {/* Schedule Exam Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-white mb-4">Schedule Upcoming Exam</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl">
+            <h3 className="text-base font-bold text-[#102A2A] mb-4">Schedule Upcoming Exam</h3>
 
             {error && (
-              <div className="mb-4 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+              <div className="mb-4 p-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSaveExam} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Subject *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Subject *</label>
                 <select
                   required
                   value={form.subjectId}
                   onChange={(e) => setForm({ ...form, subjectId: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                 >
                   <option value="">Select subject...</option>
                   {subjects.map((s) => (
@@ -269,13 +269,13 @@ export const Exams = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
                     Exam Type *
                   </label>
                   <select
                     value={form.examType}
                     onChange={(e) => setForm({ ...form, examType: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   >
                     <option value="midterm">Midterm</option>
                     <option value="final">Final Exam</option>
@@ -285,43 +285,43 @@ export const Exams = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Date *</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Date *</label>
                   <input
                     type="date"
                     required
                     value={form.date}
                     onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
                     Start Time
                   </label>
                   <input
                     type="time"
                     value={form.startTime}
                     onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Venue</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Venue</label>
                   <input
                     type="text"
                     placeholder="e.g. Exam Hall 4"
                     value={form.venue}
                     onChange={(e) => setForm({ ...form, venue: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Syllabus Units / Chapters
                 </label>
                 <textarea
@@ -329,7 +329,7 @@ export const Exams = () => {
                   placeholder="e.g. Units 1, 2, 3: Relational Algebra & SQL Normalization"
                   value={form.syllabus}
                   onChange={(e) => setForm({ ...form, syllabus: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                 ></textarea>
               </div>
 
@@ -337,14 +337,14 @@ export const Exams = () => {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? 'Scheduling...' : 'Save Exam'}
                 </button>

@@ -354,7 +354,7 @@ export const AppLayout = () => {
         {/* Desktop Sidebar Navigation */}
         <aside className="hidden lg:block w-64 shrink-0">
           <div className="sticky top-24 rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-xl p-3 shadow-sm">
-            <div className="px-3 py-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="px-3 py-2 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
               Navigation
             </div>
             <nav className="space-y-1 mt-1">
@@ -365,18 +365,18 @@ export const AppLayout = () => {
                     key={item.name}
                     to={item.to}
                     className={({ isActive }) =>
-                      `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 group ${
+                      `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 group ${
                         isActive
-                          ? 'bg-teal-50 text-teal-900 font-semibold border border-teal-200 shadow-sm'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                          ? 'bg-teal-50 text-teal-950 font-bold border border-teal-300/80 shadow-xs'
+                          : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100/70'
                       }`
                     }
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className="w-4 h-4 text-slate-400 group-hover:text-[#3B8F83] transition-colors" />
+                      <Icon className="w-4 h-4 text-slate-600 group-hover:text-[#3B8F83] transition-colors" />
                       <span>{item.name}</span>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#3B8F83] transition-colors" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#3B8F83] transition-colors" />
                   </NavLink>
                 );
               })}
@@ -421,10 +421,10 @@ export const AppLayout = () => {
                         to={item.to}
                         onClick={() => setMobileMenuOpen(false)}
                         className={({ isActive }) =>
-                          `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                          `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                             isActive
-                              ? 'bg-teal-50 text-teal-900 font-semibold border border-teal-200'
-                              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                              ? 'bg-teal-50 text-teal-950 font-bold border border-teal-300 shadow-xs'
+                              : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
                           }`
                         }
                       >
@@ -432,7 +432,7 @@ export const AppLayout = () => {
                           <Icon className="w-4 h-4 text-[#3B8F83]" />
                           <span>{item.name}</span>
                         </div>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
                       </NavLink>
                     );
                   })}

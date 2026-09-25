@@ -108,13 +108,13 @@ export const Timetable = () => {
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/90 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Calendar className="w-6 h-6 text-indigo-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#102A2A] flex items-center gap-2.5">
+            <Calendar className="w-6 h-6 text-[#3B8F83]" />
             Weekly Class Schedule
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 mt-1">
             Organize lectures, laboratory sessions, and classrooms across the week.
           </p>
         </div>
@@ -122,46 +122,47 @@ export const Timetable = () => {
         <button
           onClick={handleOpenModal}
           disabled={subjects.length === 0}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Class Slot
         </button>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400">Loading timetable...</div>
+        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">Loading timetable...</div>
       ) : subjects.length === 0 ? (
-        <div className="p-12 rounded-2xl border border-dashed border-slate-800 text-center bg-slate-900/20">
-          <BookOpen className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-          <h3 className="text-sm font-semibold text-slate-300">Add Subjects First</h3>
-          <p className="text-xs text-slate-500 mt-1">
+        <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
+          <BookOpen className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+          <h3 className="text-sm font-bold text-[#102A2A]">Add Subjects First</h3>
+          <p className="text-xs text-slate-600 mt-1">
             Please add your semester subjects in Profile before building your timetable schedule.
           </p>
         </div>
       ) : (
         <>
           {/* Today's Classes Spotlight */}
-          <div className="bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-900/40 border border-indigo-500/20 rounded-2xl p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-2">
-                <CalendarDays className="w-4 h-4 text-indigo-400" />
+          <div className="bg-[#102A2A] text-white border border-[#102A2A] rounded-2xl p-5 shadow-sm relative overflow-hidden">
+            <div className="absolute -right-8 -bottom-8 w-60 h-60 bg-[#3B8F83]/15 rounded-full blur-2xl pointer-events-none" />
+            <div className="flex items-center justify-between mb-3 relative z-10">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#E8F5F2] flex items-center gap-2">
+                <CalendarDays className="w-4 h-4 text-[#3B8F83]" />
                 Today's Schedule ({new Date().toLocaleDateString(undefined, { weekday: 'long' })})
               </h2>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-300 font-medium">
                 {todayData.slots?.length || 0} classes today
               </span>
             </div>
 
             {todayData.slots?.length === 0 ? (
-              <p className="text-xs text-slate-400 italic py-2">
+              <p className="text-xs text-slate-300 italic py-2 relative z-10">
                 No classes scheduled for today. Enjoy your self-study time!
               </p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 relative z-10">
                 {todayData.slots.map((slot) => (
                   <div
                     key={slot._id}
-                    className="p-3.5 rounded-xl bg-slate-900/80 border border-indigo-500/20 flex flex-col justify-between"
+                    className="p-3.5 rounded-xl bg-[#143333] border border-[#3B8F83]/40 flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
@@ -169,21 +170,21 @@ export const Timetable = () => {
                           {slot.subjectId?.name || 'Class'}
                         </span>
                         {slot.subjectId?.code && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#102A2A] text-[#E8F5F2] border border-[#3B8F83]/30">
                             {slot.subjectId.code}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 mt-2 text-[11px] text-indigo-300 font-mono">
-                        <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                      <div className="flex items-center gap-2 mt-2 text-[11px] text-[#E8F5F2] font-mono">
+                        <Clock className="w-3.5 h-3.5 text-[#3B8F83]" />
                         <span>
                           {slot.startTime} - {slot.endTime}
                         </span>
                       </div>
                     </div>
                     {slot.room && (
-                      <div className="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-slate-800 text-[10px] text-slate-400">
-                        <MapPin className="w-3 h-3 text-slate-500" />
+                      <div className="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-[#3B8F83]/20 text-[10px] text-slate-300">
+                        <MapPin className="w-3 h-3 text-[#3B8F83]" />
                         <span>Room: {slot.room}</span>
                       </div>
                     )}
@@ -204,30 +205,30 @@ export const Timetable = () => {
               return (
                 <div
                   key={day.key}
-                  className={`rounded-2xl p-4 flex flex-col transition-all ${
+                  className={`rounded-2xl p-4 flex flex-col transition-all shadow-xs ${
                     isToday
-                      ? 'bg-slate-900/90 border-2 border-indigo-500 shadow-xl shadow-indigo-950/40 ring-1 ring-indigo-500/20'
-                      : 'bg-slate-900/40 border border-slate-800/80'
+                      ? 'bg-white border-2 border-[#3B8F83] ring-1 ring-[#3B8F83]/20'
+                      : 'bg-white border border-slate-200/90'
                   }`}
                 >
-                  <div className="flex items-center justify-between border-b border-slate-800/60 pb-2.5 mb-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                      <h3 className="text-xs font-bold text-[#102A2A] uppercase tracking-wider">
                         {day.label}
                       </h3>
                       {isToday && (
-                        <span className="px-1.5 py-0.5 rounded bg-indigo-500 text-[9px] font-bold text-white uppercase tracking-wider">
+                        <span className="px-1.5 py-0.5 rounded bg-teal-100 text-teal-900 border border-teal-200 text-[9px] font-bold uppercase tracking-wider">
                           Today
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-mono">
+                    <span className="text-[10px] text-slate-600 font-mono font-medium">
                       {daySlots.length} {daySlots.length === 1 ? 'class' : 'classes'}
                     </span>
                   </div>
 
                   {daySlots.length === 0 ? (
-                    <div className="py-6 text-center text-[11px] text-slate-600 italic">
+                    <div className="py-6 text-center text-[11px] text-slate-500 italic">
                       No classes
                     </div>
                   ) : (
@@ -235,23 +236,23 @@ export const Timetable = () => {
                       {daySlots.map((slot) => (
                         <div
                           key={slot._id}
-                          className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/60 flex items-start justify-between group hover:border-slate-700 transition-all"
+                          className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start justify-between group hover:border-[#3B8F83]/40 transition-all"
                         >
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-bold text-slate-200">
+                              <span className="text-xs font-bold text-[#102A2A]">
                                 {slot.subjectId?.name || 'Class'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-1.5 text-[10px] text-indigo-400 mt-1 font-mono">
-                              <Clock className="w-3 h-3" />
+                            <div className="flex items-center gap-1.5 text-[10px] text-teal-800 mt-1 font-mono font-bold">
+                              <Clock className="w-3 h-3 text-[#3B8F83]" />
                               <span>
                                 {slot.startTime} - {slot.endTime}
                               </span>
                             </div>
                             {slot.room && (
-                              <div className="flex items-center gap-1 text-[10px] text-slate-400 mt-1">
-                                <MapPin className="w-3 h-3 text-slate-500" />
+                              <div className="flex items-center gap-1 text-[10px] text-slate-600 mt-1">
+                                <MapPin className="w-3 h-3 text-slate-400" />
                                 <span>{slot.room}</span>
                               </div>
                             )}
@@ -259,7 +260,7 @@ export const Timetable = () => {
 
                           <button
                             onClick={() => handleDeleteSlot(slot._id)}
-                            className="p-1 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="p-1 text-slate-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             title="Delete slot"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -277,24 +278,24 @@ export const Timetable = () => {
 
       {/* Add Slot Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-white mb-4">Add Timetable Class</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl">
+            <h3 className="text-base font-bold text-[#102A2A] mb-4">Add Timetable Class</h3>
 
             {error && (
-              <div className="mb-4 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+              <div className="mb-4 p-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSaveSlot} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Subject *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Subject *</label>
                 <select
                   required
                   value={form.subjectId}
                   onChange={(e) => setForm({ ...form, subjectId: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                 >
                   <option value="">Select subject...</option>
                   {subjects.map((s) => (
@@ -306,13 +307,13 @@ export const Timetable = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Day of Week *
                 </label>
                 <select
                   value={form.dayOfWeek}
                   onChange={(e) => setForm({ ...form, dayOfWeek: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                 >
                   {DAYS.map((d) => (
                     <option key={d.key} value={d.key}>
@@ -324,7 +325,7 @@ export const Timetable = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
                     Start Time *
                   </label>
                   <input
@@ -332,11 +333,11 @@ export const Timetable = () => {
                     required
                     value={form.startTime}
                     onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
                     End Time *
                   </label>
                   <input
@@ -344,13 +345,13 @@ export const Timetable = () => {
                     required
                     value={form.endTime}
                     onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Room / Venue (optional)
                 </label>
                 <input
@@ -358,7 +359,7 @@ export const Timetable = () => {
                   placeholder="e.g. Lab 3, Hall B-201"
                   value={form.room}
                   onChange={(e) => setForm({ ...form, room: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#3B8F83]"
                 />
               </div>
 
@@ -366,14 +367,14 @@ export const Timetable = () => {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? 'Adding...' : 'Add Slot'}
                 </button>
