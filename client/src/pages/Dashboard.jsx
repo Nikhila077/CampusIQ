@@ -413,11 +413,11 @@ export const Dashboard = () => {
               <div>
                 <span className="text-xs font-bold text-slate-700 block">StudentLens Streak</span>
                 <div className="flex items-baseline gap-2 mt-1.5">
-                  <span className="text-2xl font-black text-amber-600 flex items-center gap-1">
-                    <Flame className="w-5 h-5 fill-amber-500/20 text-amber-500" />
+                  <span className="text-2xl font-black text-[#102A2A] flex items-center gap-1">
+                    <Flame className="w-5 h-5 fill-[#3B8F83]/20 text-[#3B8F83]" />
                     <span>{gamification.currentStreak || 0}d</span>
                   </span>
-                  <span className="text-[10px] text-slate-600 font-mono font-bold">
+                  <span className="text-[10px] text-slate-700 font-mono font-bold">
                     {gamification.todayProgress?.completedCount || 0}/{gamification.todayProgress?.dailyGoal || 3} today
                   </span>
                 </div>
@@ -428,7 +428,7 @@ export const Dashboard = () => {
               <div className="mt-3">
                 <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div
-                    className="bg-amber-500 h-full rounded-full transition-all duration-300"
+                    className="bg-[#3B8F83] h-full rounded-full transition-all duration-300"
                     style={{ width: `${gamification.todayProgress?.percent || 0}%` }}
                   />
                 </div>
@@ -468,10 +468,10 @@ export const Dashboard = () => {
                   <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold">
                     Safe: {attendanceData.overall?.safeCount || 0} subjects
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 font-bold">
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 font-bold">
                     Attention Needed: {(attendanceData.overall?.atRiskCount || 0) + (attendanceData.overall?.criticalCount || 0)} subjects
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-teal-50 text-teal-900 border border-teal-200 font-medium">
                     75% requirement
                   </span>
                 </div>
@@ -505,8 +505,6 @@ export const Dashboard = () => {
                             className={`h-full rounded-full ${
                               item.status === 'Safe'
                                 ? 'bg-[#3B8F83]'
-                                : item.status === 'At Risk'
-                                ? 'bg-amber-500'
                                 : 'bg-red-500'
                             }`}
                             style={{ width: `${Math.min(100, item.currentPercent)}%` }}
@@ -553,9 +551,9 @@ export const Dashboard = () => {
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
                     <h2 className="text-sm font-bold text-[#102A2A] flex items-center gap-2">
-                      <Target className="w-4 h-4 text-amber-600" />
+                      <Target className="w-4 h-4 text-[#3B8F83]" />
                       <span>Next Best Actions</span>
-                      <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-full bg-teal-50 text-teal-900 border border-teal-200 text-[10px] font-bold">
                         Priority Guidance
                       </span>
                     </h2>
@@ -585,9 +583,7 @@ export const Dashboard = () => {
                         className={`p-3 rounded-xl border flex flex-col justify-between gap-1.5 transition-all ${
                           action.priority === 'critical'
                             ? 'bg-red-50/50 border-red-200 hover:border-red-300'
-                            : action.priority === 'high'
-                            ? 'bg-amber-50/50 border-amber-200 hover:border-amber-300'
-                            : 'bg-slate-50/70 border-slate-200 hover:border-slate-300'
+                            : 'bg-teal-50/30 border-teal-200/70 hover:border-teal-300'
                         }`}
                       >
                         <div>
@@ -598,10 +594,8 @@ export const Dashboard = () => {
                             <span
                               className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
                                 action.priority === 'critical'
-                                  ? 'bg-red-100 text-red-800'
-                                  : action.priority === 'high'
-                                  ? 'bg-amber-100 text-amber-800'
-                                  : 'bg-teal-100 text-teal-800'
+                                  ? 'bg-red-100 text-red-900 border border-red-200'
+                                  : 'bg-teal-100 text-teal-950 border border-teal-200'
                               }`}
                             >
                               {action.priority}
@@ -680,7 +674,7 @@ export const Dashboard = () => {
                           {c.startTime} - {c.endTime} {c.room && `• Room ${c.room}`}
                         </span>
                       </div>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-800 border border-teal-200">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-900 border border-teal-200">
                         Scheduled
                       </span>
                     </div>
@@ -695,7 +689,7 @@ export const Dashboard = () => {
               <div>
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[#102A2A] flex items-center gap-1.5">
-                    <ClipboardList className="w-4 h-4 text-amber-600" />
+                    <ClipboardList className="w-4 h-4 text-[#3B8F83]" />
                     <span>Pending Deliverables</span>
                   </h3>
                   <Link to="/assignments" className="text-xs font-bold text-[#3B8F83] hover:text-[#2d6f66]">
@@ -722,7 +716,7 @@ export const Dashboard = () => {
                             {a.subjectId?.name || 'Coursework'}
                           </span>
                         </div>
-                        <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-mono font-bold text-teal-950 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full">
                           Due {new Date(a.dueDate).toLocaleDateString(undefined, {
                             month: 'short',
                             day: 'numeric'
@@ -769,7 +763,7 @@ export const Dashboard = () => {
                               {e.examType} {e.venue && `• ${e.venue}`}
                             </span>
                           </div>
-                          <span className="text-xs font-bold text-amber-700 font-mono bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                          <span className="text-xs font-bold text-teal-950 font-mono bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full">
                             {diffDays <= 0 ? 'Today' : `In ${diffDays}d`}
                           </span>
                         </div>
@@ -790,7 +784,7 @@ export const Dashboard = () => {
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+                  <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>
@@ -804,7 +798,7 @@ export const Dashboard = () => {
                     </p>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                <span className="text-xs font-mono font-bold text-teal-950 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">
                   +10 XP
                 </span>
               </div>
