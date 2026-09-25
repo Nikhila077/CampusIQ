@@ -21,6 +21,22 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
+import { PredictiveArcCanvas } from "@designcodeio/threeui";
+import "@designcodeio/threeui/style.css";
+
+export function Scene() {
+  return (
+    <div className="shader-frame">
+      <PredictiveArcCanvas
+        mode="dark"
+        speed={1.00}
+        hue={0}
+        saturation={1.00}
+        brightness={1.00}
+      />
+    </div>
+  );
+}
 
 export const Landing = () => {
   // Interactive Brain Boost Sample Demo State
@@ -125,6 +141,84 @@ export const Landing = () => {
             <div className="hidden sm:flex items-center gap-1.5">
               <Lock className="w-4 h-4 text-purple-400" />
               <span>JWT & HttpOnly Session Security</span>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 1: HERO — MAIN VISUAL ELEMENT: ThreeUI Predictive Arc Canvas */}
+        <div className="mt-10 sm:mt-14 w-full max-w-5xl mx-auto relative group">
+          {/* Subtle Outer Violet Glow */}
+          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-indigo-500/25 via-purple-500/30 to-indigo-500/25 blur-xl opacity-70 group-hover:opacity-90 transition duration-1000 -z-10" />
+
+          <div className="relative rounded-2xl sm:rounded-3xl border border-indigo-500/30 bg-slate-950/90 backdrop-blur-2xl shadow-2xl shadow-indigo-950/70 overflow-hidden">
+            {/* Header Telemetry Bar */}
+            <div className="px-4 py-3 border-b border-slate-800/80 bg-slate-900/60 flex items-center justify-between flex-wrap gap-2 text-left">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                </div>
+                <span className="text-xs font-mono font-medium text-indigo-300 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                  ThreeUI Predictive Arc Engine
+                </span>
+                <span className="text-[10px] text-slate-500 hidden md:inline font-mono">
+                  predictive • r128 canvas
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                  Mode: Dark • Speed: 1.0x
+                </span>
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                  Vector: Real-Time Wave
+                </span>
+              </div>
+            </div>
+
+            {/* Canvas Viewport with Exact Configured Scene */}
+            <div className="relative h-[320px] sm:h-[400px] md:h-[460px] w-full bg-[#030303]">
+              <Scene />
+
+              {/* Floating Real-Time Academic Intelligence Overlays */}
+              <div className="absolute top-4 left-4 max-w-xs pointer-events-none text-left">
+                <div className="p-3 rounded-xl bg-slate-900/85 backdrop-blur-md border border-indigo-500/30 shadow-lg shadow-black/50">
+                  <div className="flex items-center justify-between gap-3 mb-1">
+                    <span className="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">Predictive Horizon</span>
+                    <span className="text-[10px] font-mono text-emerald-400 font-semibold">Active Sync</span>
+                  </div>
+                  <p className="text-xs font-semibold text-white">Dynamic Attendance Forecasting</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Continuous harmonic calculations projecting safe absence margins across subjects.</p>
+                </div>
+              </div>
+
+              <div className="absolute top-4 right-4 max-w-xs pointer-events-none text-right hidden sm:block">
+                <div className="p-3 rounded-xl bg-slate-900/85 backdrop-blur-md border border-purple-500/30 shadow-lg shadow-black/50">
+                  <div className="flex items-center justify-end gap-2 mb-1">
+                    <span className="text-[10px] font-mono text-purple-300 font-semibold">Risk Buffer Curve</span>
+                    <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping" />
+                  </div>
+                  <p className="text-xs font-semibold text-white">Next Best Action Signals</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Identifies critical classes before defaulter thresholds are crossed.</p>
+                </div>
+              </div>
+
+              <div className="absolute bottom-4 inset-x-4 flex items-center justify-between pointer-events-none text-left flex-wrap gap-2">
+                <div className="px-3 py-1.5 rounded-lg bg-slate-900/90 backdrop-blur-md border border-slate-700/60 text-[11px] text-slate-300 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span>AI: 84% (Safe +3)</span>
+                  <span className="text-slate-600">|</span>
+                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                  <span>DBMS: 78.5% (Safe +1)</span>
+                  <span className="text-slate-600">|</span>
+                  <span className="w-2 h-2 rounded-full bg-rose-400" />
+                  <span>OS: 74% (At Risk - Attend 1)</span>
+                </div>
+                <div className="px-3 py-1.5 rounded-lg bg-indigo-950/80 backdrop-blur-md border border-indigo-500/40 text-[11px] text-indigo-200 font-medium">
+                  ✦ Continuous Decision Support
+                </div>
+              </div>
             </div>
           </div>
         </div>
