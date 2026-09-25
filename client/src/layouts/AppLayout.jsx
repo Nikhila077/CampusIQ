@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   CalendarCheck,
@@ -16,7 +16,8 @@ import {
   Menu,
   X,
   Compass,
-  ChevronRight
+  ChevronRight,
+  User
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth.js';
 
@@ -44,74 +45,70 @@ export const AppLayout = () => {
       isComingSoon: false
     },
     {
+      name: 'Profile & Subjects',
+      icon: User,
+      to: '/profile',
+      isComingSoon: false
+    },
+    {
       name: 'Attendance',
       icon: CalendarCheck,
       to: '/attendance',
-      isComingSoon: true,
-      phase: 'Phase 4: Smart Attendance Engine'
+      isComingSoon: false
     },
     {
       name: 'Timetable',
       icon: Calendar,
       to: '/timetable',
-      isComingSoon: true,
-      phase: 'Phase 5: Class Scheduling'
+      isComingSoon: false
     },
     {
       name: 'Assignments',
       icon: ClipboardList,
       to: '/assignments',
-      isComingSoon: true,
-      phase: 'Phase 5: Academic Tracking'
+      isComingSoon: false
     },
     {
       name: 'Exams',
       icon: GraduationCap,
       to: '/exams',
-      isComingSoon: true,
-      phase: 'Phase 5: Exam Countdown'
+      isComingSoon: false
     },
     {
       name: 'Performance',
       icon: BarChart3,
       to: '/performance',
-      isComingSoon: true,
-      phase: 'Phase 6: Visual Analytics'
+      isComingSoon: false
     },
     {
       name: 'Smart Planner',
       icon: Clock,
       to: '/planner',
-      isComingSoon: true,
-      phase: 'Phase 7: Priority Planner'
+      isComingSoon: false
     },
     {
       name: 'Career Readiness',
       icon: Briefcase,
       to: '/career',
-      isComingSoon: true,
-      phase: 'Phase 8: Career Gaps'
+      isComingSoon: false
     },
     {
       name: 'Opportunities',
       icon: Sparkles,
       to: '/opportunities',
-      isComingSoon: true,
-      phase: 'Phase 8: Opportunity Hub'
+      isComingSoon: false
     },
     {
       name: 'Project Hub',
       icon: FolderGit2,
       to: '/projects',
-      isComingSoon: true,
-      phase: 'Phase 9: Student Projects'
+      isComingSoon: false
     },
     {
       name: 'Settings',
       icon: Settings,
       to: '/settings',
-      isComingSoon: true,
-      phase: 'Phase 10: Preferences'
+      isComingSoon: false
     }
   ];
 
@@ -138,22 +135,28 @@ export const AppLayout = () => {
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
-            <div className="flex items-center gap-2.5">
+            <Link to="/dashboard" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
                 <Compass className="w-5 h-5 text-white" />
               </div>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-xl font-bold tracking-tight text-white">Campus<span className="text-indigo-400">IQ</span></span>
+                <span className="text-xl font-bold tracking-tight text-white">
+                  Campus<span className="text-indigo-400">IQ</span>
+                </span>
                 <span className="hidden sm:inline-block text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Phase 1
+                  Decision Engine
                 </span>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* User profile & actions */}
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-slate-800/60">
+            <Link
+              to="/profile"
+              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-slate-800/60 hover:border-indigo-500/40 transition-colors"
+              title="View & Edit Profile"
+            >
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
               </div>
@@ -165,7 +168,7 @@ export const AppLayout = () => {
                   {user?.branch ? `${user.branch} • Sem ${user.semester || 1}` : user?.email}
                 </span>
               </div>
-            </div>
+            </Link>
 
             <button
               onClick={handleLogout}
@@ -207,13 +210,7 @@ export const AppLayout = () => {
                       <Icon className="w-4 h-4 text-slate-400 group-hover:text-indigo-400 transition-colors" />
                       <span>{item.name}</span>
                     </div>
-                    {item.isComingSoon ? (
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60">
-                        Soon
-                      </span>
-                    ) : (
-                      <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
-                    )}
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-indigo-400 transition-colors" />
                   </NavLink>
                 );
               })}
@@ -221,9 +218,9 @@ export const AppLayout = () => {
 
             <div className="mt-6 pt-4 border-t border-slate-800/60 px-3 pb-2">
               <div className="p-3 rounded-xl bg-indigo-950/30 border border-indigo-500/20">
-                <p className="text-[11px] font-medium text-indigo-300">Phase 1 Architecture</p>
+                <p className="text-[11px] font-medium text-indigo-300">Decision Support Engine</p>
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Auth, MongoDB Atlas & Session foundation active.
+                  Attendance buffers, planner priorities, and career analytics active.
                 </p>
               </div>
             </div>
@@ -264,7 +261,7 @@ export const AppLayout = () => {
                         onClick={(e) => handleNavClick(e, item)}
                         className={({ isActive }) =>
                           `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                            isActive && !item.isComingSoon
+                            isActive
                               ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
                               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                           }`
@@ -274,11 +271,7 @@ export const AppLayout = () => {
                           <Icon className="w-4 h-4" />
                           <span>{item.name}</span>
                         </div>
-                        {item.isComingSoon && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                            Soon
-                          </span>
-                        )}
+                        <ChevronRight className="w-3.5 h-3.5" />
                       </NavLink>
                     );
                   })}
@@ -304,22 +297,16 @@ export const AppLayout = () => {
         </main>
       </div>
 
-      {/* Coming Soon Modal */}
+      {/* Fallback Coming Soon Modal */}
       {comingSoonModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/95 p-6 shadow-2xl">
             <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4 text-indigo-400">
               <comingSoonModal.icon className="w-6 h-6" />
             </div>
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2">
-              Coming Soon
-            </div>
             <h3 className="text-xl font-bold text-white tracking-tight">
               {comingSoonModal.name} Module
             </h3>
-            <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-              This module is scheduled for development in <span className="text-indigo-300 font-medium">{comingSoonModal.phase}</span>. In Phase 1, only the core authentication foundation, MongoDB Atlas connection, and protected Dashboard are active.
-            </p>
             <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setComingSoonModal(null)}

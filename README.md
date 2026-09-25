@@ -10,26 +10,49 @@
 
 ---
 
-## 🚀 Features (Phase 1 Foundation)
+## 🚀 Platform Capabilities & Modules
 
-- **Authentication System:**
-  - Secure student registration with institutional academic profile (College, Branch, Year, Semester, Roll Number).
+- **Smart Attendance Engine (Core Differentiator):**
+  - **Safe Absence Buffer:** Automatically calculates the exact number of future classes a student can safely miss while remaining at or above institutional minimums (e.g. 75%).
+  - **Recovery Calculator:** Computes the minimum consecutive attendances required to regain compliance if attendance drops below the threshold.
+  - **What-If Simulator (`/attendance/simulate`):** Real-time scenario projection modeling the exact statistical impact of missing or attending next $N$ classes.
+  - **Transparent Rule-Based Insights:** Clearly explains *why* a status or alert is triggered without obscure heuristics.
+
+- **Personalized Academic Dashboard (`/dashboard`):**
+  - Answers the core question: *"What should I pay attention to today?"*
+  - Live summaries of daily classes, attendance shortages, pending assignments, upcoming exams, and career skill coverage.
+
+- **Student Profile & Subject Management (`/profile`):**
+  - Manage personal and academic identity (college, branch, year, semester, roll number).
+  - Curriculum subjects with custom minimum attendance thresholds and planning priority preferences (High/Medium/Low).
+
+- **Timetable & Daily Schedule (`/timetable`):**
+  - Weekly schedule grid with room numbers and today's classes spotlight.
+
+- **Assignments & Deliverables (`/assignments`):**
+  - Track coursework deadlines, overdue alerts, and submission states.
+
+- **Exams & Countdown (`/exams`):**
+  - Midterms, finals, quizzes, and practicals with preparation countdown timers.
+
+- **Academic Performance Analytics (`/performance`):**
+  - Visual mark distributions and assessment progression curves powered by **Recharts**.
+
+- **Smart Academic Planner (`/planner`):**
+  - Synthesizes attendance buffers, exams, deadlines, and grades into a prioritized daily action plan with clear deterministic explanations.
+
+- **Career Readiness & Opportunity Hub (`/career` & `/opportunities`):**
+  - Target role benchmarking (Software Engineer, Data Analyst, etc.) with skill gap analysis.
+  - Opportunity feed matching internships, scholarships, and hackathons with student skills.
+
+- **Student Project Hub (`/projects`):**
+  - Collaborative project showcases, technical stack requirements, and join requests.
+
+- **Authentication & Security:**
+  - Secure student registration, login, and logout.
   - High-security password hashing with **bcryptjs** (12 salt rounds).
   - Stateless JSON Web Token (**JWT**) stored securely in **HttpOnly, SameSite cookies** to prevent XSS attacks.
-  - Persistent login restoration across browser refreshes via `/api/auth/me`.
-  - Protected client routes redirecting unauthenticated users to `/login`.
-
-- **Modern SaaS User Interface:**
-  - Built with **React 19**, **Vite**, and **Tailwind CSS v4**.
-  - Dynamic dark theme, ambient gradients, micro-animations, and responsive layouts.
-  - Interactive landing page with feature previews and architecture overviews.
-  - Personalized student dashboard showcasing active session, academic identity, and future module roadmaps.
-
-- **Robust Backend & Database:**
-  - **Express.js** REST API with centralized error handling and structured JSON responses.
-  - **MongoDB Atlas** cloud integration via **Mongoose** schemas and strict validations.
-  - Automated database seeding script for instant local or cloud testing.
-  - Configured for cross-origin credentials (CORS) and reverse-proxy deployments.
+  - Strict tenant data isolation: all queries scoped to `req.user._id`.
 
 ---
 

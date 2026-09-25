@@ -43,6 +43,33 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: ''
+    },
+    avatar: {
+      type: String,
+      default: ''
+    },
+    targetRole: {
+      type: String,
+      trim: true,
+      default: ''
+    },
+    skills: {
+      type: [String],
+      default: []
+    },
+    interests: {
+      type: [String],
+      default: []
+    },
+    notificationPreferences: {
+      emailAlerts: { type: Boolean, default: true },
+      attendanceReminders: { type: Boolean, default: true },
+      deadlineAlerts: { type: Boolean, default: true }
+    },
+    themePreference: {
+      type: String,
+      enum: ['dark', 'system'],
+      default: 'dark'
     }
   },
   {

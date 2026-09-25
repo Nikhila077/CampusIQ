@@ -2,6 +2,17 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import subjectRoutes from './routes/subjectRoutes.js';
+import attendanceRoutes from './routes/attendanceRoutes.js';
+import timetableRoutes from './routes/timetableRoutes.js';
+import assignmentRoutes from './routes/assignmentRoutes.js';
+import examRoutes from './routes/examRoutes.js';
+import markRoutes from './routes/markRoutes.js';
+import plannerRoutes from './routes/plannerRoutes.js';
+import careerRoutes from './routes/careerRoutes.js';
+import opportunityRoutes from './routes/opportunityRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -85,6 +96,17 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/subjects', subjectRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/timetable', timetableRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/exams', examRoutes);
+app.use('/api/marks', markRoutes);
+app.use('/api/planner', plannerRoutes);
+app.use('/api/career', careerRoutes);
+app.use('/api/opportunities', opportunityRoutes);
+app.use('/api/projects', projectRoutes);
 
 // Global Error Handler
 app.use(errorHandler);
