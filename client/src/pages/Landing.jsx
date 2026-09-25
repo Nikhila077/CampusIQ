@@ -93,230 +93,170 @@ export const Landing = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-24">
-        {/* SECTION 1: HERO */}
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/70 border border-indigo-500/30 text-indigo-300 text-xs font-medium shadow-sm backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Personalized Student Decision-Support Platform</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-            <span className="text-slate-400 font-normal">DATA → UNDERSTANDING → ACTION</span>
+      <main className="flex-1 flex flex-col items-center justify-center text-center pb-24">
+        {/* SECTION 1: HERO (With ThreeUI Predictive Arc Animated Background) */}
+        <section className="relative w-full overflow-hidden pt-12 sm:pt-20 pb-20 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+          {/* PredictiveArcCanvas — Full-Section Animated Background */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <PredictiveArcCanvas
+              mode="dark"
+              speed={1.00}
+              hue={0}
+              saturation={1.00}
+              brightness={1.00}
+              className="w-full h-full"
+            />
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight">
-            Your Student Life, <br />
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-200 bg-clip-text text-transparent">
-              Smarter.
-            </span>
-          </h1>
+          {/* Subtle Dark / Gradient Overlay for readability and smooth section transition */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-slate-950/70 via-slate-950/30 to-slate-950 pointer-events-none" />
 
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-300/90 leading-relaxed font-normal">
-            CampusIQ transforms fragmented academic records into clear calculations, safe absence buffers, prioritized study schedules, and career readiness.
-          </p>
+          {/* CampusIQ Hero Content */}
+          <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/70 border border-indigo-500/30 text-indigo-300 text-xs font-medium shadow-sm backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Personalized Student Decision-Support Platform</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+              <span className="text-slate-400 font-normal">DATA → UNDERSTANDING → ACTION</span>
+            </div>
 
-          {/* Action Buttons */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/register" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto text-base font-semibold px-8 shadow-indigo-500/30">
-                Sign Up
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-            <Link to="/login" className="w-full sm:w-auto">
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto text-base font-medium px-8">
-                Login
-              </Button>
-            </Link>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight">
+              Your Student Life, <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-200 bg-clip-text text-transparent">
+                Smarter.
+              </span>
+            </h1>
+
+            <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-300/90 leading-relaxed font-normal">
+              CampusIQ transforms fragmented academic records into clear calculations, safe absence buffers, prioritized study schedules, and career readiness.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link to="/register" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto text-base font-semibold px-8 shadow-indigo-500/30">
+                  Sign Up
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+              <Link to="/login" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto text-base font-medium px-8">
+                  Login
+                </Button>
+              </Link>
+            </div>
+
+            <div className="pt-4 flex items-center justify-center gap-6 text-xs text-slate-400">
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Isolated Student Data</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Database className="w-4 h-4 text-indigo-400" />
+                <span>Real MongoDB Atlas Backend</span>
+              </div>
+              <div className="hidden sm:flex items-center gap-1.5">
+                <Lock className="w-4 h-4 text-purple-400" />
+                <span>JWT & HttpOnly Session Security</span>
+              </div>
+            </div>
           </div>
 
-          <div className="pt-4 flex items-center justify-center gap-6 text-xs text-slate-400">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Isolated Student Data</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Database className="w-4 h-4 text-indigo-400" />
-              <span>Real MongoDB Atlas Backend</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-1.5">
-              <Lock className="w-4 h-4 text-purple-400" />
-              <span>JWT & HttpOnly Session Security</span>
-            </div>
-          </div>
-        </div>
-
-        {/* SECTION 1: HERO — MAIN VISUAL ELEMENT: ThreeUI Predictive Arc Canvas */}
-        <div className="mt-10 sm:mt-14 w-full max-w-5xl mx-auto relative group">
-          {/* Subtle Outer Violet Glow */}
-          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-indigo-500/25 via-purple-500/30 to-indigo-500/25 blur-xl opacity-70 group-hover:opacity-90 transition duration-1000 -z-10" />
-
-          <div className="relative rounded-2xl sm:rounded-3xl border border-indigo-500/30 bg-slate-950/90 backdrop-blur-2xl shadow-2xl shadow-indigo-950/70 overflow-hidden">
-            {/* Header Telemetry Bar */}
-            <div className="px-4 py-3 border-b border-slate-800/80 bg-slate-900/60 flex items-center justify-between flex-wrap gap-2 text-left">
-              <div className="flex items-center gap-2.5">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                </div>
-                <span className="text-xs font-mono font-medium text-indigo-300 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                  ThreeUI Predictive Arc Engine
-                </span>
-                <span className="text-[10px] text-slate-500 hidden md:inline font-mono">
-                  predictive • r128 canvas
-                </span>
+          {/* Dashboard Live Preview Mockup */}
+          <div className="relative z-10 mt-14 w-full max-w-5xl mx-auto rounded-2xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-2xl p-4 sm:p-6 shadow-2xl shadow-indigo-950/50 text-left">
+            {/* Window Chrome */}
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <span className="ml-3 text-xs text-slate-400 font-mono">campusiq.internal/command-center</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-                  Mode: Dark • Speed: 1.0x
-                </span>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                  Vector: Real-Time Wave
-                </span>
+                <Badge variant="purple" className="text-[10px]">
+                  🔥 7 Day Streak
+                </Badge>
+                <Badge variant="primary" className="text-[10px]">
+                  Level 3 • 240 XP
+                </Badge>
               </div>
             </div>
 
-            {/* Canvas Viewport with Exact Configured Scene */}
-            <div className="relative h-[320px] sm:h-[400px] md:h-[460px] w-full bg-[#030303]">
-              <Scene />
+            {/* Top Command Strip Preview */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <span className="text-[10px] text-slate-400 block font-medium">Overall Attendance</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-xl font-bold text-white">83.5%</span>
+                  <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">
+                    Safe
+                  </span>
+                </div>
+              </div>
 
-              {/* Floating Real-Time Academic Intelligence Overlays */}
-              <div className="absolute top-4 left-4 max-w-xs pointer-events-none text-left">
-                <div className="p-3 rounded-xl bg-slate-900/85 backdrop-blur-md border border-indigo-500/30 shadow-lg shadow-black/50">
-                  <div className="flex items-center justify-between gap-3 mb-1">
-                    <span className="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">Predictive Horizon</span>
-                    <span className="text-[10px] font-mono text-emerald-400 font-semibold">Active Sync</span>
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <span className="text-[10px] text-slate-400 block font-medium">Daily Actions</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-xl font-bold text-amber-400">4 / 4</span>
+                  <span className="text-[9px] font-semibold text-slate-400">100% Goal</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <span className="text-[10px] text-slate-400 block font-medium">Next Exam</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-xl font-bold text-yellow-400">In 4 Days</span>
+                  <span className="text-[9px] text-slate-400">DBMS Midterm</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <span className="text-[10px] text-slate-400 block font-medium">Career Readiness</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-xl font-bold text-indigo-400">76%</span>
+                  <span className="text-[9px] text-slate-400">Software Eng.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Priorities Preview */}
+            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-4 space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  Next Best Actions (Live Decision Support)
+                </span>
+                <span className="text-[10px] text-slate-400">Generated from MongoDB data</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-red-300">Attend OS Class</span>
+                    <span className="text-[9px] font-bold uppercase px-1 rounded bg-red-500/20 text-red-400">Critical</span>
                   </div>
-                  <p className="text-xs font-semibold text-white">Dynamic Attendance Forecasting</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Continuous harmonic calculations projecting safe absence margins across subjects.</p>
+                  <p className="text-[11px] text-slate-300 mt-1">Attendance is 74% (below 75% minimum). Attend next 2 classes to recover.</p>
                 </div>
-              </div>
 
-              <div className="absolute top-4 right-4 max-w-xs pointer-events-none text-right hidden sm:block">
-                <div className="p-3 rounded-xl bg-slate-900/85 backdrop-blur-md border border-purple-500/30 shadow-lg shadow-black/50">
-                  <div className="flex items-center justify-end gap-2 mb-1">
-                    <span className="text-[10px] font-mono text-purple-300 font-semibold">Risk Buffer Curve</span>
-                    <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping" />
+                <div className="p-3 rounded-lg bg-orange-500/10 border border-orange-500/20 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-orange-300">Submit DBMS Assignment</span>
+                    <span className="text-[9px] font-bold uppercase px-1 rounded bg-orange-500/20 text-orange-400">High</span>
                   </div>
-                  <p className="text-xs font-semibold text-white">Next Best Action Signals</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Identifies critical classes before defaulter thresholds are crossed.</p>
+                  <p className="text-[11px] text-slate-300 mt-1">Normalization problem set due tomorrow. Submit on time to earn +15 XP.</p>
                 </div>
-              </div>
 
-              <div className="absolute bottom-4 inset-x-4 flex items-center justify-between pointer-events-none text-left flex-wrap gap-2">
-                <div className="px-3 py-1.5 rounded-lg bg-slate-900/90 backdrop-blur-md border border-slate-700/60 text-[11px] text-slate-300 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span>AI: 84% (Safe +3)</span>
-                  <span className="text-slate-600">|</span>
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  <span>DBMS: 78.5% (Safe +1)</span>
-                  <span className="text-slate-600">|</span>
-                  <span className="w-2 h-2 rounded-full bg-rose-400" />
-                  <span>OS: 74% (At Risk - Attend 1)</span>
-                </div>
-                <div className="px-3 py-1.5 rounded-lg bg-indigo-950/80 backdrop-blur-md border border-indigo-500/40 text-[11px] text-indigo-200 font-medium">
-                  ✦ Continuous Decision Support
+                <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-indigo-300">Prepare AI Internal</span>
+                    <span className="text-[9px] font-bold uppercase px-1 rounded bg-indigo-500/20 text-indigo-400">Prep</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-1">Exam in 8 days. Heuristics & Adversarial search high-weight topics.</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Dashboard Live Preview Mockup */}
-        <div className="mt-14 w-full max-w-5xl mx-auto rounded-2xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-2xl p-4 sm:p-6 shadow-2xl shadow-indigo-950/50 text-left">
-          {/* Window Chrome */}
-          <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              <span className="ml-3 text-xs text-slate-400 font-mono">campusiq.internal/command-center</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="purple" className="text-[10px]">
-                🔥 7 Day Streak
-              </Badge>
-              <Badge variant="primary" className="text-[10px]">
-                Level 3 • 240 XP
-              </Badge>
-            </div>
-          </div>
-
-          {/* Top Command Strip Preview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block font-medium">Overall Attendance</span>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-xl font-bold text-white">83.5%</span>
-                <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">
-                  Safe
-                </span>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block font-medium">Daily Actions</span>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-xl font-bold text-amber-400">4 / 4</span>
-                <span className="text-[9px] font-semibold text-slate-400">100% Goal</span>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block font-medium">Next Exam</span>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-xl font-bold text-yellow-400">In 4 Days</span>
-                <span className="text-[9px] text-slate-400">DBMS Midterm</span>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block font-medium">Career Readiness</span>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-xl font-bold text-indigo-400">76%</span>
-                <span className="text-[9px] text-slate-400">Software Eng.</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Priorities Preview */}
-          <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-4 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
-              <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-amber-400" />
-                Next Best Actions (Live Decision Support)
-              </span>
-              <span className="text-[10px] text-slate-400">Generated from MongoDB data</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-red-300">Attend OS Class</span>
-                  <span className="text-[9px] font-bold uppercase px-1 rounded bg-red-500/20 text-red-400">Critical</span>
-                </div>
-                <p className="text-[11px] text-slate-300 mt-1">Attendance is 74% (below 75% minimum). Attend next 2 classes to recover.</p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-orange-500/10 border border-orange-500/20 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-orange-300">Submit DBMS Assignment</span>
-                  <span className="text-[9px] font-bold uppercase px-1 rounded bg-orange-500/20 text-orange-400">High</span>
-                </div>
-                <p className="text-[11px] text-slate-300 mt-1">Normalization problem set due tomorrow. Submit on time to earn +15 XP.</p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-indigo-300">Prepare AI Internal</span>
-                  <span className="text-[9px] font-bold uppercase px-1 rounded bg-indigo-500/20 text-indigo-400">Prep</span>
-                </div>
-                <p className="text-[11px] text-slate-300 mt-1">Exam in 8 days. Heuristics & Adversarial search high-weight topics.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
 
         {/* SECTION 2: WHY CAMPUSIQ (Traditional ERP vs CampusIQ) */}
         <section className="mt-28 max-w-5xl mx-auto w-full text-center">
