@@ -15,14 +15,17 @@ export const AuthProvider = ({ children }) => {
       if (res?.success && res?.data?.user) {
         setUser(res.data.user);
         if (res?.data?.token) {
+          localStorage.setItem('studentlens_token', res.data.token);
           localStorage.setItem('campusiq_token', res.data.token);
         }
       } else {
+        localStorage.removeItem('studentlens_token');
         localStorage.removeItem('campusiq_token');
         setUser(null);
       }
     } catch {
       // 401 or network error - user is unauthenticated
+      localStorage.removeItem('studentlens_token');
       localStorage.removeItem('campusiq_token');
       setUser(null);
     } finally {
@@ -41,6 +44,7 @@ export const AuthProvider = ({ children }) => {
     const res = await authService.login(credentials);
     if (res?.success && res?.data?.user) {
       if (res?.data?.token) {
+        localStorage.setItem('studentlens_token', res.data.token);
         localStorage.setItem('campusiq_token', res.data.token);
       }
       setUser(res.data.user);
@@ -56,6 +60,7 @@ export const AuthProvider = ({ children }) => {
     const res = await authService.register(userData);
     if (res?.success && res?.data?.user) {
       if (res?.data?.token) {
+        localStorage.setItem('studentlens_token', res.data.token);
         localStorage.setItem('campusiq_token', res.data.token);
       }
       setUser(res.data.user);
@@ -73,6 +78,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.warn('Logout API warning:', err.message);
     } finally {
+      localStorage.removeItem('studentlens_token');
       localStorage.removeItem('campusiq_token');
       setUser(null);
     }

@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB Atlas / Local MongoDB
 connectDB().then(() => {
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[CampusIQ Server] Running on http://localhost:${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+    console.log(`[StudentLens Server] Running on http://localhost:${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
   });
 });
 

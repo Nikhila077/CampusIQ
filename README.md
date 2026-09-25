@@ -1,4 +1,4 @@
-# CampusIQ — Personalized Student Decision-Support Platform
+# StudentLens — Personalized Student Decision-Support Platform
 
 [![Full Stack](https://img.shields.io/badge/Stack-MERN-blue.svg)](https://github.com/Nikhila077/CampusIQ)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,7 +6,7 @@
 
 > **Core Principle:** `Student Data → Analysis → Insight → Recommended Action`
 
-**CampusIQ** is a modern, full-stack student platform designed as an actionable decision-support platform. Unlike traditional college ERPs that passively display tables of raw numbers, CampusIQ actively analyzes student data and converts it into personalized recommendations and next steps.
+**StudentLens** (formerly CampusIQ) is a modern, full-stack student platform designed as an actionable decision-support platform. Unlike traditional college ERPs that passively display tables of raw numbers, StudentLens actively analyzes student data and converts it into personalized recommendations and next steps.
 
 ---
 
@@ -218,7 +218,7 @@ All API routes are prefixed with `/api`.
    - `PORT`: `5000` (or leave default assigned by platform)
    - `MONGO_URI`: Your MongoDB Atlas connection URI
    - `JWT_SECRET`: A strong random 64-character secret
-   - `CLIENT_ORIGIN`: Your production frontend URL (e.g. `https://campusiq.vercel.app`)
+   - `CLIENT_ORIGIN`: Your production frontend URL (e.g. `https://studentlens.vercel.app` or `https://campusiq.vercel.app`)
    - `COOKIE_SAME_SITE`: `none` (required when client and server run on different domains)
 
 ---

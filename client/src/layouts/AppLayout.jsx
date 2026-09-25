@@ -196,8 +196,8 @@ export const AppLayout = () => {
           <div className="flex items-center gap-2.5 sm:gap-4">
             {/* Gamification Streak & Level Badge */}
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-              <span className="flex items-center gap-1 font-bold text-amber-600" title="Active meaningful learning streak">
-                <Flame className="w-3.5 h-3.5 fill-amber-500/20" />
+              <span className="flex items-center gap-1 font-bold text-[#102A2A]" title="Active meaningful learning streak">
+                <Flame className="w-3.5 h-3.5 text-[#3B8F83] fill-[#3B8F83]/20" />
                 <span>{gamification.currentStreak || 0}d Streak</span>
               </span>
               <span className="text-slate-300">•</span>
@@ -282,11 +282,11 @@ export const AppLayout = () => {
                             {n.type === 'attendance' ? (
                               <AlertTriangle className="w-4 h-4 text-red-500" />
                             ) : n.type === 'assignment' ? (
-                              <ClipboardList className="w-4 h-4 text-amber-500" />
+                              <ClipboardList className="w-4 h-4 text-[#3B8F83]" />
                             ) : n.type === 'exam' ? (
                               <GraduationCap className="w-4 h-4 text-[#3B8F83]" />
                             ) : n.type === 'brain_boost' ? (
-                              <Zap className="w-4 h-4 text-amber-500" />
+                              <Zap className="w-4 h-4 text-[#3B8F83]" />
                             ) : (
                               <Info className="w-4 h-4 text-[#3B8F83]" />
                             )}

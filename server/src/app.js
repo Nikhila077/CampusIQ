@@ -25,6 +25,8 @@ app.set('trust proxy', 1);
 
 // Whitelisted origins for both local dev and production deployments
 const defaultAllowedOrigins = [
+  'https://studentlens.vercel.app',
+  'https://student-lens.vercel.app',
   'https://campus-iq-tawny.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
@@ -55,8 +57,8 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // Allow all Vercel deployment preview and production URLs for CampusIQ
-    if (/^https:\/\/(campus-iq|campusiq)[a-zA-Z0-9_-]*\.vercel\.app$/.test(normalized)) {
+    // Allow all Vercel deployment preview and production URLs for StudentLens and CampusIQ
+    if (/^https:\/\/(studentlens|student-lens|campus-iq|campusiq)[a-zA-Z0-9_-]*\.vercel\.app$/.test(normalized)) {
       return callback(null, true);
     }
 
@@ -92,7 +94,7 @@ app.use(cookieParser());
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
-    message: 'CampusIQ Server is healthy',
+    message: 'StudentLens Server is healthy',
     timestamp: new Date().toISOString()
   });
 });

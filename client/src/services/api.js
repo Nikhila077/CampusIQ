@@ -32,7 +32,10 @@ const api = axios.create({
 // Request interceptor: attach Authorization Bearer token from localStorage
 api.interceptors.request.use(
   (config) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('campusiq_token') : null;
+    const token =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('studentlens_token') || localStorage.getItem('campusiq_token')
+        : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -45,8 +48,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // If token is invalid or expired, clean up local storage token
+    // If token is invalid or expired, clean up local storage tokens
     if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('studentlens_token');
       localStorage.removeItem('campusiq_token');
     }
 
