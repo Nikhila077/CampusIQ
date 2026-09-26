@@ -19,9 +19,9 @@ export const Input = ({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-semibold uppercase tracking-wider text-slate-300"
+          className="block text-xs font-semibold uppercase tracking-wider text-[#102A2A]"
         >
-          {label} {required && <span className="text-red-400">*</span>}
+          {label} {required && <span className="text-rose-500">*</span>}
         </label>
       )}
       <div className="relative rounded-xl">
@@ -38,12 +38,12 @@ export const Input = ({
           disabled={disabled}
           placeholder={placeholder}
           required={required}
-          className={`w-full bg-slate-900/90 text-slate-100 placeholder-slate-500 rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200 border ${
+          className={`w-full bg-white text-[#102A2A] placeholder-slate-400 rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200 border shadow-xs ${
             error
-              ? 'border-red-500/80 focus:ring-2 focus:ring-red-500/30 focus:border-red-500'
-              : 'border-slate-800 hover:border-slate-700 focus:border-[#3B8F83] focus:ring-2 focus:ring-[#3B8F83]/20'
+              ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+              : 'border-slate-200/90 hover:border-slate-300 focus:border-[#3B8F83] focus:ring-2 focus:ring-[#3B8F83]/20 focus:bg-white'
           } ${Icon ? 'pl-10' : ''} ${endAdornment ? 'pr-11' : ''} ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
+            disabled ? 'opacity-60 cursor-not-allowed bg-slate-50' : ''
           } ${className} outline-none`}
           {...props}
         />
@@ -54,7 +54,7 @@ export const Input = ({
         )}
       </div>
       {error ? (
-        <p className="text-xs text-red-400 font-medium">{error}</p>
+        <p className="text-xs text-rose-600 font-medium">{error}</p>
       ) : helperText ? (
         <p className="text-xs text-slate-500">{helperText}</p>
       ) : null}

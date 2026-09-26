@@ -331,7 +331,7 @@ export const AttendanceSimulator = () => {
 
               {/* Before and After Comparison Card */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <div className="p-4 rounded-xl bg-slate-50/80 border border-slate-200/90 text-center card-lift">
                   <span className="text-xs font-bold text-slate-700 block mb-1">Current Attendance</span>
                   <span className="text-3xl font-black text-[#102A2A]">
                     {simulation.currentPercent}%
@@ -342,10 +342,10 @@ export const AttendanceSimulator = () => {
                 </div>
 
                 <div
-                  className={`p-4 rounded-xl border text-center ${
+                  className={`p-4 rounded-xl border text-center transition-all duration-300 card-lift ${
                     simulation.projectedPercent >= simulation.minPercent
-                      ? 'bg-emerald-50 border-emerald-200'
-                      : 'bg-red-50 border-red-200'
+                      ? 'bg-emerald-50/80 border-emerald-200'
+                      : 'bg-rose-50/80 border-rose-200'
                   }`}
                 >
                   <span className="text-xs font-bold text-slate-800 block mb-1">
@@ -356,7 +356,7 @@ export const AttendanceSimulator = () => {
                       className={`text-3xl font-black ${
                         simulation.projectedPercent >= simulation.minPercent
                           ? 'text-emerald-700'
-                          : 'text-red-700'
+                          : 'text-rose-700'
                       }`}
                     >
                       {simulation.projectedPercent}%
@@ -370,13 +370,43 @@ export const AttendanceSimulator = () => {
                 </div>
               </div>
 
+              {/* Visual Multi-Bar Gauge */}
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-600">
+                  <span>Attendance Trajectory</span>
+                  <span>Minimum Target: {simulation.minPercent}%</span>
+                </div>
+                <div className="relative w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+                  {/* Min threshold indicator line */}
+                  <div
+                    className="absolute top-0 bottom-0 w-0.5 bg-slate-800 z-10"
+                    style={{ left: `${simulation.minPercent}%` }}
+                    title={`Required: ${simulation.minPercent}%`}
+                  />
+                  {/* Projected fill */}
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      simulation.projectedPercent >= simulation.minPercent
+                        ? 'bg-emerald-500'
+                        : 'bg-rose-500'
+                    }`}
+                    style={{ width: `${Math.min(100, Math.max(0, simulation.projectedPercent))}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium">
+                  <span>0%</span>
+                  <span className="text-slate-700 font-bold">▲ Req Threshold ({simulation.minPercent}%)</span>
+                  <span>100%</span>
+                </div>
+              </div>
+
               {/* Requirement Delta & Buffers */}
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-600 block text-[10px] font-semibold">Difference from Min ({simulation.minPercent}%)</span>
                   <span
                     className={`text-sm font-black ${
-                      simulation.differenceFromMin >= 0 ? 'text-emerald-700' : 'text-red-600'
+                      simulation.differenceFromMin >= 0 ? 'text-emerald-700' : 'text-rose-600'
                     }`}
                   >
                     {simulation.differenceFromMin >= 0 ? '+' : ''}
@@ -384,7 +414,7 @@ export const AttendanceSimulator = () => {
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   {simulation.projectedPercent >= simulation.minPercent ? (
                     <>
                       <span className="text-slate-600 block text-[10px] font-semibold">Updated Absence Buffer</span>
@@ -395,7 +425,7 @@ export const AttendanceSimulator = () => {
                   ) : (
                     <>
                       <span className="text-slate-600 block text-[10px] font-semibold">Classes Needed to Recover</span>
-                      <span className="text-sm font-black text-red-600">
+                      <span className="text-sm font-black text-rose-600">
                         {simulation.recoveryNeeded} classes consecutively
                       </span>
                     </>

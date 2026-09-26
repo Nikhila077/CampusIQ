@@ -324,7 +324,7 @@ export const Profile = () => {
       {activeTab === 'profile' && (
         <div className="space-y-6">
           {/* Identity Showcase Card (Clean, high-contrast, brand colors) */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5 card-lift">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-[#102A2A] text-[#E8F5F2] flex items-center justify-center text-2xl font-black shadow-xs ring-4 ring-teal-50 shrink-0">
@@ -351,7 +351,7 @@ export const Profile = () => {
 
               {/* Badges: Level & Streak */}
               <div className="flex items-center gap-3 shrink-0">
-                <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center hover:border-teal-200 transition-colors">
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">
                     Active Streak
                   </span>
@@ -360,7 +360,7 @@ export const Profile = () => {
                     <span>{user?.currentStreak || 0}d</span>
                   </span>
                 </div>
-                <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center hover:border-teal-200 transition-colors">
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">
                     Student Level
                   </span>
@@ -383,9 +383,9 @@ export const Profile = () => {
                   {completionPercentage}% Complete
                 </span>
               </div>
-              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
                 <div
-                  className="bg-[#3B8F83] h-full rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-teal-500 to-[#3B8F83] h-full rounded-full transition-all duration-700"
                   style={{ width: `${completionPercentage}%` }}
                 />
               </div>
@@ -398,7 +398,7 @@ export const Profile = () => {
                 {(user?.skills || []).map((sk) => (
                   <span
                     key={sk}
-                    className="px-2.5 py-0.5 rounded-lg bg-teal-50 border border-teal-200 text-[10px] text-teal-950 font-bold"
+                    className="px-2.5 py-0.5 rounded-lg bg-teal-50 border border-teal-200 text-[10px] text-teal-950 font-bold hover:bg-teal-100 transition-colors"
                   >
                     {sk}
                   </span>
@@ -406,7 +406,7 @@ export const Profile = () => {
                 {(user?.interests || []).map((inr) => (
                   <span
                     key={inr}
-                    className="px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-medium"
+                    className="px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-medium hover:bg-slate-200 transition-colors"
                   >
                     #{inr}
                   </span>
@@ -448,7 +448,7 @@ export const Profile = () => {
                     required
                     value={profileForm.name}
                     onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
 
@@ -458,7 +458,7 @@ export const Profile = () => {
                     type="email"
                     disabled
                     value={user?.email || ''}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-500 cursor-not-allowed font-mono text-[11px]"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-500 cursor-not-allowed font-mono text-xs"
                   />
                 </div>
 
@@ -468,7 +468,7 @@ export const Profile = () => {
                     type="text"
                     value={profileForm.college}
                     onChange={(e) => setProfileForm({ ...profileForm, college: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
 
@@ -478,7 +478,7 @@ export const Profile = () => {
                     type="text"
                     value={profileForm.branch}
                     onChange={(e) => setProfileForm({ ...profileForm, branch: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
 
@@ -488,7 +488,7 @@ export const Profile = () => {
                     <select
                       value={profileForm.year}
                       onChange={(e) => setProfileForm({ ...profileForm, year: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     >
                       <option value={1}>1st Year</option>
                       <option value={2}>2nd Year</option>
@@ -503,7 +503,7 @@ export const Profile = () => {
                     <select
                       value={profileForm.semester}
                       onChange={(e) => setProfileForm({ ...profileForm, semester: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                         <option key={sem} value={sem}>
@@ -520,7 +520,7 @@ export const Profile = () => {
                     type="text"
                     value={profileForm.rollNumber}
                     onChange={(e) => setProfileForm({ ...profileForm, rollNumber: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
               </div>
@@ -538,7 +538,7 @@ export const Profile = () => {
                   <select
                     value={profileForm.targetRole}
                     onChange={(e) => setProfileForm({ ...profileForm, targetRole: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   >
                     <option value="">Select target role...</option>
                     <option value="Software Engineer">Software Engineer</option>
@@ -557,7 +557,7 @@ export const Profile = () => {
                     placeholder="e.g. Python, Java, SQL, React, DSA, Git"
                     value={profileForm.skillsInput}
                     onChange={(e) => setProfileForm({ ...profileForm, skillsInput: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
 
@@ -568,7 +568,7 @@ export const Profile = () => {
                     placeholder="e.g. Web Development, Open Source, Distributed Systems"
                     value={profileForm.interestsInput}
                     onChange={(e) => setProfileForm({ ...profileForm, interestsInput: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
               </div>
@@ -578,7 +578,7 @@ export const Profile = () => {
               <button
                 type="submit"
                 disabled={profileSaving}
-                className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50"
+                className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all disabled:opacity-50"
               >
                 {profileSaving ? 'Saving Changes...' : 'Save Profile Changes'}
               </button>
@@ -633,7 +633,7 @@ export const Profile = () => {
               {subjects.map((s) => (
                 <div
                   key={s._id}
-                  className="bg-white border border-slate-200/90 hover:border-slate-300 rounded-2xl p-5 flex flex-col justify-between transition-all shadow-xs space-y-4"
+                  className="bg-white border border-slate-200/90 hover:border-[#3B8F83]/40 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-xs space-y-4 card-lift"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
@@ -833,44 +833,44 @@ export const Profile = () => {
 
             <form onSubmit={handleSaveSubject} className="space-y-3.5 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Subject Name *</label>
+                <label className="block font-bold text-slate-700 mb-1.5">Subject Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Operating Systems"
                   value={subjectForm.name}
                   onChange={(e) => setSubjectForm({ ...subjectForm, name: e.target.value })}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Subject Code</label>
+                  <label className="block font-bold text-slate-700 mb-1.5">Subject Code</label>
                   <input
                     type="text"
                     placeholder="e.g. CS302"
                     value={subjectForm.code}
                     onChange={(e) => setSubjectForm({ ...subjectForm, code: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Faculty Name</label>
+                  <label className="block font-bold text-slate-700 mb-1.5">Faculty Name</label>
                   <input
                     type="text"
                     placeholder="e.g. Dr. Reynolds"
                     value={subjectForm.faculty}
                     onChange={(e) => setSubjectForm({ ...subjectForm, faculty: e.target.value })}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Min Attendance %</label>
+                  <label className="block font-bold text-slate-700 mb-1.5">Min Attendance %</label>
                   <input
                     type="number"
                     min={50}
@@ -882,12 +882,12 @@ export const Profile = () => {
                         minAttendancePercent: Number(e.target.value)
                       })
                     }
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Credits</label>
+                  <label className="block font-bold text-slate-700 mb-1.5">Credits</label>
                   <input
                     type="number"
                     min={1}
@@ -896,17 +896,17 @@ export const Profile = () => {
                     onChange={(e) =>
                       setSubjectForm({ ...subjectForm, credits: Number(e.target.value) })
                     }
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Study Priority</label>
+                <label className="block font-bold text-slate-700 mb-1.5">Study Priority</label>
                 <select
                   value={subjectForm.priority}
                   onChange={(e) => setSubjectForm({ ...subjectForm, priority: e.target.value })}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                 >
                   <option value="low">Low Priority</option>
                   <option value="medium">Medium Priority</option>
@@ -918,14 +918,14 @@ export const Profile = () => {
                 <button
                   type="button"
                   onClick={() => setSubjectModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50"
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={subjectSaving}
-                  className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white font-semibold disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all disabled:opacity-50"
                 >
                   {subjectSaving ? 'Saving...' : editingSubject ? 'Update Subject' : 'Add Subject'}
                 </button>

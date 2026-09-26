@@ -116,11 +116,12 @@ export const getMe = async (req, res) => {
  */
 export const logout = async (req, res) => {
   const cookieOptions = getCookieOptions(req);
-  // Set maxAge 0 to clear cookie
+  // Clear cookie with exact matching options
   res.clearCookie('token', {
     httpOnly: cookieOptions.httpOnly,
     secure: cookieOptions.secure,
-    sameSite: cookieOptions.sameSite
+    sameSite: cookieOptions.sameSite,
+    path: '/'
   });
 
   return sendSuccess(res, 200, 'Logged out successfully.');

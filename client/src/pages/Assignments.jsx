@@ -201,10 +201,23 @@ export const Assignments = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">Loading assignments...</div>
+        <div className="space-y-3 animate-in fade-in duration-200">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white border border-slate-200/90 rounded-2xl p-4.5 flex items-center justify-between shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-lg skeleton-shimmer" />
+                <div className="space-y-2">
+                  <div className="h-4 w-48 skeleton-shimmer rounded" />
+                  <div className="h-3 w-32 skeleton-shimmer rounded" />
+                </div>
+              </div>
+              <div className="h-4 w-20 skeleton-shimmer rounded" />
+            </div>
+          ))}
+        </div>
       ) : filteredAssignments.length === 0 ? (
         <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
-          <ClipboardList className="w-10 h-10 text-slate-400 mx-auto mb-2" />
+          <ClipboardList className="w-10 h-10 text-slate-400 mx-auto mb-2 animate-subtle-float" />
           <h3 className="text-sm font-bold text-[#102A2A]">No assignments found</h3>
           <p className="text-xs text-slate-600 mt-1 max-w-sm mx-auto">
             {filterTab === 'all'
@@ -215,7 +228,7 @@ export const Assignments = () => {
             <button
               onClick={handleOpenModal}
               disabled={subjects.length === 0}
-              className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer"
+              className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5"
             >
               Add First Assignment
             </button>
@@ -231,12 +244,12 @@ export const Assignments = () => {
             return (
               <div
                 key={a._id}
-                className={`bg-white border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all shadow-xs ${
+                className={`bg-white border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all duration-200 shadow-2xs card-lift ${
                   a.status === 'submitted'
-                    ? 'border-slate-200/80 opacity-75 bg-slate-50/50'
+                    ? 'border-slate-200/80 bg-slate-50/60 opacity-80'
                     : isOverdue
-                    ? 'border-red-200 bg-red-50/20'
-                    : 'border-slate-200/90 hover:border-[#3B8F83]/40'
+                    ? 'border-rose-200/90 bg-rose-50/20 hover:border-rose-300'
+                    : 'border-slate-200/90 hover:border-[#3B8F83]/50 hover:shadow-md'
                 }`}
               >
                 <div className="flex items-start gap-3.5">

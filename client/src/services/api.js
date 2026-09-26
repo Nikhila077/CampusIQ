@@ -11,14 +11,20 @@ const getApiBaseUrl = () => {
       window.location.hostname === '127.0.0.1' ||
       window.location.hostname === '[::1]');
 
-  // In production deployment (e.g. *.vercel.app), if envUrl is missing or points to localhost, use Render backend
+  // In production deployment (e.g. *.vercel.app), if envUrl is missing, points to localhost, or points to obsolete Render instance, use active Render backend
   if (isBrowser && !isLocalHost) {
-    if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
-      return 'https://campusiq-vb32.onrender.com/api';
+    if (
+      !envUrl ||
+      envUrl.includes('localhost') ||
+      envUrl.includes('127.0.0.1') ||
+      envUrl.includes('campusiq-vb32.onrender.com')
+    ) {
+      return 'https://studentlens-qvp7.onrender.com/api';
     }
   }
 
-  return envUrl || 'http://localhost:5000/api';
+  const rawUrl = envUrl || 'http://localhost:5000/api';
+  return rawUrl.trim().replace(/\/+$/, '');
 };
 
 const api = axios.create({
@@ -36,7 +42,8 @@ api.interceptors.request.use(
       typeof window !== 'undefined'
         ? localStorage.getItem('studentlens_token') || localStorage.getItem('campusiq_token')
         : null;
-    if (token) {
+    if (token && token !== 'null' && token !== 'undefined') {
+      config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -59,7 +66,10 @@ api.interceptors.response.use(
       error.response?.data?.message ||
       error.message ||
       'An unexpected error occurred. Please try again.';
-    return Promise.reject(new Error(message));
+    const enhancedError = new Error(message);
+    enhancedError.response = error.response;
+    enhancedError.status = error.response?.status;
+    return Promise.reject(enhancedError);
   }
 );
 

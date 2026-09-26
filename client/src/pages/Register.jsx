@@ -133,7 +133,7 @@ export const Register = () => {
 
       {/* Form Container */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl px-4 sm:px-0">
-        <div className="rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-xl p-6 sm:p-8 shadow-xl shadow-slate-900/5">
+        <div className="rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-xl p-6 sm:p-8 shadow-xl shadow-slate-900/5 card-depth-3d transition-all">
           {serverError && (
             <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3 text-red-700 text-xs font-medium animate-in fade-in duration-200">
               <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />

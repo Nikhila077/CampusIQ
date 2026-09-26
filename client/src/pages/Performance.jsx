@@ -176,7 +176,21 @@ export const Performance = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">Loading performance data...</div>
+        <div className="space-y-5 animate-in fade-in duration-200">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3 shadow-xs">
+                <div className="h-3 w-20 skeleton-shimmer rounded" />
+                <div className="h-8 w-24 skeleton-shimmer rounded-lg" />
+                <div className="h-3 w-28 skeleton-shimmer rounded" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 h-72 skeleton-shimmer" />
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 h-72 skeleton-shimmer" />
+          </div>
+        </div>
       ) : marks.length === 0 ? (
         <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
           <Award className="w-10 h-10 text-slate-400 mx-auto mb-2" />
@@ -187,7 +201,7 @@ export const Performance = () => {
           <button
             onClick={handleOpenModal}
             disabled={subjects.length === 0}
-            className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer"
+            className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5"
           >
             Record First Assessment
           </button>
@@ -197,45 +211,45 @@ export const Performance = () => {
           {/* Summary Stat Cards */}
           {summary && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
-                <span className="text-xs font-bold text-slate-700 block">Overall Score</span>
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all">
+                <span className="text-xs font-bold text-slate-600 block">Overall Score</span>
                 <span className="text-2xl font-black text-[#102A2A] mt-1 block">
                   {summary.overallPercentage}%
                 </span>
-                <span className="text-[11px] text-slate-600 font-medium mt-1 block">
+                <span className="text-[11px] text-slate-500 font-medium mt-1 block">
                   {summary.totalObtained} / {summary.totalMax} total marks
                 </span>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
-                <span className="text-xs font-bold text-slate-700 block">Overall Grade</span>
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all">
+                <span className="text-xs font-bold text-slate-600 block">Overall Grade</span>
                 <span className="text-2xl font-black text-[#3B8F83] mt-1 block">
                   {summary.overallGrade}
                 </span>
-                <span className="text-[11px] text-slate-600 font-medium mt-1 block">
+                <span className="text-[11px] text-slate-500 font-medium mt-1 block">
                   Weighted academic tier
                 </span>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
-                <span className="text-xs font-bold text-slate-700 block">Total Assessments</span>
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all">
+                <span className="text-xs font-bold text-slate-600 block">Total Assessments</span>
                 <span className="text-2xl font-black text-[#102A2A] mt-1 block">
                   {summary.totalAssessments}
                 </span>
-                <span className="text-[11px] text-slate-600 font-medium mt-1 block">
+                <span className="text-[11px] text-slate-500 font-medium mt-1 block">
                   Logged across all subjects
                 </span>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
-                <span className="text-xs font-bold text-slate-700 block">Benchmark Status</span>
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all">
+                <span className="text-xs font-bold text-slate-600 block">Benchmark Status</span>
                 <span
                   className={`text-2xl font-black mt-1 block ${
                     summary.overallPercentage >= 75
                       ? 'text-emerald-700'
                       : summary.overallPercentage >= 60
                       ? 'text-amber-700'
-                      : 'text-red-700'
+                      : 'text-rose-700'
                   }`}
                 >
                   {summary.overallPercentage >= 75
@@ -244,7 +258,7 @@ export const Performance = () => {
                     ? 'Passing'
                     : 'Needs Focus'}
                 </span>
-                <span className="text-[11px] text-slate-600 font-medium mt-1 block">
+                <span className="text-[11px] text-slate-500 font-medium mt-1 block">
                   Target threshold: 75%
                 </span>
               </div>

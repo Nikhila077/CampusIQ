@@ -21,6 +21,7 @@ export const Attendance = () => {
   const [data, setData] = useState({ subjects: [], overall: null });
   const [logs, setLogs] = useState([]);
   const [selectedSubjectId, setSelectedSubjectId] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   // Log class modal
   const [logModalOpen, setLogModalOpen] = useState(false);
@@ -241,20 +242,52 @@ export const Attendance = () => {
 
           {/* Per-Subject Attendance Cards */}
           <div className="space-y-4">
-            <h2 className="text-sm font-bold text-[#102A2A] uppercase tracking-wider flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#3B8F83]" />
-              Subject Intelligence Cards
-            </h2>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-sm font-bold text-[#102A2A] uppercase tracking-wider flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#3B8F83]" />
+                Subject Intelligence Cards
+              </h2>
+
+              {/* Status Filter Tabs */}
+              <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200/90 text-xs shadow-2xs">
+                {[
+                  { id: 'all', label: `All (${data.subjects.length})` },
+                  { id: 'safe', label: `Safe (${data.overall?.safeCount || 0})` },
+                  { id: 'at_risk', label: `At Risk (${data.overall?.atRiskCount || 0})` },
+                  { id: 'critical', label: `Critical (${data.overall?.criticalCount || 0})` }
+                ].map((btn) => (
+                  <button
+                    key={btn.id}
+                    type="button"
+                    onClick={() => setStatusFilter(btn.id)}
+                    className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                      statusFilter === btn.id
+                        ? 'bg-[#3B8F83] text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-[#102A2A] hover:bg-slate-50'
+                    }`}
+                  >
+                    {btn.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {data.subjects.map((item) => {
+              {data.subjects
+                .filter((item) => {
+                  if (statusFilter === 'safe') return item.status === 'Safe';
+                  if (statusFilter === 'at_risk') return item.status === 'At Risk';
+                  if (statusFilter === 'critical') return item.status === 'Critical' || item.status === 'Defaulter';
+                  return true;
+                })
+                .map((item) => {
                 const s = item.subject;
                 const isUnderThreshold = item.currentPercent < item.minPercent;
 
                 return (
                   <div
                     key={s._id}
-                    className="bg-white border border-slate-200/90 hover:border-slate-300 rounded-2xl p-5 shadow-xs flex flex-col justify-between transition-all"
+                    className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs card-lift hover:border-[#3B8F83]/50 hover:shadow-md flex flex-col justify-between transition-all"
                   >
                     <div>
                       {/* Card Header */}

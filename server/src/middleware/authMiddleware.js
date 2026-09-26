@@ -16,7 +16,7 @@ export const protect = async (req, res, next) => {
       token = req.cookies.token;
     }
 
-    if (!token) {
+    if (!token || token === 'null' || token === 'undefined') {
       return sendError(res, 401, 'Unauthorized: Access token missing. Please log in.');
     }
 

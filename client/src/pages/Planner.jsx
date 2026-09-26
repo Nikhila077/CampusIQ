@@ -146,12 +146,15 @@ export const Planner = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
-          Synthesizing academic schedules, exams, and attendance buffers...
+        <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 h-20 skeleton-shimmer shadow-xs" />
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="rounded-2xl border border-slate-200/90 bg-white p-4.5 h-24 skeleton-shimmer shadow-xs" />
+          ))}
         </div>
       ) : plan.length === 0 ? (
         <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
-          <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-2" />
+          <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-2 animate-subtle-float" />
           <h3 className="text-base font-bold text-[#102A2A]">All Caught Up!</h3>
           <p className="text-xs text-slate-600 mt-1 max-w-md mx-auto">
             No critical attendance shortages, upcoming exams, or pending overdue assignments right now. You are in a safe academic zone.
@@ -159,12 +162,31 @@ export const Planner = () => {
         </div>
       ) : (
         <div className="space-y-6">
+          {/* Daily Completion Progress Banner */}
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-4.5 shadow-2xs card-lift">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-[#3B8F83]" />
+                <span className="text-xs font-bold text-[#102A2A]">Daily Action Plan Velocity</span>
+              </div>
+              <span className="text-xs font-mono font-bold text-[#3B8F83]">
+                {completedTasks.length} / {plan.length} actions completed ({Math.round((completedTasks.length / (plan.length || 1)) * 100)}%)
+              </span>
+            </div>
+            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div
+                className="bg-[#3B8F83] h-full rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${Math.round((completedTasks.length / (plan.length || 1)) * 100)}%` }}
+              />
+            </div>
+          </div>
+
           {/* SECTION: HIGH PRIORITY (Critical / Immediate) */}
           {highPriorityTasks.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                <h2 className="text-xs font-bold uppercase tracking-wider text-red-800">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-rose-800">
                   High Priority Actions ({highPriorityTasks.length})
                 </h2>
               </div>
@@ -175,10 +197,10 @@ export const Planner = () => {
                   return (
                     <div
                       key={item.id}
-                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all shadow-xs ${
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all duration-200 shadow-2xs card-lift ${
                         isDone
-                          ? 'bg-slate-50 border-slate-200 opacity-60'
-                          : 'bg-white border-red-200 hover:border-red-300'
+                          ? 'bg-slate-50/80 border-slate-200/90 opacity-60'
+                          : 'bg-white border-rose-200/90 hover:border-rose-400 hover:shadow-sm'
                       }`}
                     >
                       <div className="flex items-start gap-3.5">

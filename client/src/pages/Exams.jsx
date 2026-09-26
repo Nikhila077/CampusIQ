@@ -123,10 +123,23 @@ export const Exams = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">Loading exams...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in duration-200">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3.5 shadow-xs">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1.5">
+                  <div className="h-4 w-16 skeleton-shimmer rounded" />
+                  <div className="h-5 w-40 skeleton-shimmer rounded" />
+                </div>
+                <div className="h-6 w-20 skeleton-shimmer rounded-full" />
+              </div>
+              <div className="h-10 w-full skeleton-shimmer rounded-xl" />
+            </div>
+          ))}
+        </div>
       ) : exams.length === 0 ? (
         <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
-          <GraduationCap className="w-10 h-10 text-slate-400 mx-auto mb-2" />
+          <GraduationCap className="w-10 h-10 text-slate-400 mx-auto mb-2 animate-subtle-float" />
           <h3 className="text-sm font-bold text-[#102A2A]">No exams scheduled</h3>
           <p className="text-xs text-slate-600 mt-1 max-w-sm mx-auto">
             Add your upcoming midterms, finals, or practical dates so the Smart Planner can prioritize study sessions for you.
@@ -134,7 +147,7 @@ export const Exams = () => {
           <button
             onClick={handleOpenModal}
             disabled={subjects.length === 0}
-            className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer"
+            className="mt-4 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5"
           >
             Schedule First Exam
           </button>
@@ -149,14 +162,14 @@ export const Exams = () => {
             return (
               <div
                 key={exam._id}
-                className={`bg-white border rounded-2xl p-5 flex flex-col justify-between transition-all shadow-xs ${
+                className={`bg-white border rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-2xs card-lift ${
                   isPast
                     ? 'border-slate-200/80 opacity-60 bg-slate-50/50'
                     : diffDays <= 2
-                    ? 'border-red-200 bg-red-50/20'
+                    ? 'border-rose-200/90 bg-rose-50/20 hover:border-rose-300'
                     : diffDays <= 7
-                    ? 'border-teal-200 bg-teal-50/20'
-                    : 'border-slate-200/90 hover:border-[#3B8F83]/40'
+                    ? 'border-teal-200/90 bg-teal-50/20 hover:border-teal-300'
+                    : 'border-slate-200/90 hover:border-[#3B8F83]/50 hover:shadow-md'
                 }`}
               >
                 <div>

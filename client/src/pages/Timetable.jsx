@@ -26,6 +26,7 @@ export const Timetable = () => {
   const [todayData, setTodayData] = useState({ day: '', slots: [] });
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDayFilter, setSelectedDayFilter] = useState('all');
 
   // Add slot modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -129,7 +130,14 @@ export const Timetable = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">Loading timetable...</div>
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 h-40 skeleton-shimmer shadow-xs" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="rounded-2xl border border-slate-200/90 bg-white p-4 h-48 skeleton-shimmer shadow-xs" />
+            ))}
+          </div>
+        </div>
       ) : subjects.length === 0 ? (
         <div className="p-12 rounded-2xl border border-dashed border-slate-300 text-center bg-white shadow-xs">
           <BookOpen className="w-8 h-8 text-slate-400 mx-auto mb-2" />
@@ -141,7 +149,7 @@ export const Timetable = () => {
       ) : (
         <>
           {/* Today's Classes Spotlight */}
-          <div className="bg-[#102A2A] text-white border border-[#102A2A] rounded-2xl p-5 shadow-sm relative overflow-hidden">
+          <div className="bg-[#102A2A] text-white border border-[#102A2A] rounded-2xl p-5 shadow-xs relative overflow-hidden card-lift">
             <div className="absolute -right-8 -bottom-8 w-60 h-60 bg-[#3B8F83]/15 rounded-full blur-2xl pointer-events-none" />
             <div className="flex items-center justify-between mb-3 relative z-10">
               <h2 className="text-xs font-bold uppercase tracking-wider text-[#E8F5F2] flex items-center gap-2">
@@ -162,7 +170,7 @@ export const Timetable = () => {
                 {todayData.slots.map((slot) => (
                   <div
                     key={slot._id}
-                    className="p-3.5 rounded-xl bg-[#143333] border border-[#3B8F83]/40 flex flex-col justify-between"
+                    className="p-3.5 rounded-xl bg-[#143333] border border-[#3B8F83]/40 flex flex-col justify-between hover:border-[#3B8F83] transition-colors"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
@@ -194,9 +202,32 @@ export const Timetable = () => {
             )}
           </div>
 
+          {/* Day Filter Pills */}
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Schedule Explorer
+            </h2>
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200/90 text-xs shadow-2xs overflow-x-auto max-w-full">
+              {[{ key: 'all', label: 'All Days' }, ...DAYS].map((d) => (
+                <button
+                  key={d.key}
+                  type="button"
+                  onClick={() => setSelectedDayFilter(d.key)}
+                  className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                    selectedDayFilter === d.key
+                      ? 'bg-[#3B8F83] text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-[#102A2A] hover:bg-slate-50'
+                  }`}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Weekly Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {DAYS.map((day) => {
+            {DAYS.filter((d) => selectedDayFilter === 'all' || selectedDayFilter === d.key).map((day) => {
               const daySlots = slots.filter((s) => s.dayOfWeek === day.key);
               const todayIndex = new Date().getDay();
               const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -205,10 +236,10 @@ export const Timetable = () => {
               return (
                 <div
                   key={day.key}
-                  className={`rounded-2xl p-4 flex flex-col transition-all shadow-xs ${
+                  className={`rounded-2xl p-4 flex flex-col transition-all shadow-2xs card-lift ${
                     isToday
-                      ? 'bg-white border-2 border-[#3B8F83] ring-1 ring-[#3B8F83]/20'
-                      : 'bg-white border border-slate-200/90'
+                      ? 'bg-white border-2 border-[#3B8F83] ring-2 ring-[#3B8F83]/15'
+                      : 'bg-white border border-slate-200/90 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">

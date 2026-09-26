@@ -218,7 +218,7 @@ export const Settings = () => {
       {/* 2. Structured Split Layout: Left Navigation + Right Content Panel */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
         {/* Left Category Nav (4 cols) */}
-        <div className="md:col-span-4 bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs space-y-1">
+        <div className="md:col-span-4 bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs space-y-1.5 sticky top-20">
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.key;
@@ -226,17 +226,17 @@ export const Settings = () => {
               <button
                 key={cat.key}
                 onClick={() => setActiveCategory(cat.key)}
-                className={`w-full text-left p-3 rounded-xl transition-all flex items-start gap-3 ${
+                className={`w-full text-left p-3 rounded-xl transition-all duration-200 flex items-start gap-3 group ${
                   isActive
-                    ? 'bg-[#102A2A] text-white shadow-xs'
-                    : 'text-slate-700 hover:bg-slate-50 hover:text-[#102A2A]'
+                    ? 'bg-[#102A2A] text-white shadow-sm'
+                    : 'text-slate-700 hover:bg-slate-50 hover:text-[#102A2A] hover:translate-x-0.5'
                 }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                     isActive
                       ? 'bg-white/10 text-[#3B8F83]'
-                      : 'bg-teal-50 text-[#3B8F83] border border-teal-200'
+                      : 'bg-teal-50 text-[#3B8F83] border border-teal-200/70 group-hover:border-teal-300'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -256,10 +256,13 @@ export const Settings = () => {
           })}
 
           <div className="pt-3 mt-3 border-t border-slate-100 px-3 pb-1">
-            <div className="text-[11px] text-slate-500 space-y-1 font-mono">
+            <div className="text-[11px] text-slate-500 space-y-1">
               <span className="block text-slate-700 font-bold font-sans">Active Session:</span>
-              <span className="block truncate">{user?.email}</span>
-              <span className="block text-[#3B8F83] font-semibold">Status: Authenticated</span>
+              <span className="block font-mono text-slate-600 truncate">{user?.email}</span>
+              <span className="inline-flex items-center gap-1.5 text-[#3B8F83] font-semibold text-[10px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Status: Authenticated
+              </span>
             </div>
           </div>
         </div>
@@ -272,7 +275,7 @@ export const Settings = () => {
               {/* Profile Information Panel */}
               <form
                 onSubmit={handleAccountSubmit}
-                className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4"
+                className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5"
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
@@ -284,81 +287,86 @@ export const Settings = () => {
                       Your primary institutional identity on StudentLens.
                     </p>
                   </div>
-                  <span className="text-xs font-mono font-medium text-slate-500">
+                  <span className="text-xs font-mono font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg border border-slate-200/60">
                     ID: {user?._id?.slice(-6) || 'active'}
                   </span>
                 </div>
 
                 {accountMsg.text && (
                   <div
-                    className={`p-3 rounded-xl text-xs font-medium ${
+                    className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
                       accountMsg.type === 'success'
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
+                        : 'bg-rose-50 text-rose-800 border border-rose-200'
                     }`}
                   >
-                    {accountMsg.text}
+                    {accountMsg.type === 'success' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    )}
+                    <span>{accountMsg.text}</span>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Full Name</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Full Name</label>
                     <input
                       type="text"
                       value={accountForm.name}
                       onChange={(e) => setAccountForm({ ...accountForm, name: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Institutional Email</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Institutional Email</label>
                     <input
                       type="email"
                       disabled
                       value={user?.email || ''}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-500 cursor-not-allowed font-mono text-[11px]"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-500 cursor-not-allowed font-mono text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">College / University</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">College / University</label>
                     <input
                       type="text"
                       value={accountForm.college}
                       onChange={(e) => setAccountForm({ ...accountForm, college: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Department / Branch</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Department / Branch</label>
                     <input
                       type="text"
                       value={accountForm.branch}
                       onChange={(e) => setAccountForm({ ...accountForm, branch: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Roll / Registration Number</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Roll / Registration Number</label>
                     <input
                       type="text"
                       value={accountForm.rollNumber}
                       onChange={(e) => setAccountForm({ ...accountForm, rollNumber: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Target Career Role</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Target Career Role</label>
                     <input
                       type="text"
                       value={accountForm.targetRole}
                       onChange={(e) => setAccountForm({ ...accountForm, targetRole: e.target.value })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
                 </div>
@@ -367,7 +375,7 @@ export const Settings = () => {
                   <button
                     type="submit"
                     disabled={accountSaving}
-                    className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50"
+                    className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all disabled:opacity-50"
                   >
                     {accountSaving ? 'Saving...' : 'Save Account Changes'}
                   </button>
@@ -377,7 +385,7 @@ export const Settings = () => {
               {/* Password Change Form */}
               <form
                 onSubmit={handlePasswordSubmit}
-                className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4"
+                className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5"
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
@@ -393,19 +401,24 @@ export const Settings = () => {
 
                 {passwordMsg.text && (
                   <div
-                    className={`p-3 rounded-xl text-xs font-medium ${
+                    className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
                       passwordMsg.type === 'success'
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
+                        : 'bg-rose-50 text-rose-800 border border-rose-200'
                     }`}
                   >
-                    {passwordMsg.text}
+                    {passwordMsg.type === 'success' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    )}
+                    <span>{passwordMsg.text}</span>
                   </div>
                 )}
 
-                <div className="space-y-3 text-xs max-w-md">
+                <div className="space-y-4 text-xs max-w-md">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Current Password *</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Current Password *</label>
                     <input
                       type="password"
                       required
@@ -413,12 +426,12 @@ export const Settings = () => {
                       onChange={(e) =>
                         setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
                       }
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">New Password *</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">New Password *</label>
                     <input
                       type="password"
                       required
@@ -427,12 +440,12 @@ export const Settings = () => {
                       onChange={(e) =>
                         setPasswordForm({ ...passwordForm, newPassword: e.target.value })
                       }
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Confirm New Password *</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Confirm New Password *</label>
                     <input
                       type="password"
                       required
@@ -441,7 +454,7 @@ export const Settings = () => {
                       onChange={(e) =>
                         setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })
                       }
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     />
                   </div>
                 </div>
@@ -450,7 +463,7 @@ export const Settings = () => {
                   <button
                     type="submit"
                     disabled={passwordSaving}
-                    className="px-4 py-2 rounded-xl bg-[#102A2A] hover:bg-[#1a4040] text-white text-xs font-semibold transition-all disabled:opacity-50"
+                    className="px-5 py-2.5 rounded-xl bg-[#102A2A] hover:bg-[#1a4040] text-white text-xs font-semibold hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all disabled:opacity-50"
                   >
                     {passwordSaving ? 'Updating...' : 'Update Password'}
                   </button>
@@ -463,7 +476,7 @@ export const Settings = () => {
           {activeCategory === 'preferences' && (
             <form
               onSubmit={handlePreferencesSubmit}
-              className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5"
+              className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-6"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div>
@@ -479,129 +492,99 @@ export const Settings = () => {
 
               {prefMsg.text && (
                 <div
-                  className={`p-3 rounded-xl text-xs font-medium ${
+                  className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
                     prefMsg.type === 'success'
                       ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                      : 'bg-red-50 text-red-800 border border-red-200'
+                      : 'bg-rose-50 text-rose-800 border border-rose-200'
                   }`}
                 >
-                  {prefMsg.text}
+                  {prefMsg.type === 'success' ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  )}
+                  <span>{prefMsg.text}</span>
                 </div>
               )}
 
-              {/* Notification Toggles */}
-              <div className="space-y-4 text-xs">
-                <label className="flex items-start gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={notifications.attendanceWarnings}
-                    onChange={(e) =>
-                      setNotifications({ ...notifications, attendanceWarnings: e.target.checked })
-                    }
-                    className="rounded mt-0.5 text-[#3B8F83] focus:ring-0"
-                  />
-                  <div>
-                    <span className="font-bold text-[#102A2A] block">Attendance Shortage Warnings</span>
-                    <span className="text-slate-600 text-[11px]">
-                      Alert when attendance drops below 75% or when safe absence buffer reaches 0.
-                    </span>
-                  </div>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={notifications.assignmentReminders}
-                    onChange={(e) =>
-                      setNotifications({ ...notifications, assignmentReminders: e.target.checked })
-                    }
-                    className="rounded mt-0.5 text-[#3B8F83] focus:ring-0"
-                  />
-                  <div>
-                    <span className="font-bold text-[#102A2A] block">Assignment Reminders</span>
-                    <span className="text-slate-600 text-[11px]">
-                      Remind 48 hours and 24 hours prior to submission deadlines.
-                    </span>
-                  </div>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={notifications.examReminders}
-                    onChange={(e) =>
-                      setNotifications({ ...notifications, examReminders: e.target.checked })
-                    }
-                    className="rounded mt-0.5 text-[#3B8F83] focus:ring-0"
-                  />
-                  <div>
-                    <span className="font-bold text-[#102A2A] block">Exam Revision Countdowns</span>
-                    <span className="text-slate-600 text-[11px]">
-                      Periodic reminders for midterms, finals, and practical assessments.
-                    </span>
-                  </div>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={notifications.plannerReminders}
-                    onChange={(e) =>
-                      setNotifications({ ...notifications, plannerReminders: e.target.checked })
-                    }
-                    className="rounded mt-0.5 text-[#3B8F83] focus:ring-0"
-                  />
-                  <div>
-                    <span className="font-bold text-[#102A2A] block">Smart Planner Daily Focus</span>
-                    <span className="text-slate-600 text-[11px]">
-                      Remind of uncompleted high-priority study milestones each morning.
-                    </span>
-                  </div>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={notifications.dailyBrainBoost}
-                    onChange={(e) =>
-                      setNotifications({ ...notifications, dailyBrainBoost: e.target.checked })
-                    }
-                    className="rounded mt-0.5 text-[#3B8F83] focus:ring-0"
-                  />
-                  <div>
-                    <span className="font-bold text-[#102A2A] block">Daily Brain Boost Challenge</span>
-                    <span className="text-slate-600 text-[11px]">
-                      Notify when today's role-calibrated technical micro-challenge is active.
-                    </span>
-                  </div>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={notifications.desktopAlerts}
-                    onChange={async (e) => {
-                      const checked = e.target.checked;
-                      if (checked && 'Notification' in window && Notification.permission !== 'granted') {
-                        const res = await Notification.requestPermission();
-                        setNotifications({ ...notifications, desktopAlerts: res === 'granted' });
-                      } else {
-                        setNotifications({ ...notifications, desktopAlerts: checked });
-                      }
-                    }}
-                    className="rounded mt-0.5 text-[#3B8F83] focus:ring-0"
-                  />
-                  <div>
-                    <span className="font-bold text-[#102A2A] block">Browser Desktop Notifications</span>
-                    <span className="text-slate-600 text-[11px]">
-                      Trigger native OS notification banners for imminent deadlines.
-                    </span>
-                  </div>
-                </label>
+              {/* Notification Toggles with Modern Animated Switches */}
+              <div className="space-y-3 divide-y divide-slate-100 text-xs">
+                {[
+                  {
+                    key: 'attendanceWarnings',
+                    title: 'Attendance Shortage Warnings',
+                    desc: 'Alert when attendance drops below 75% or when safe absence buffer reaches 0.'
+                  },
+                  {
+                    key: 'assignmentReminders',
+                    title: 'Assignment Reminders',
+                    desc: 'Remind 48 hours and 24 hours prior to submission deadlines.'
+                  },
+                  {
+                    key: 'examReminders',
+                    title: 'Exam Revision Countdowns',
+                    desc: 'Periodic reminders for midterms, finals, and practical assessments.'
+                  },
+                  {
+                    key: 'plannerReminders',
+                    title: 'Smart Planner Daily Focus',
+                    desc: 'Remind of uncompleted high-priority study milestones each morning.'
+                  },
+                  {
+                    key: 'dailyBrainBoost',
+                    title: 'Daily Brain Boost Challenge',
+                    desc: "Notify when today's role-calibrated technical micro-challenge is active."
+                  },
+                  {
+                    key: 'desktopAlerts',
+                    title: 'Browser Desktop Notifications',
+                    desc: 'Trigger native OS notification banners for imminent deadlines.',
+                    isDesktop: true
+                  }
+                ].map((item, idx) => {
+                  const isChecked = !!notifications[item.key];
+                  return (
+                    <div
+                      key={item.key}
+                      className={`flex items-center justify-between gap-4 py-3 ${
+                        idx === 0 ? 'pt-0' : ''
+                      } hover:bg-slate-50/60 rounded-xl px-2 transition-colors`}
+                    >
+                      <div className="space-y-0.5 pr-2">
+                        <span className="font-bold text-[#102A2A] block text-xs">{item.title}</span>
+                        <span className="text-slate-500 text-[11px] leading-relaxed block">
+                          {item.desc}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={isChecked}
+                        onClick={async () => {
+                          if (item.isDesktop && !isChecked && 'Notification' in window && Notification.permission !== 'granted') {
+                            const res = await Notification.requestPermission();
+                            setNotifications({ ...notifications, desktopAlerts: res === 'granted' });
+                          } else {
+                            setNotifications({ ...notifications, [item.key]: !isChecked });
+                          }
+                        }}
+                        className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out shrink-0 ${
+                          isChecked ? 'bg-[#3B8F83]' : 'bg-slate-200 hover:bg-slate-300'
+                        }`}
+                      >
+                        <div
+                          className={`bg-white w-4 h-4 rounded-full shadow-xs transform transition-transform duration-200 ease-in-out ${
+                            isChecked ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Theme Preference */}
-              <div className="pt-4 border-t border-slate-100 space-y-2">
+              <div className="pt-4 border-t border-slate-100 space-y-2.5">
                 <span className="text-xs font-bold text-[#102A2A] block">Interface Theme</span>
                 <div className="grid grid-cols-3 gap-3">
                   {[
@@ -616,10 +599,10 @@ export const Settings = () => {
                         key={theme.key}
                         type="button"
                         onClick={() => setThemePreference(theme.key)}
-                        className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+                        className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all duration-200 ${
                           isSelected
-                            ? 'bg-teal-50 border-teal-300 text-[#102A2A] shadow-xs'
-                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                            ? 'bg-teal-50 border-[#3B8F83] text-[#102A2A] shadow-xs'
+                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50/50'
                         }`}
                       >
                         <Icon className="w-4 h-4 text-[#3B8F83]" />
@@ -634,7 +617,7 @@ export const Settings = () => {
                 <button
                   type="submit"
                   disabled={prefSaving}
-                  className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all disabled:opacity-50"
                 >
                   {prefSaving ? 'Saving...' : 'Save Preferences'}
                 </button>
@@ -647,7 +630,7 @@ export const Settings = () => {
             <div className="space-y-6">
               <form
                 onSubmit={handleAcademicSubmit}
-                className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4"
+                className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5"
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
@@ -663,23 +646,28 @@ export const Settings = () => {
 
                 {academicMsg.text && (
                   <div
-                    className={`p-3 rounded-xl text-xs font-medium ${
+                    className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
                       academicMsg.type === 'success'
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
+                        : 'bg-rose-50 text-rose-800 border border-rose-200'
                     }`}
                   >
-                    {academicMsg.text}
+                    {academicMsg.type === 'success' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    )}
+                    <span>{academicMsg.text}</span>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Academic Year</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Academic Year</label>
                     <select
                       value={academicForm.year}
                       onChange={(e) => setAcademicForm({ ...academicForm, year: Number(e.target.value) })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     >
                       <option value={1}>1st Year (Freshman)</option>
                       <option value={2}>2nd Year (Sophomore)</option>
@@ -690,11 +678,11 @@ export const Settings = () => {
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Active Semester</label>
+                    <label className="block font-bold text-slate-700 mb-1.5">Active Semester</label>
                     <select
                       value={academicForm.semester}
                       onChange={(e) => setAcademicForm({ ...academicForm, semester: Number(e.target.value) })}
-                      className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-[#3B8F83]"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3B8F83]/20 focus:border-[#3B8F83] transition-all"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((sem) => (
                         <option key={sem} value={sem}>
@@ -709,7 +697,7 @@ export const Settings = () => {
                   <button
                     type="submit"
                     disabled={academicSaving}
-                    className="px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50"
+                    className="px-5 py-2.5 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all disabled:opacity-50"
                   >
                     {academicSaving ? 'Updating...' : 'Update Academic Standing'}
                   </button>
@@ -717,7 +705,7 @@ export const Settings = () => {
               </form>
 
               {/* Curriculum Subjects Direct Link Panel */}
-              <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="bg-gradient-to-r from-teal-50/70 to-emerald-50/40 border border-teal-200/80 rounded-2xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 card-lift">
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#102A2A]">
                     Curriculum Subjects & Attendance Rules
@@ -728,7 +716,7 @@ export const Settings = () => {
                 </div>
                 <Link
                   to="/profile"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#102A2A] hover:bg-[#143333] text-white text-xs font-semibold shadow-xs transition-all shrink-0"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#102A2A] hover:bg-[#143333] text-white text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-98 transition-all shrink-0"
                 >
                   <span>Manage Subjects in Profile</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -739,7 +727,7 @@ export const Settings = () => {
 
           {/* CATEGORY 4: PRIVACY & SESSIONS */}
           {activeCategory === 'security' && (
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div>
                   <h3 className="text-sm font-bold text-[#102A2A] flex items-center gap-2">
@@ -762,18 +750,20 @@ export const Settings = () => {
                 </p>
               </div>
 
-              <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between py-2 border-b border-slate-100">
+              <div className="space-y-3 text-xs divide-y divide-slate-100">
+                <div className="flex items-center justify-between py-2.5">
                   <span className="font-bold text-slate-700">Account ID:</span>
-                  <span className="font-mono text-slate-600">{user?._id || 'N/A'}</span>
+                  <span className="font-mono text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-200/60">
+                    {user?._id || 'N/A'}
+                  </span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                <div className="flex items-center justify-between py-2.5">
                   <span className="font-bold text-slate-700">Account Registered:</span>
                   <span className="font-mono text-slate-600">
                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Active'}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                <div className="flex items-center justify-between py-2.5">
                   <span className="font-bold text-slate-700">Last Active Date:</span>
                   <span className="font-mono text-slate-600">{user?.lastActiveDate || 'Today'}</span>
                 </div>
@@ -781,7 +771,7 @@ export const Settings = () => {
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold text-red-700 block">Terminate Current Session</span>
+                  <span className="text-xs font-bold text-rose-700 block">Terminate Current Session</span>
                   <span className="text-[11px] text-slate-500">Sign out of your account on this device.</span>
                 </div>
                 <button
@@ -790,7 +780,7 @@ export const Settings = () => {
                     await logout();
                     navigate('/login');
                   }}
-                  className="px-4 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all flex items-center gap-1.5 hover:shadow-xs active:scale-98"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out</span>

@@ -9,6 +9,26 @@ export const AuthProvider = ({ children }) => {
 
   // Check if student has an active session on startup / refresh
   const checkAuth = useCallback(async () => {
+    const savedToken =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('studentlens_token') || localStorage.getItem('campusiq_token')
+        : null;
+
+    const isLocalhost =
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '[::1]');
+
+    // In cross-origin deployments (e.g. Vercel -> Render), third-party cookies
+    // are partitioned or blocked by browsers. If no token is stored in localStorage,
+    // the user has no session; avoid unnecessary network calls that trigger 401s.
+    if (!savedToken && !isLocalhost) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await authService.getMe();

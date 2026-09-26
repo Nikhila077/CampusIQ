@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Compass,
@@ -25,17 +25,51 @@ import {
   BookOpen,
   Code2,
   Target,
-  BarChart3
+  BarChart3,
+  Menu,
+  X
 } from 'lucide-react';
 import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
 import LightPillar from '../components/LightPillar.jsx';
 import { StudentLensLogo } from '../components/shared/StudentLensLogo.jsx';
+import { InteractiveTiltCard } from '../components/ui/InteractiveTiltCard.jsx';
+import { Hero3DScene } from '../components/home/Hero3DScene.jsx';
 
 export const Landing = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   // Interactive Smart Attendance Scenario Selector state
   const [activeScenario, setActiveScenario] = useState('safe');
   const [simulatedClasses, setSimulatedClasses] = useState(2);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Staggered scroll reveal observer for sections
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    const targets = document.querySelectorAll('.scroll-reveal');
+    targets.forEach((el) => observer.observe(el));
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      targets.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
 
   const scenarios = {
     safe: {
@@ -80,30 +114,45 @@ export const Landing = () => {
       {/* ================================================================ */}
       {/* 1. STICKY NAVIGATION HEADER                                      */}
       {/* ================================================================ */}
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-xs'
+            : 'bg-white/80 backdrop-blur-md border-b border-slate-200/60'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <StudentLensLogo />
-            <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-teal-50 text-teal-900 border border-teal-200">
-              Decision Support
-            </span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-600 hover:text-[#102A2A] rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Toggle navigation"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <StudentLensLogo />
+              <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-[#E8F5F2] text-[#3B8F83] border border-teal-200/80 transition-transform group-hover:scale-105">
+                Decision Support
+              </span>
+            </Link>
+          </div>
 
           {/* Nav Anchors */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-700">
-            <a href="#philosophy" className="hover:text-[#3B8F83] transition-colors">
+            <a href="#philosophy" className="hover:text-[#3B8F83] transition-colors py-1">
               Philosophy
             </a>
-            <a href="#attendance" className="hover:text-[#3B8F83] transition-colors">
+            <a href="#attendance" className="hover:text-[#3B8F83] transition-colors py-1">
               Smart Attendance
             </a>
-            <a href="#academic" className="hover:text-[#3B8F83] transition-colors">
+            <a href="#academic" className="hover:text-[#3B8F83] transition-colors py-1">
               Academic Hub
             </a>
-            <a href="#productivity" className="hover:text-[#3B8F83] transition-colors">
+            <a href="#productivity" className="hover:text-[#3B8F83] transition-colors py-1">
               Productivity
             </a>
-            <a href="#career" className="hover:text-[#3B8F83] transition-colors">
+            <a href="#career" className="hover:text-[#3B8F83] transition-colors py-1">
               Career Engine
             </a>
           </nav>
@@ -114,7 +163,7 @@ export const Landing = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="font-bold text-slate-700 hover:text-slate-950 hover:bg-slate-100"
+                className="font-bold text-slate-700 hover:text-[#102A2A] hover:bg-slate-100"
               >
                 Sign In
               </Button>
@@ -129,102 +178,59 @@ export const Landing = () => {
             </Link>
           </div>
         </div>
+
+        {/* Mobile Nav Menu Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-b border-slate-200 bg-white/98 backdrop-blur-xl px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-200 shadow-xl">
+            <a
+              href="#philosophy"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-[#E8F5F2] hover:text-[#3B8F83] rounded-xl transition-colors"
+            >
+              Philosophy
+            </a>
+            <a
+              href="#attendance"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-[#E8F5F2] hover:text-[#3B8F83] rounded-xl transition-colors"
+            >
+              Smart Attendance
+            </a>
+            <a
+              href="#academic"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-[#E8F5F2] hover:text-[#3B8F83] rounded-xl transition-colors"
+            >
+              Academic Hub
+            </a>
+            <a
+              href="#productivity"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-[#E8F5F2] hover:text-[#3B8F83] rounded-xl transition-colors"
+            >
+              Productivity
+            </a>
+            <a
+              href="#career"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-[#E8F5F2] hover:text-[#3B8F83] rounded-xl transition-colors"
+            >
+              Career Engine
+            </a>
+          </div>
+        )}
       </header>
 
       {/* ================================================================ */}
-      {/* 2. HERO SECTION WITH EXACT LIGHTPILLAR BACKGROUND PRESERVED      */}
+      {/* 2. HERO SECTION WITH REAL 3D MULTI-LAYER PARALLAX SCENE           */}
       {/* ================================================================ */}
-      <section className="hero relative overflow-hidden w-full min-h-[640px] sm:min-h-[720px] lg:min-h-[760px] flex flex-col justify-between">
-        {/* LightPillar: position: absolute, inset: 0, z-index: 0 */}
-        <div className="absolute inset-0 z-0">
-          <LightPillar
-            topColor="#F4F7F5"
-            bottomColor="#3B8F83"
-            intensity={0.8}
-            rotationSpeed={0.2}
-            glowAmount={0.003}
-            pillarWidth={3.0}
-            pillarHeight={0.4}
-            noiseIntensity={0.5}
-            pillarRotation={0}
-            interactive={true}
-            mixBlendMode="normal"
-            quality="high"
-            lightMode={true}
-          />
-        </div>
-
-        {/* Hero Foreground Content: position: relative, z-index: 10 */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-16 flex flex-col items-center justify-center text-center space-y-6">
-          {/* Core Concept Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-teal-700/20 text-teal-950 text-xs font-bold shadow-xs backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-[#3B8F83]"></span>
-            <span>Personalized Student Decision-Support Platform</span>
-            <span className="text-slate-300">|</span>
-            <span className="text-slate-700 font-medium">Student Data → Analysis → Insight → Recommended Action</span>
-          </div>
-
-          {/* Main Title & Editorial Headline */}
-          <div className="space-y-2">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[#102A2A] leading-[1.08]">
-              Understand Where You Stand.
-              <br />
-              <span className="text-[#3B8F83]">Know What To Do Next.</span>
-            </h1>
-          </div>
-
-          {/* Subtitle / Positioning Idea */}
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
-            StudentLens turns raw student records into clear mathematical insights, safe absence buffers, prioritized study schedules, and career readiness.
-          </p>
-
-          {/* Primary & Secondary CTAs */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
-            <Link to="/register" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto text-sm sm:text-base font-bold px-8 bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-md shadow-teal-950/10 border-0"
-              >
-                Launch Decision Engine
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-            <Link to="/login" className="w-full sm:w-auto">
-              <Button
-                variant="secondary"
-                size="lg"
-                className="w-full sm:w-auto text-sm sm:text-base font-bold px-8 border border-slate-300 bg-white/95 hover:bg-white text-[#102A2A] shadow-xs"
-              >
-                Sign In to Command Center
-              </Button>
-            </Link>
-          </div>
-
-          {/* Truth / Reliability Pillars */}
-          <div className="pt-4 flex flex-wrap items-center justify-center gap-5 sm:gap-8 text-xs text-slate-700 font-semibold">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#3B8F83]" />
-              <span>100% Deterministic Math</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Database className="w-4 h-4 text-[#3B8F83]" />
-              <span>Real MongoDB Atlas Backend</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Lock className="w-4 h-4 text-[#3B8F83]" />
-              <span>Authenticated Session Security</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom subtle edge divider */}
-        <div className="relative z-10 w-full h-8 bg-gradient-to-b from-transparent to-[#F4F7F5]" />
-      </section>
+      <Hero3DScene />
 
       {/* ================================================================ */}
       {/* 3. COMMAND CENTER LIVE PREVIEW MOCKUP                            */}
       {/* ================================================================ */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 mb-24 w-full">
+      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 mb-24 w-full scroll-reveal">
+        <InteractiveTiltCard maxTilt={3} scale={1.01} className="w-full">
         <div className="rounded-3xl border border-slate-200/90 bg-white shadow-2xl p-5 sm:p-7 text-left space-y-5">
           {/* Window Chrome Header */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -244,7 +250,7 @@ export const Landing = () => {
 
           {/* Top 4 KPI Metric Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 feature-card-3d cursor-pointer">
               <span className="text-xs font-bold text-slate-700 block">Overall Attendance</span>
               <div className="flex items-baseline gap-2 mt-1.5">
                 <span className="text-2xl font-black text-[#102A2A]">84.2%</span>
@@ -257,7 +263,7 @@ export const Landing = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 feature-card-3d cursor-pointer">
               <span className="text-xs font-bold text-slate-700 block">Academic Standing</span>
               <div className="flex items-baseline gap-2 mt-1.5">
                 <span className="text-2xl font-black text-[#102A2A]">Level 4</span>
@@ -270,7 +276,7 @@ export const Landing = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 feature-card-3d cursor-pointer">
               <span className="text-xs font-bold text-slate-700 block">Next Milestone</span>
               <div className="flex items-baseline gap-2 mt-1.5">
                 <span className="text-2xl font-black text-[#102A2A]">In 4 Days</span>
@@ -283,7 +289,7 @@ export const Landing = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 feature-card-3d cursor-pointer">
               <span className="text-xs font-bold text-slate-700 block">Career Readiness</span>
               <div className="flex items-baseline gap-2 mt-1.5">
                 <span className="text-2xl font-black text-[#3B8F83]">76%</span>
@@ -408,12 +414,13 @@ export const Landing = () => {
             </div>
           </div>
         </div>
+        </InteractiveTiltCard>
       </section>
 
       {/* ================================================================ */}
       {/* 4. THE DECISION-SUPPORT PHILOSOPHY                               */}
       {/* ================================================================ */}
-      <section id="philosophy" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28">
+      <section id="philosophy" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28 scroll-reveal">
         <div className="space-y-3 mb-12">
           <Badge
             variant="secondary"
@@ -432,13 +439,13 @@ export const Landing = () => {
         {/* 4-Step Connected Editorial Flow */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-left">
           {/* Step 1 */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4 feature-card-3d cursor-pointer scroll-reveal stagger-1">
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-black text-[#3B8F83] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
                   STEP 01
                 </span>
-                <Database className="w-4 h-4 text-slate-500" />
+                <Database className="w-4 h-4 text-slate-500 card-icon-bounce" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A] mt-3">Student Data</h3>
               <p className="text-xs text-slate-700 leading-relaxed mt-1.5">
@@ -452,13 +459,13 @@ export const Landing = () => {
           </div>
 
           {/* Step 2 */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4 feature-card-3d cursor-pointer scroll-reveal stagger-2">
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-black text-[#3B8F83] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
                   STEP 02
                 </span>
-                <Layers className="w-4 h-4 text-slate-500" />
+                <Layers className="w-4 h-4 text-slate-500 card-icon-bounce" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A] mt-3">Analysis</h3>
               <p className="text-xs text-slate-700 leading-relaxed mt-1.5">
@@ -472,13 +479,13 @@ export const Landing = () => {
           </div>
 
           {/* Step 3 */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4 feature-card-3d cursor-pointer scroll-reveal stagger-3">
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-black text-[#3B8F83] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
                   STEP 03
                 </span>
-                <Sparkles className="w-4 h-4 text-slate-500" />
+                <Sparkles className="w-4 h-4 text-slate-500 card-icon-bounce" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A] mt-3">Insight</h3>
               <p className="text-xs text-slate-700 leading-relaxed mt-1.5">
@@ -492,13 +499,13 @@ export const Landing = () => {
           </div>
 
           {/* Step 4 */}
-          <div className="p-6 rounded-2xl bg-white border border-teal-300 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="p-6 rounded-2xl bg-white border border-teal-300 shadow-xs flex flex-col justify-between space-y-4 feature-card-3d cursor-pointer scroll-reveal stagger-4">
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-black text-teal-950 bg-teal-100 px-2 py-0.5 rounded border border-teal-300">
                   STEP 04
                 </span>
-                <Target className="w-4 h-4 text-[#3B8F83]" />
+                <Target className="w-4 h-4 text-[#3B8F83] card-icon-bounce" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A] mt-3">Recommended Action</h3>
               <p className="text-xs text-slate-700 leading-relaxed mt-1.5">
@@ -516,7 +523,7 @@ export const Landing = () => {
       {/* ================================================================ */}
       {/* 5. SMART ATTENDANCE SHOWCASE (CORE DIFFERENTIATOR)               */}
       {/* ================================================================ */}
-      <section id="attendance" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28">
+      <section id="attendance" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28 scroll-reveal">
         <div className="space-y-3 mb-12">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-bold text-[#102A2A] shadow-xs">
             <CalendarCheck className="w-3.5 h-3.5 text-[#3B8F83]" />
@@ -663,7 +670,7 @@ export const Landing = () => {
       {/* ================================================================ */}
       {/* 6. UNIFIED ACADEMIC INTELLIGENCE SUITE                           */}
       {/* ================================================================ */}
-      <section id="academic" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28">
+      <section id="academic" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28 scroll-reveal">
         <div className="space-y-3 mb-12">
           <Badge
             variant="secondary"
@@ -679,12 +686,12 @@ export const Landing = () => {
           </p>
         </div>
 
-        {/* Feature Grid: Centerpiece + 4 Supporting Cards */}
+        {/* Feature Grid: Centerpiece + 5 Supporting Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
           {/* Card 1: Attendance Intelligence */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 feature-card-3d cursor-pointer scroll-reveal stagger-1">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                 <CalendarCheck className="w-4 h-4" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A]">Smart Attendance & What-If</h3>
@@ -699,9 +706,9 @@ export const Landing = () => {
           </div>
 
           {/* Card 2: Weekly Schedule Timetable */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 feature-card-3d cursor-pointer scroll-reveal stagger-2">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                 <Calendar className="w-4 h-4" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A]">Timetable & Lecture Map</h3>
@@ -716,9 +723,9 @@ export const Landing = () => {
           </div>
 
           {/* Card 3: Coursework & Deliverables */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 feature-card-3d cursor-pointer scroll-reveal stagger-3">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                 <ClipboardList className="w-4 h-4" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A]">Assignment Deliverables</h3>
@@ -733,9 +740,9 @@ export const Landing = () => {
           </div>
 
           {/* Card 4: Exam Milestones & Countdowns */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 feature-card-3d cursor-pointer scroll-reveal stagger-4">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                 <GraduationCap className="w-4 h-4" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A]">Exam Milestones</h3>
@@ -750,9 +757,9 @@ export const Landing = () => {
           </div>
 
           {/* Card 5: Performance Analytics */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#3B8F83]/50 transition-all">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-3 feature-card-3d cursor-pointer scroll-reveal stagger-5">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+              <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                 <BarChart3 className="w-4 h-4" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A]">Performance Analytics</h3>
@@ -767,9 +774,9 @@ export const Landing = () => {
           </div>
 
           {/* Card 6: Smart Decision Planner */}
-          <div className="p-6 rounded-2xl bg-white border border-teal-300 shadow-xs flex flex-col justify-between space-y-3">
+          <div className="p-6 rounded-2xl bg-white border border-teal-300 shadow-xs flex flex-col justify-between space-y-3 feature-card-3d cursor-pointer scroll-reveal stagger-6">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-100 border border-teal-300 flex items-center justify-center text-teal-950">
+              <div className="w-8 h-8 rounded-xl bg-teal-100 border border-teal-300 flex items-center justify-center text-teal-950 card-icon-bounce">
                 <Clock className="w-4 h-4" />
               </div>
               <h3 className="text-base font-bold text-[#102A2A]">Smart Academic Planner</h3>
@@ -788,7 +795,10 @@ export const Landing = () => {
       {/* ================================================================ */}
       {/* 7. PRODUCTIVITY & MEANINGFUL LEARNING                            */}
       {/* ================================================================ */}
-      <section id="productivity" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28">
+      {/* ================================================================ */}
+      {/* 7. PRODUCTIVITY & MEANINGFUL LEARNING                            */}
+      {/* ================================================================ */}
+      <section id="productivity" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28 scroll-reveal">
         <div className="space-y-3 mb-12">
           <Badge
             variant="secondary"
@@ -806,10 +816,10 @@ export const Landing = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
           {/* Daily Brain Boost */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3 flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3 flex flex-col justify-between feature-card-3d cursor-pointer scroll-reveal stagger-1">
             <div>
               <div className="flex items-center justify-between">
-                <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+                <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                   <Zap className="w-4 h-4" />
                 </div>
                 <span className="text-[10px] font-mono font-bold text-teal-900 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
@@ -828,10 +838,10 @@ export const Landing = () => {
           </div>
 
           {/* StudentLens Streak */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3 flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3 flex flex-col justify-between feature-card-3d cursor-pointer scroll-reveal stagger-2">
             <div>
               <div className="flex items-center justify-between">
-                <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+                <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                   <Flame className="w-4 h-4" />
                 </div>
                 <span className="text-[10px] font-mono font-bold text-teal-900 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
@@ -855,10 +865,10 @@ export const Landing = () => {
           </div>
 
           {/* XP & Leveling */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3 flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3 flex flex-col justify-between feature-card-3d cursor-pointer scroll-reveal stagger-3">
             <div>
               <div className="flex items-center justify-between">
-                <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83]">
+                <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-[#3B8F83] card-icon-bounce">
                   <Award className="w-4 h-4" />
                 </div>
                 <span className="text-[10px] font-mono font-bold text-teal-900 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
@@ -881,7 +891,7 @@ export const Landing = () => {
       {/* ================================================================ */}
       {/* 8. CAREER READINESS & INDUSTRY BENCHMARKS                        */}
       {/* ================================================================ */}
-      <section id="career" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28">
+      <section id="career" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mb-28 scroll-reveal">
         <div className="space-y-3 mb-12">
           <Badge
             variant="secondary"
@@ -897,7 +907,7 @@ export const Landing = () => {
           </p>
         </div>
 
-        <div className="bg-[#102A2A] text-white border border-[#102A2A] rounded-3xl p-6 sm:p-10 shadow-xl text-left space-y-8 relative overflow-hidden">
+        <div className="bg-[#102A2A] text-white border border-[#102A2A] rounded-3xl p-6 sm:p-10 shadow-xl text-left space-y-8 relative overflow-hidden feature-card-3d">
           <div className="absolute -right-8 -bottom-8 w-80 h-80 bg-[#3B8F83]/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
@@ -916,7 +926,7 @@ export const Landing = () => {
                 {['Data Structures', 'Algorithms', 'SQL & RDBMS', 'Operating Systems', 'Git & CI/CD'].map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#143333] border border-[#3B8F83]/40 text-xs font-semibold text-[#E8F5F2]"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#143333] border border-[#3B8F83]/40 text-xs font-semibold text-[#E8F5F2] hover:border-[#3B8F83] transition-colors"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#3B8F83]" />
                     <span>{skill}</span>
@@ -947,8 +957,8 @@ export const Landing = () => {
       {/* ================================================================ */}
       {/* 9. FINAL CALL TO ACTION                                          */}
       {/* ================================================================ */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-28">
-        <div className="py-14 px-6 sm:px-12 rounded-3xl bg-white border border-slate-200/90 text-center space-y-6 shadow-xl">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-28 scroll-reveal">
+        <div className="py-14 px-6 sm:px-12 rounded-3xl bg-white border border-slate-200/90 text-center space-y-6 shadow-xl feature-card-3d">
           <Badge
             variant="secondary"
             className="text-xs px-3 py-1 font-bold text-[#3B8F83] bg-teal-50 border border-teal-200 mx-auto inline-block"
@@ -968,17 +978,17 @@ export const Landing = () => {
             <Link to="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto text-base font-bold px-9 bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-md border-0"
+                className="btn-3d-primary w-full sm:w-auto text-base font-bold px-9 bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-md border-0"
               >
                 Sign Up for StudentLens Free
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-2 btn-arrow-slide" />
               </Button>
             </Link>
             <Link to="/login" className="w-full sm:w-auto">
               <Button
                 variant="secondary"
                 size="lg"
-                className="w-full sm:w-auto text-base font-bold px-8 border border-slate-300 bg-white hover:bg-slate-50 text-[#102A2A]"
+                className="btn-3d-secondary w-full sm:w-auto text-base font-bold px-8 border border-slate-300 bg-white hover:bg-slate-50 text-[#102A2A]"
               >
                 Sign In to Existing Account
               </Button>

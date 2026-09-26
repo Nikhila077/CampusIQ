@@ -12,19 +12,19 @@ export const Button = ({
   ...props
 }) => {
   const baseStyles =
-    'relative inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-60 disabled:cursor-not-allowed select-none rounded-xl active:scale-[0.98]';
+    'relative inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed select-none rounded-xl cursor-pointer active:scale-[0.98] active:translate-y-0';
 
   const variants = {
     primary:
-      'bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-xs focus:ring-[#3B8F83] border border-[#3B8F83]/40',
+      'bg-[#3B8F83] hover:bg-[#327a70] text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 focus:ring-[#3B8F83] border border-[#3B8F83]/30',
     secondary:
-      'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 focus:ring-slate-400 shadow-xs',
+      'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200/90 hover:border-slate-300 focus:ring-slate-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5',
     outline:
-      'border border-[#3B8F83] text-[#3B8F83] hover:bg-teal-50 focus:ring-[#3B8F83]',
+      'bg-transparent border border-[#3B8F83] text-[#3B8F83] hover:bg-[#E8F5F2] hover:border-[#327a70] focus:ring-[#3B8F83] hover:-translate-y-0.5 shadow-xs',
     ghost:
-      'text-slate-700 hover:text-slate-950 hover:bg-slate-100 focus:ring-slate-300',
+      'bg-transparent text-slate-700 hover:text-[#102A2A] hover:bg-slate-100/80 focus:ring-slate-300',
     danger:
-      'bg-red-600 hover:bg-red-500 text-white focus:ring-red-500 shadow-md shadow-red-600/25'
+      'bg-rose-600 hover:bg-rose-500 text-white focus:ring-rose-500 shadow-sm hover:shadow-md hover:-translate-y-0.5 border border-rose-700/20'
   };
 
   const sizes = {

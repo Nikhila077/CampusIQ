@@ -218,7 +218,7 @@ All API routes are prefixed with `/api`.
    - `PORT`: `5000` (or leave default assigned by platform)
    - `MONGO_URI`: Your MongoDB Atlas connection URI
    - `JWT_SECRET`: A strong random 64-character secret
-   - `CLIENT_ORIGIN`: Your production frontend URL (e.g. `https://studentlens.vercel.app` or `https://campusiq.vercel.app`)
+   - `CLIENT_ORIGIN`: Your production frontend URL (e.g. `https://student-lens-bay.vercel.app` or `http://localhost:5173`)
    - `COOKIE_SAME_SITE`: `none` (required when client and server run on different domains)
 
 ---

@@ -300,13 +300,33 @@ export const Dashboard = () => {
       </div>
 
       {loading ? (
-        <div className="p-16 text-center text-xs font-semibold text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
-          Loading student decision-support data...
+        <div className="space-y-5 animate-in fade-in duration-200">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-2xl border border-slate-200/90 bg-white p-4 space-y-3 shadow-xs">
+                <div className="h-3 w-24 skeleton-shimmer rounded-md" />
+                <div className="h-8 w-28 skeleton-shimmer rounded-lg" />
+                <div className="h-3 w-full skeleton-shimmer rounded-md" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <div className="lg:col-span-7 rounded-2xl border border-slate-200/90 bg-white p-6 space-y-4 shadow-xs">
+              <div className="h-5 w-48 skeleton-shimmer rounded-lg" />
+              <div className="h-24 w-full skeleton-shimmer rounded-xl" />
+              <div className="h-16 w-full skeleton-shimmer rounded-xl" />
+            </div>
+            <div className="lg:col-span-5 rounded-2xl border border-slate-200/90 bg-white p-6 space-y-3 shadow-xs">
+              <div className="h-5 w-40 skeleton-shimmer rounded-lg" />
+              <div className="h-14 w-full skeleton-shimmer rounded-xl" />
+              <div className="h-14 w-full skeleton-shimmer rounded-xl" />
+            </div>
+          </div>
         </div>
       ) : !hasSubjects ? (
         /* Empty State: Guide user to add subjects */
         <div className="p-10 rounded-2xl border border-dashed border-slate-300 bg-white text-center space-y-3.5 max-w-2xl mx-auto shadow-xs">
-          <BookOpen className="w-12 h-12 text-[#3B8F83] mx-auto" />
+          <BookOpen className="w-12 h-12 text-[#3B8F83] mx-auto animate-subtle-float" />
           <div className="space-y-1">
             <h2 className="text-base font-bold text-[#102A2A]">No Subjects Configured Yet</h2>
             <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
@@ -315,7 +335,7 @@ export const Dashboard = () => {
           </div>
           <Link
             to="/profile"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3B8F83] hover:bg-[#327a70] text-white text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer"
           >
             <span>Add Subjects in Profile</span>
             <ArrowRight className="w-4 h-4" />
@@ -326,10 +346,20 @@ export const Dashboard = () => {
         <div className="space-y-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
             {/* KPI 1: Overall Attendance */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
+            <Link
+              to="/attendance"
+              className="bg-white border border-slate-200/90 rounded-2xl p-4.5 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all flex flex-col justify-between group block"
+            >
               <div>
-                <span className="text-xs font-bold text-slate-700 block">Overall Attendance</span>
-                <div className="flex items-baseline gap-2 mt-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600 block group-hover:text-[#102A2A] transition-colors">
+                    Overall Attendance
+                  </span>
+                  <div className="w-7 h-7 rounded-lg bg-[#E8F5F2] text-[#3B8F83] flex items-center justify-center transition-transform group-hover:scale-110">
+                    <CalendarCheck className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-2 mt-2">
                   <span className="text-2xl font-black text-[#102A2A]">
                     {attendanceData.overall?.overallPercent || 100}%
                   </span>
@@ -337,46 +367,49 @@ export const Dashboard = () => {
                     className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
                       attendanceData.overall?.overallStatus === 'Safe'
                         ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                        : 'bg-red-50 text-red-800 border-red-200'
+                        : 'bg-rose-50 text-rose-800 border-rose-200'
                     }`}
                   >
                     {attendanceData.overall?.overallStatus || 'Safe'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 font-medium mt-1">
+                <p className="text-xs text-slate-500 font-medium mt-1">
                   {attendanceData.overall?.totalAttended || 0} / {attendanceData.overall?.totalConducted || 0} classes attended
                 </p>
               </div>
-              <Link
-                to="/attendance"
-                className="text-xs font-semibold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1 mt-3"
-              >
+              <div className="text-xs font-semibold text-[#3B8F83] group-hover:text-[#2d6f66] flex items-center gap-1 mt-3.5 pt-2 border-t border-slate-100">
                 <span>Buffer breakdown</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+                <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Link>
 
             {/* KPI 2: Academic Standing & XP */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4.5 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all flex flex-col justify-between group">
               <div>
-                <span className="text-xs font-bold text-slate-700 block">Academic Standing</span>
-                <div className="flex items-baseline gap-2 mt-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600 block group-hover:text-[#102A2A] transition-colors">
+                    Academic Standing
+                  </span>
+                  <div className="w-7 h-7 rounded-lg bg-[#E8F5F2] text-[#3B8F83] flex items-center justify-center transition-transform group-hover:scale-110">
+                    <Zap className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-2 mt-2">
                   <span className="text-2xl font-black text-[#102A2A] flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-[#3B8F83] fill-[#3B8F83]/20" />
                     <span>Lvl {gamification.level || 1}</span>
                   </span>
-                  <span className="text-[10px] font-mono font-bold text-[#3B8F83] bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
+                  <span className="text-[10px] font-mono font-bold text-[#3B8F83] bg-[#E8F5F2] px-2 py-0.5 rounded-full border border-teal-200">
                     {gamification.xp || 0} XP
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 font-medium mt-1">
+                <p className="text-xs text-slate-500 font-medium mt-1">
                   {gamification.levelProgress?.percent || 0}% toward Level {(gamification.level || 1) + 1}
                 </p>
               </div>
-              <div className="mt-3">
+              <div className="mt-3.5 pt-2 border-t border-slate-100">
                 <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div
-                    className="bg-[#3B8F83] h-full rounded-full transition-all duration-300"
+                    className="bg-[#3B8F83] h-full rounded-full transition-all duration-500 ease-out"
                     style={{ width: `${gamification.levelProgress?.percent || 0}%` }}
                   />
                 </div>
@@ -384,51 +417,64 @@ export const Dashboard = () => {
             </div>
 
             {/* KPI 3: Career Readiness */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
+            <Link
+              to="/career"
+              className="bg-white border border-slate-200/90 rounded-2xl p-4.5 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all flex flex-col justify-between group block"
+            >
               <div>
-                <span className="text-xs font-bold text-slate-700 block">Career Readiness</span>
-                <div className="flex items-baseline gap-2 mt-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600 block group-hover:text-[#102A2A] transition-colors">
+                    Career Readiness
+                  </span>
+                  <div className="w-7 h-7 rounded-lg bg-[#E8F5F2] text-[#3B8F83] flex items-center justify-center transition-transform group-hover:scale-110">
+                    <Briefcase className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-2 mt-2">
                   <span className="text-2xl font-black text-[#102A2A]">
                     {careerReadiness?.readinessScore || 0}%
                   </span>
-                  <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                  <span className="text-[10px] font-semibold text-[#3B8F83] bg-[#E8F5F2] px-2 py-0.5 rounded-full border border-teal-200">
                     Match
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 font-medium mt-1 truncate">
+                <p className="text-xs text-slate-500 font-medium mt-1 truncate">
                   Role: {careerReadiness?.targetRole || user?.targetRole || 'Software Engineer'}
                 </p>
               </div>
-              <Link
-                to="/career"
-                className="text-xs font-semibold text-[#3B8F83] hover:text-[#2d6f66] flex items-center gap-1 mt-3"
-              >
+              <div className="text-xs font-semibold text-[#3B8F83] group-hover:text-[#2d6f66] flex items-center gap-1 mt-3.5 pt-2 border-t border-slate-100">
                 <span>Career roadmap</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+                <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Link>
 
             {/* KPI 4: Productivity Streak */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4.5 shadow-2xs card-lift hover:border-[#3B8F83]/40 hover:shadow-md transition-all flex flex-col justify-between group">
               <div>
-                <span className="text-xs font-bold text-slate-700 block">StudentLens Streak</span>
-                <div className="flex items-baseline gap-2 mt-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600 block group-hover:text-[#102A2A] transition-colors">
+                    StudentLens Streak
+                  </span>
+                  <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center transition-transform group-hover:scale-110">
+                    <Flame className="w-3.5 h-3.5 text-[#3B8F83]" />
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-2 mt-2">
                   <span className="text-2xl font-black text-[#102A2A] flex items-center gap-1">
-                    <Flame className="w-5 h-5 fill-[#3B8F83]/20 text-[#3B8F83]" />
                     <span>{gamification.currentStreak || 0}d</span>
                   </span>
-                  <span className="text-[10px] text-slate-700 font-mono font-bold">
+                  <span className="text-[10px] text-slate-600 font-mono font-bold bg-slate-100 px-2 py-0.5 rounded-full">
                     {gamification.todayProgress?.completedCount || 0}/{gamification.todayProgress?.dailyGoal || 3} today
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 font-medium mt-1">
+                <p className="text-xs text-slate-500 font-medium mt-1">
                   Daily goals completed today
                 </p>
               </div>
-              <div className="mt-3">
+              <div className="mt-3.5 pt-2 border-t border-slate-100">
                 <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div
-                    className="bg-[#3B8F83] h-full rounded-full transition-all duration-300"
+                    className="bg-[#3B8F83] h-full rounded-full transition-all duration-500 ease-out"
                     style={{ width: `${gamification.todayProgress?.percent || 0}%` }}
                   />
                 </div>
@@ -819,12 +865,14 @@ export const Dashboard = () => {
                       const isCorrect =
                         answerFeedback && answerFeedback.correctAnswer === idx;
 
-                      let style = 'bg-slate-50 border-slate-200 text-slate-800 hover:border-[#3B8F83] hover:bg-teal-50/30';
+                      let style = 'bg-slate-50/80 border-slate-200 text-[#102A2A] hover:border-[#3B8F83]/70 hover:bg-[#E8F5F2]/50 hover:shadow-2xs cursor-pointer active:scale-[0.99]';
                       if (answerFeedback) {
                         if (isCorrect) {
-                          style = 'bg-emerald-50 border-emerald-300 text-emerald-950 font-bold';
+                          style = 'bg-emerald-50 border-emerald-300 text-emerald-950 font-bold shadow-2xs';
                         } else if (isSelected && !answerFeedback.correct) {
-                          style = 'bg-red-50 border-red-300 text-red-950';
+                          style = 'bg-rose-50 border-rose-300 text-rose-950';
+                        } else {
+                          style = 'bg-slate-50 border-slate-200 text-slate-400 opacity-60';
                         }
                       }
 
@@ -833,9 +881,9 @@ export const Dashboard = () => {
                           key={opt}
                           disabled={Boolean(answerFeedback) || submittingAnswer}
                           onClick={() => handleAnswerSubmit(idx)}
-                          className={`p-3 rounded-xl border text-xs text-left flex items-center justify-between transition-all ${style}`}
+                          className={`p-3.5 rounded-xl border text-xs text-left flex items-center justify-between transition-all duration-200 ${style}`}
                         >
-                          <span>{opt}</span>
+                          <span className="font-medium">{opt}</span>
                           {answerFeedback && isCorrect && (
                             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                           )}

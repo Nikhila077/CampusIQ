@@ -25,6 +25,7 @@ app.set('trust proxy', 1);
 
 // Whitelisted origins for both local dev and production deployments
 const defaultAllowedOrigins = [
+  'https://student-lens-bay.vercel.app',
   'https://studentlens.vercel.app',
   'https://student-lens.vercel.app',
   'https://campus-iq-tawny.vercel.app',
@@ -57,8 +58,13 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // Allow all Vercel deployment preview and production URLs for StudentLens and CampusIQ
-    if (/^https:\/\/(studentlens|student-lens|campus-iq|campusiq)[a-zA-Z0-9_-]*\.vercel\.app$/.test(normalized)) {
+    // Allow all Vercel deployment preview and production URLs (*.vercel.app)
+    if (/^https:\/\/([a-zA-Z0-9_-]+\.)?vercel\.app$/.test(normalized)) {
+      return callback(null, true);
+    }
+
+    // Allow any localhost / 127.0.0.1 port in development or preview
+    if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalized)) {
       return callback(null, true);
     }
 
@@ -77,13 +83,17 @@ const corsOptions = {
     'Authorization',
     'X-Requested-With',
     'Accept',
-    'Origin'
+    'Origin',
+    'Cache-Control',
+    'Pragma'
   ],
   exposedHeaders: ['Set-Cookie', 'Authorization'],
   optionsSuccessStatus: 200
 };
 
+// Mount CORS middleware and explicit pre-flight options handler across all routes
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Body parsers & cookie parser
 app.use(express.json());

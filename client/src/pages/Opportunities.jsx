@@ -226,10 +226,10 @@ export const Opportunities = () => {
                   setActiveType(cat.key);
                   if (viewSavedOnly) setViewSavedOnly(false);
                 }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
                   isActive
-                    ? 'bg-[#102A2A] text-white border-[#102A2A] shadow-xs'
-                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:text-slate-900'
+                    ? 'bg-[#3B8F83] text-white border-[#3B8F83] shadow-2xs font-bold'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:text-[#102A2A]'
                 }`}
               >
                 {cat.label}
@@ -241,8 +241,18 @@ export const Opportunities = () => {
 
       {/* 3. Opportunities Discovery Feed */}
       {loading ? (
-        <div className="p-16 text-center text-xs font-semibold text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
-          Scanning opportunity registry and matching skill profile...
+        <div className="space-y-3.5 animate-in fade-in duration-200">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3 shadow-xs">
+              <div className="flex gap-2">
+                <div className="h-5 w-20 skeleton-shimmer rounded-full" />
+                <div className="h-5 w-28 skeleton-shimmer rounded-full" />
+              </div>
+              <div className="h-5 w-64 skeleton-shimmer rounded" />
+              <div className="h-4 w-full skeleton-shimmer rounded" />
+              <div className="h-4 w-3/4 skeleton-shimmer rounded" />
+            </div>
+          ))}
         </div>
       ) : displayedOpportunities.length === 0 ? (
         /* Professional Empty State */
@@ -292,7 +302,7 @@ export const Opportunities = () => {
             return (
               <div
                 key={opp._id}
-                className="bg-white border border-slate-200/90 hover:border-slate-300 rounded-2xl p-5 sm:p-6 transition-all shadow-xs flex flex-col md:flex-row md:items-start justify-between gap-5"
+                className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-2xs card-lift hover:border-[#3B8F83]/50 hover:shadow-md flex flex-col md:flex-row md:items-start justify-between gap-5"
               >
                 {/* Left/Middle Content */}
                 <div className="space-y-3 flex-1">

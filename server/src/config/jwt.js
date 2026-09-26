@@ -13,11 +13,14 @@ export const verifyToken = (token) => {
 export const getCookieOptions = (req) => {
   const isHttps = req ? (req.secure || req.headers?.['x-forwarded-proto'] === 'https') : false;
   const isProduction = process.env.NODE_ENV === 'production' || isHttps;
+  const sameSite = process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+  const secure = sameSite === 'none' ? true : isProduction;
 
   return {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax'),
+    secure,
+    sameSite,
+    path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   };
 };

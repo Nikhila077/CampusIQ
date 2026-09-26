@@ -335,8 +335,21 @@ export const Projects = () => {
           )}
         </div>
       ) : loading ? (
-        <div className="p-16 text-center text-xs font-semibold text-slate-600 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
-          Loading student engineering projects...
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in duration-200">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3.5 shadow-xs">
+              <div className="flex justify-between">
+                <div className="h-5 w-40 skeleton-shimmer rounded" />
+                <div className="h-5 w-20 skeleton-shimmer rounded-full" />
+              </div>
+              <div className="h-1.5 w-full skeleton-shimmer rounded-full" />
+              <div className="h-12 w-full skeleton-shimmer rounded-xl" />
+              <div className="flex gap-2">
+                <div className="h-5 w-14 skeleton-shimmer rounded" />
+                <div className="h-5 w-16 skeleton-shimmer rounded" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : projects.length === 0 ? (
         /* Professional Empty State */
@@ -478,7 +491,7 @@ export const Projects = () => {
               return (
                 <div
                   key={proj._id}
-                  className="bg-white border border-slate-200/90 hover:border-slate-300 rounded-2xl p-5 flex flex-col justify-between transition-all shadow-xs space-y-4"
+                  className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-2xs card-lift hover:border-[#3B8F83]/50 hover:shadow-md space-y-4"
                 >
                   <div className="space-y-3">
                     {/* Header Row */}
